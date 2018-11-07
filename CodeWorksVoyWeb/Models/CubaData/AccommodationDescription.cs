@@ -1,0 +1,100 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace CodeWorkVoyWebService.Models.CubaData
+{
+    public partial class AccommodationDescription
+    {
+        public int AccommodationId { get; set; }
+        public bool? UseIt { get; set; }
+        public string AccommodationName { get; set; }
+        public string Provider { get; set; }
+        public string Country { get; set; }
+        public string Region { get; set; }
+        public string Place { get; set; }
+        public string PlaceName { get; set; }
+        public string Location { get; set; }
+        public string AccommodationStandard { get; set; }
+        public string AccommodationType { get; set; }
+        public string DescriptionNote { get; set; }
+        public string NumberOfRooms { get; set; }
+        public string NumberOfRoomsNote { get; set; }
+        public string OfficialRating { get; set; }
+        public string OurRating { get; set; }
+        public string ContractBoardBasis { get; set; }
+        public string BoardUpgradeAvailable1 { get; set; }
+        public string BoardUpgradeAvailable2 { get; set; }
+        public string BoardUpgradeAvailable3 { get; set; }
+        public string BoardUpgradeAvailable4 { get; set; }
+        public int? AgeRestriction { get; set; }
+        public int? MaximumAdultOccupancy { get; set; }
+        public int? MaxAdultWithChild { get; set; }
+        public int? MaxChildWithAdult { get; set; }
+        public bool ThirdAdultShare { get; set; }
+        public string ThirdAdultShareNote { get; set; }
+        public bool FourthAdultShare { get; set; }
+        public string FourthAdultShareNote { get; set; }
+        public bool Honeymoon { get; set; }
+        public string HoneymoonCopy { get; set; }
+        public string HoneymoonDeal { get; set; }
+        public bool ChildrensFacilities { get; set; }
+        public string ChildrensFacilitiesNote { get; set; }
+        public bool ChildrensDiscount { get; set; }
+        public string ChildrensDiscountNote { get; set; }
+        public bool Pool { get; set; }
+        public bool Jacuzzi { get; set; }
+        public bool Restaurant { get; set; }
+        public bool Bar { get; set; }
+        public bool RoomService { get; set; }
+        public bool BeachTowelsProvided { get; set; }
+        public bool CarRental { get; set; }
+        public bool ToursDesk { get; set; }
+        public bool EveningEntertainment { get; set; }
+        public bool Nightclub { get; set; }
+        public bool Shops { get; set; }
+        public bool MoneyExchange { get; set; }
+        public bool DisabledFacilities { get; set; }
+        public bool Concierge { get; set; }
+        public bool SportsFacilities { get; set; }
+        public bool Watersports { get; set; }
+        public bool ScubaDiving { get; set; }
+        public bool Tennis { get; set; }
+        public bool Gymnasium { get; set; }
+        public bool Golf { get; set; }
+        public bool Horseriding { get; set; }
+        public bool Squash { get; set; }
+        public bool OtherFacilities { get; set; }
+        public string PoolNote { get; set; }
+        public string RestaurantNote { get; set; }
+        public string BarNote { get; set; }
+        public string RoomServiceNote { get; set; }
+        public string NightclubNote { get; set; }
+        public string EveningEntertainmentNote { get; set; }
+        public string DisabledFacilitiesNote { get; set; }
+        public string BeachTowelsProvidedNote { get; set; }
+        public string MoneyExchangeNote { get; set; }
+        public string ShopsNote { get; set; }
+        public string ConciergeNote { get; set; }
+        public string ToursDeskNote { get; set; }
+        public string CarRentalNote { get; set; }
+        public string JacuzziNote { get; set; }
+        public string SportsFacilitiesNote { get; set; }
+        public string GymnasiumNote { get; set; }
+        public string TennisNote { get; set; }
+        public string WatersportsNote { get; set; }
+        public string ScubaDivingNote { get; set; }
+        public string GolfNote { get; set; }
+        public string HorseridingNote { get; set; }
+        public string SquashNote { get; set; }
+        public string ProductGroup1 { get; set; }
+        public string ProductGroup2 { get; set; }
+        public string ProductGroup3 { get; set; }
+        public string ProductGroup4 { get; set; }
+        public string OtherFacilitiesNote { get; set; }
+        public string BoardBasisNote { get; set; }
+        public bool WebDefaultBudget { get; set; }
+        public bool WebDefaultModerate { get; set; }
+        public bool WebDefaultSuperior { get; set; }
+        public string HotelBriefDescription { get; set; }
+    }
+}
