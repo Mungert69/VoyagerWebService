@@ -14,6 +14,7 @@ using CodeWorksVoyWebServiceTest.Controllers.Mocks;
 using CodeWorksVoyWebServiceTest.Utils;
 using Microsoft.Extensions.Configuration;
 using Xunit.Abstractions;
+using CodeWorksVoyWebService.Services;
 
 namespace CodeWorksVoyWebServiceTest.Controllers
 {
@@ -33,6 +34,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
         private ItineraryController itineraryController_StoredItinObj;
         private readonly ITestOutputHelper output;
         private SessionObject sessionObjects;
+        private Mock<ISessionObjectsService> mockSessionObjectsService;
 
 
 
@@ -50,6 +52,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             this.mockUserItinAdapter = this.mockRepository.Create<IUserItinAdapter>();
             this.mockTransferAdapter = this.mockRepository.Create<ITransferAdapter>();
             this.mockMapService = this.mockRepository.Create<IMapService>();
+            this.mockSessionObjectsService = this.mockRepository.Create<ISessionObjectsService>();
         }
 
         public void Dispose()
@@ -69,7 +72,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             IConfiguration config = TestContainerConfig.InitConfiguration();
              sessionObjects= new SessionObject(config);
             sessionObjects= JsonUtils.getJsonObjectFromFile<SessionObject>("./TestObjects/sessionObjects-StoredItinBefore.json",sessionObjects);
-
+            
             // Setup Mocks 
             this.mockUserItinAdapter.SetupAllProperties();
             this.mockUserItinAdapter.SetReturnsDefault<CodeWorkVoyWebService.Models.WebData.UserItinerary>(userItin);
@@ -78,12 +81,13 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             this.mockTransferAdapter.SetupAllProperties();
             this.mockTransferAdapter.SetReturnsDefault<List<string>>(transferStrings);
             this.mockMapService.SetReturnsDefault<List<PlaceState>>(placeStates);
+            this.mockSessionObjectsService.SetReturnsDefault<ISessionObject>(sessionObjects);
 
             // Use A FluentAPI pattern so multiple methods can be chained.
             Mock<ISessionObject> mockSessionObjects = new MockSessionObjects().SetUpObject();
 
             itineraryController_StoredItinObj = new ItineraryController(
-               sessionObjects,
+               this.mockSessionObjectsService.Object,
                this.mockItineraryService.Object,
                this.mockHotelAdapter.Object,
                this.mockPlaceAdapter.Object,
@@ -94,7 +98,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
 
            
             itineraryController =new ItineraryController(
-                mockSessionObjects.Object,
+                this.mockSessionObjectsService.Object,
                 this.mockItineraryService.Object,
                 this.mockHotelAdapter.Object,
                 this.mockPlaceAdapter.Object,

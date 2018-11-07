@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
 using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
 using CodeWorkVoyWebService.Models.CubaData;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 
 namespace CodeWorkVoyWebService.Controllers
 {
@@ -39,7 +40,7 @@ namespace CodeWorkVoyWebService.Controllers
         {
             if (id != "0") { 
 
-            CardObj card = getCardFromHotel(Convert.ToInt32(id));
+            HotelCardObj card = getCardFromHotel(Convert.ToInt32(id));
                 return Ok(card);
             }
 
@@ -48,7 +49,7 @@ namespace CodeWorkVoyWebService.Controllers
             
         }
 
-        private CardObj getCardFromHotel(int hotelId)
+        private HotelCardObj getCardFromHotel(int hotelId)
         {
 
             return _hotelAdapter.getCardFromHotel(hotelId);
@@ -67,10 +68,10 @@ namespace CodeWorkVoyWebService.Controllers
 
         // GET: api/Hotels/Cards
         [HttpGet("Cards")]
-        public IEnumerable<CardObj> GetHotelCards()
+        public IEnumerable<HotelCardObj> GetHotelCards()
         {
             List<HotelObj> hotels = _hotelAdapter.getAllHotels();
-            List<CardObj> cards = new List<CardObj>();
+            List<HotelCardObj> cards = new List<HotelCardObj>();
             foreach (HotelObj hotel in hotels)
             {
                 cards.Add(getCardFromHotel(hotel.HotelID));

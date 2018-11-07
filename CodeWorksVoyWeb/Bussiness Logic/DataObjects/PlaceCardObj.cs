@@ -12,6 +12,8 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
 
         private PlaceState placeState;
 
+
+
         public PlaceCardObj()
         {
             placeState = new PlaceState();

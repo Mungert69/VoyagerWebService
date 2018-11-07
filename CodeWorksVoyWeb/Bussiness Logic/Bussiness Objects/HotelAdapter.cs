@@ -14,6 +14,7 @@ using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
 using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 /// <summary>
 /// Summary description for HotelAdapter
 /// </summary>
@@ -24,6 +25,10 @@ public class HotelAdapter : IHotelAdapter
     private readonly List<CodeWorkVoyWebService.Models.CubaData.Hotels> hotelsTable;
     private readonly List<CodeWorkVoyWebService.Models.CubaData.ContractRates> contractRatesTable;
     private readonly List<CodeWorkVoyWebService.Models.CubaData.AccommodationDescription> accommodationDescriptionTable;
+    private readonly List<CodeWorkVoyWebService.Models.CubaData.AccommodationRoomSpecification> accommodationRoomSpecificationTable;
+    private readonly List<CodeWorkVoyWebService.Models.CubaData.AccommodationCharacteristics> accommodationCharacteristicsTable;
+    private readonly List<CodeWorkVoyWebService.Models.CubaData.AccommodationAllInclusiveFacilities> accommodationAllInclusiveFacilitiesTable;
+    private readonly List<CodeWorkVoyWebService.Models.CubaData.AccommodationSelfCater> accommodationSelfCaterTable;
 
     // private readonly VoyagerReserveContext _contextRes;
     private readonly IPlaceAdapter _placeAdapter;
@@ -33,6 +38,11 @@ public class HotelAdapter : IHotelAdapter
     {
         hotelsTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.Hotels>(ref cache, context, hotelsTable, "HotelsTable");
         accommodationDescriptionTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.AccommodationDescription>(ref cache, context, accommodationDescriptionTable, "AccommodationDescriptionTable");
+        accommodationRoomSpecificationTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.AccommodationRoomSpecification>(ref cache, context, accommodationRoomSpecificationTable, "AccommodationRoomSpecificationTable");
+        accommodationCharacteristicsTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.AccommodationCharacteristics>(ref cache, context, accommodationCharacteristicsTable, "AccommodationCharacteristicsTable");
+        accommodationAllInclusiveFacilitiesTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.AccommodationAllInclusiveFacilities>(ref cache, context, accommodationAllInclusiveFacilitiesTable, "AccommodationAllInclusiveFacilitiesTable");
+        accommodationSelfCaterTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.AccommodationSelfCater>(ref cache, context, accommodationSelfCaterTable, "AccommodationSelfCaterTable");
+
         contractRatesTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.ContractRates>(ref cache, context, contractRatesTable, "ContractRatesTable");
 
 
@@ -46,10 +56,10 @@ public class HotelAdapter : IHotelAdapter
     }
 
 
-    public CardObj getCardFromHotel(int hotelId)
+    public HotelCardObj getCardFromHotel(int hotelId)
     {
 
-        CardObj card = new CardObj();
+        HotelCardObj card = new HotelCardObj();
 
         var countryId = hotelsTable  // your starting point - table in the "from" statement
           .Join(_placeAdapter.PlacesTable, // the source table of the inner join
@@ -70,14 +80,39 @@ public class HotelAdapter : IHotelAdapter
         }
         card.Id = hotelId;
         card.Title = hotel.Hotel;
-        card.HotelFeatures = "Historic Centre - Small Hotel - Heritage - £££";
-        card.Panel1 = "facilities";
-        card.Panel2 = "rooms";
-        card.Panel3 = "All Inclusive";
+        card.HotelFeatures = "";
+        card.Panel1 = "";
+        card.Panel2 = "";
+        card.Panel3 = "";
         card.Subtitle = hotel.Place;
-        CodeWorkVoyWebService.Models.CubaData.AccommodationDescription accomDescTable = accommodationDescriptionTable.Where(a => a.AccommodationId == hotelId).First();
-        card.DescriptionShort = accomDescTable.DescriptionNote;
-        card.DescriptionLong = accomDescTable.HotelBriefDescription;
+        try {
+            CodeWorkVoyWebService.Models.CubaData.AccommodationRoomSpecification roomSpec = accommodationRoomSpecificationTable.Where(a => a.AccommodationId == hotelId).First();
+            card.AccommodationRoomSpecification = roomSpec;
+        }
+        catch { }
+       
+        try
+        {
+            CodeWorkVoyWebService.Models.CubaData.AccommodationDescription accomDescTable = accommodationDescriptionTable.Where(a => a.AccommodationId == hotelId).First();
+            card.AccommodationDescription = accomDescTable;
+        }
+        catch { }
+       
+        CodeWorkVoyWebService.Models.CubaData.AccommodationCharacteristics accomCharTable = accommodationCharacteristicsTable.Where(a => a.AccommodationId == hotelId).First();
+        card.AccommodationCharacteristics = accomCharTable;
+        try {
+            CodeWorkVoyWebService.Models.CubaData.AccommodationAllInclusiveFacilities accomAllIncTable = accommodationAllInclusiveFacilitiesTable.Where(a => a.AccommodationId == hotelId).First();
+            card.AccommodationAllInclusiveFacilities = accomAllIncTable;
+        }
+        catch { }
+
+       
+        try {
+            CodeWorkVoyWebService.Models.CubaData.AccommodationSelfCater accomSelfTable = accommodationSelfCaterTable.Where(a => a.AccommodationId == hotelId).First();
+            card.AccommodationSelfCater = accomSelfTable;
+        }
+        catch { }
+       
         card.Longitude = hotel.Longitude;
         card.Latitude = hotel.Latitude;
         if (card.Latitude == null) card.Latitude = "0";

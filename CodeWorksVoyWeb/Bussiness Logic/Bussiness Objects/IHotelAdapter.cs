@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 using CodeWorkVoyWebService.Models.CubaData;
 
 public interface IHotelAdapter
 {
     List<HotelObj> getAllHotels();
-    CardObj getCardFromHotel(int hotelId);
+    HotelCardObj getCardFromHotel(int hotelId);
     string getHotelAllInc(int hid);
     string getHotelBoardBasis(int hid);
     string getHotelDesc(int selectedHotelID);

@@ -15,6 +15,7 @@ namespace CodeWorksVoyWebService.Services
 
         private IMemoryCache cache;
         private IConfiguration configuration;
+        private int accessCounter=0;
 
         public SessionObjectsService(IMemoryCache cache, IConfiguration configuration)
         {
@@ -24,6 +25,7 @@ namespace CodeWorksVoyWebService.Services
 
         public ISessionObject getSessionObject(string userHashId) {
             SessionObject sessionObject = null;
+            accessCounter++;
             sessionObject= FactoryUtils.CheckCache<SessionObject>(ref cache, sessionObject, "SessionObject" + userHashId);
             sessionObject.Configuration=configuration;
             return sessionObject;
