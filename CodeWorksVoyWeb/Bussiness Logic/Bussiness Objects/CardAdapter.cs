@@ -12,6 +12,7 @@ using CodeWorkVoyWebService.Models.WebData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 
 namespace CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects
 {
@@ -52,8 +53,8 @@ namespace CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects
            
             foreach (PRSelection pRSelection in pRSelections)
             {
-                CardObj placeCard = new CardObj();
-                CardObj hotelCard = new CardObj();
+                PlaceCardObj placeCard = new PlaceCardObj();
+                HotelCardObj hotelCard = new HotelCardObj();
                 placeCard = _placeAdapter.getCardFromPlace(pRSelection.PlaceID);
                 hotelCard = _hotelAdapter.getCardFromHotel(pRSelection.HotelID);
                 pRSelection.HotelCard = hotelCard;

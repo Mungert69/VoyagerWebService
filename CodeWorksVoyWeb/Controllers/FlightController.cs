@@ -22,7 +22,7 @@ namespace CodeWorkVoyWebService.Controllers
         private IHotelAdapter _hotelAdapter;
         private IPlaceAdapter _placeAdapter;
         private ITransferAdapter _transferAdapter;
-        private string userHashId = "xxxx";
+        //private string userHashId = "xxxx";
 
         public FlightController(ISessionObjectsService sessionObjectsService, IItineraryService itineraryService, IHotelAdapter hotelAdapter, IPlaceAdapter placeAdapter, IFlightAdapter flightAdapter, IPriceService priceService, ITransferAdapter transferAdapter)
         {
@@ -45,27 +45,27 @@ namespace CodeWorkVoyWebService.Controllers
         }
 
 
-        [HttpGet("GetAirports/{id}")]
-        public IActionResult GetAirports([FromRoute] int id)
+        [HttpGet("GetAirports/{id}/{userId}")]
+        public IActionResult GetAirports([FromRoute] int id, [FromRoute] string userId)
         {
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             sessionObject.Flight.SupplierID = id;
             return Ok(_flightAdapter.getAirportsByAID(id));
 
         }
 
-        [HttpGet("GetAirlines")]
-        public IActionResult GetAirlines()
+        [HttpGet("GetAirlines/{userId}")]
+        public IActionResult GetAirlines( [FromRoute] string userId)
         {
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             return Ok(_flightAdapter.getAirlines(sessionObject.CountryFlag));
 
         }
 
-        [HttpGet("GetOutFlight/{id}")]
-        public IActionResult GetOutFlights([FromRoute] string id)
+        [HttpGet("GetOutFlight/{id}/{userId}")]
+        public IActionResult GetOutFlights([FromRoute] string id, [FromRoute] string userId)
         {
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             sessionObject.Flight.DepartAirport = id;
             DateTime SelectedDate = DateTime.Now;
             DateTime startDate = SelectedDate.AddDays(-30d);
@@ -73,14 +73,14 @@ namespace CodeWorkVoyWebService.Controllers
 
 
             List<FlightObj> flightObjs = _flightAdapter.getOutFlightsByDateRangeForward(sessionObject.Flight.SupplierID, SelectedDate, endDate);
-            _sessionObjectsService.setSessionObject(userHashId, sessionObject);
+            _sessionObjectsService.setSessionObject(userId, sessionObject);
             return Ok(flightObjs);
         }
 
-        [HttpGet("GetInFlight/{id}/{id2}")]
-        public IActionResult getInFlights([FromRoute] int id, [FromRoute] string id2)
+        [HttpGet("GetInFlight/{id}/{id2}/{userId}")]
+        public IActionResult getInFlights([FromRoute] int id, [FromRoute] string id2, [FromRoute] string userId)
         {
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             sessionObject.Flight.OutFlightID = id;
             sessionObject.Flight.StartDate = Convert.ToDateTime(id2);
 
@@ -90,54 +90,54 @@ namespace CodeWorkVoyWebService.Controllers
 
 
             List<FlightObj> flightObjs = _flightAdapter.getInFlightsByDateRangeForward(sessionObject.Flight.SupplierID, SelectedDate, endDate);
-            _sessionObjectsService.setSessionObject(userHashId, sessionObject);
+            _sessionObjectsService.setSessionObject(userId, sessionObject);
             return Ok(flightObjs);
         }
 
-        [HttpGet("GetCost/{id}/{id2}")]
-        public IActionResult GetCost([FromRoute] int id, [FromRoute] string id2)
+        [HttpGet("GetCost/{id}/{id2}/{userId}")]
+        public IActionResult GetCost([FromRoute] int id, [FromRoute] string id2, [FromRoute] string userId)
         {
             StringBuilder message = new StringBuilder();
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             sessionObject.Flight.InFlightID = id;
             sessionObject.Flight.EndDate = Convert.ToDateTime(id2);
             TimeSpan span = sessionObject.Flight.EndDate - sessionObject.Flight.StartDate;
             sessionObject.SelectedNights = Convert.ToInt32(span.TotalDays);
-            _sessionObjectsService.setSessionObject(userHashId, sessionObject);
-            message.Append(CheckLastHop());
-            if (!testNightsEqual())
+            _sessionObjectsService.setSessionObject(userId, sessionObject);
+            message.Append(CheckLastHop(userId));
+            if (!testNightsEqual(userId))
             {
                 message.Append(" Nights not equal");
                 return Ok(JsonUtils.ConvertJsonStr(message.ToString()));
             };
-            decimal cost = getPrice();
+            decimal cost = getPrice(userId);
             //DateTime SelectedDate = _sessionObjects.Flight.StartDate;
             return Ok(JsonUtils.ConvertJsonStr(message.ToString() + " Cost is : " + cost));
         }
 
-        [HttpGet("GetCost")]
-        public IActionResult GetCost()
+        [HttpGet("GetCost/{userId}")]
+        public IActionResult GetCost( [FromRoute] string userId)
         {
             StringBuilder message = new StringBuilder();
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             TimeSpan span = sessionObject.Flight.EndDate - sessionObject.Flight.StartDate;
             sessionObject.SelectedNights = Convert.ToInt32(span.TotalDays);
-            _sessionObjectsService.setSessionObject(userHashId, sessionObject);
-            message.Append(CheckLastHop());
-            if (!testNightsEqual())
+            _sessionObjectsService.setSessionObject(userId, sessionObject);
+            message.Append(CheckLastHop(userId));
+            if (!testNightsEqual(userId))
             {
                 message.Append(" Nights not equal");
                 return Ok(JsonUtils.ConvertJsonStr(message.ToString()));
             };
-            decimal cost = getPrice();
+            decimal cost = getPrice(userId);
             //DateTime SelectedDate = _sessionObjects.Flight.StartDate;
             return Ok(JsonUtils.ConvertJsonStr(message.ToString() + " Cost is : " + cost));
         }
 
-        public string CheckLastHop()
+        public string CheckLastHop(string userId)
         {
             string message = "";
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             _itineraryService.SessionObject = sessionObject;
             if (sessionObject.Flight.DepartAirportID == -1)
             {
@@ -164,7 +164,7 @@ namespace CodeWorkVoyWebService.Controllers
                     if (_transferAdapter.lastHopAirport(sessionObject.Flight.DepartAirportID, lastPlaceID, sessionObject.WithCar))
                     {
                         _itineraryService.addFinalTransferNode(sessionObject.Flight.DepartAirportID);
-                        _sessionObjectsService.setSessionObject(userHashId, sessionObject);
+                        _sessionObjectsService.setSessionObject(userId, sessionObject);
                         // _sessionObjects.PageStates.FinishSelected = true;
                         message = "We have added another day to your itinerary so that you can connect with your return flight.";
 
@@ -182,7 +182,7 @@ namespace CodeWorkVoyWebService.Controllers
                     if (_transferAdapter.lastHopAirport(sessionObject.Flight.DepartAirportID, lastPlaceID, sessionObject.WithCar))
                     {
                         _itineraryService.addFinalTransferNode(sessionObject.Flight.DepartAirportID);
-                        _sessionObjectsService.setSessionObject(userHashId, sessionObject);
+                        _sessionObjectsService.setSessionObject(userId, sessionObject);
                         return "Itinerary Complete.";
                         //_sessionObjects.PageStates.FinishSelected = true;
                     }
@@ -226,7 +226,7 @@ namespace CodeWorkVoyWebService.Controllers
 
                         message = "You can not get back to the airport in one day. Last night in Havana has been added. You can now Change the new Hotel or Just Finish and Get Price ";
                         //ErrorBox.Visible = true;
-                        _sessionObjectsService.setSessionObject(userHashId, sessionObject);
+                        _sessionObjectsService.setSessionObject(userId, sessionObject);
                         return message;
                         //PageStates.FinishSelected = true;
                         //Response.Redirect("builder"+Country+".aspx?place=" + SelectedPlace + "&hotel=" + SelectedHotel);
@@ -239,25 +239,25 @@ namespace CodeWorkVoyWebService.Controllers
         }
 
 
-        private decimal getPrice()
+        private decimal getPrice(string userId)
         {
             decimal price = 0;
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             // Get and display a Price.
             sessionObject.UserItinID = 0;
             _priceService.SessionObject=sessionObject;
            
             price= _priceService.getPrice();
-            _sessionObjectsService.setSessionObject(userHashId, sessionObject);
+            _sessionObjectsService.setSessionObject(userId, sessionObject);
             return price;
 
 
             //Response.Redirect("Detail.aspx");
         }
-        private bool testNightsEqual()
+        private bool testNightsEqual(string userId)
         {
             int totalNights = 0;
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             if (sessionObject.PRSelections == null) return false;
 
             foreach (PRSelection sel in sessionObject.PRSelections)

@@ -39,13 +39,14 @@ namespace CodeWorksVoyWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddSessionStateTempDataProvider();
             services.AddMemoryCache();
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAnyOrigin",
                     builder => builder.AllowAnyOrigin());
             });
+
 
             var conCubaData = @"Server=DEVELOP\CODEWORKS;Database=CubaData;Trusted_Connection=True;ConnectRetryCount=0";
             services.AddDbContext<CubaDataContext>(options => options.UseSqlServer(conCubaData));
@@ -93,7 +94,7 @@ namespace CodeWorksVoyWeb
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller}/{action=Index}/{id?}/{id2?}");
+                    template: "{controller}/{action=Index}/{id?}/{id2?}/{id3?}");
             });
         }
     }

@@ -32,7 +32,7 @@ namespace CodeWorkVoyWebService.Controllers
         private IUserItinAdapter _userItinAdapter;
         private ITransferAdapter _transferAdapter;
         private IMapService _mapService;
-        private string userHashId="xxxx";
+        //private string userHashId="xxxx";
 
         public ItineraryController(ISessionObjectsService sessionObjectsService, IItineraryService itineraryService, IHotelAdapter hotelAdapter, IPlaceAdapter placeAdapter, ICardAdapter cardAdapter, IUserItinAdapter userItinAdapter, ITransferAdapter transferAdapter, IMapService mapService)
         {
@@ -49,30 +49,35 @@ namespace CodeWorkVoyWebService.Controllers
 
 
         // GET: api/Itinerary/ItinObj/30058/43
-        [HttpGet("ItinObj/{id}/{templateTypeId}")]
-        public ItinObj GetItinObj([FromRoute] string id, [FromRoute] int templateTypeId)
+        [HttpGet("ItinObj/{id}/{templateTypeId}/{userId}")]
+        public ItinObj GetItinObj([FromRoute] string id, [FromRoute] int templateTypeId, [FromRoute] string userId)
         {
 
-            return ItinObj(id, templateTypeId, false);
+            return ItinObj(id, templateTypeId, false, userId);
         }
 
         // GET: api/Itinerary/ViewItinObj/30058/43
         [HttpGet("ViewItinObj/{id}/{templateTypeId}")]
         public ItinObj GetViewItinObj([FromRoute] string id, [FromRoute] int templateTypeId)
         {
-            return ItinObj(id, templateTypeId, true);
+            return ItinObj(id, templateTypeId, true,null);
 
         }
 
 
-        private ItinObj ItinObj(string id, int templateTypeId, bool isView)
+        private ItinObj ItinObj(string id, int templateTypeId, bool isView, string userId)
         {
             //TODO write UserData code
+            ItinObj itinObj = new ItinObj();
+
+            // Prevent buffer over run.
+            if ((userId !=null && userId.Length > 36) || id.Length>10 ) return itinObj;
             CardObj card = new CardObj();
-            List<PRSelection> pRSelections = new List<PRSelection>();
+
+            List <PRSelection> pRSelections = new List<PRSelection>();
             List<TransferNode> transferNodes = new List<TransferNode>();
             List<string> transferStrings = new List<string>();
-            ItinObj itinObj = new ItinObj();
+            
             if (id != "0")
             {
                 _userItinAdapter.AdminTemplate = true;
@@ -95,7 +100,7 @@ namespace CodeWorkVoyWebService.Controllers
 
                 if (!isView)
                 {
-                    ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+                    ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
                     sessionObject.PRSelections = pRSelections;
                     sessionObject.TransferNodes = transferNodes;
                     sessionObject.SelectedPlaceID = sessionObject.PRSelections[sessionObject.PRSelections.Count - 1].PlaceID;
@@ -106,7 +111,7 @@ namespace CodeWorkVoyWebService.Controllers
                     sessionObject.SelectedIndex = sessionObject.PRSelections.Count - 1;
                     sessionObject.Flight.ArriveAirportID = sessionObject.ArrivalAirportID;
                     sessionObject.Flight.DepartAirportID = sessionObject.DepartAirportID;
-                    _sessionObjectsService.setSessionObject(userHashId, sessionObject);
+                    _sessionObjectsService.setSessionObject(userId, sessionObject);
                 }
             }
 
@@ -117,10 +122,10 @@ namespace CodeWorkVoyWebService.Controllers
 
 
         // GET: api/Itinerary/StoredItinObj
-        [HttpGet("StoredItinObj")]
-        public StoredItinObj GetStoredItinObj()
+        [HttpGet("StoredItinObj/{userId}")]
+        public StoredItinObj GetStoredItinObj([FromRoute] string userId)
         {
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             //JsonUtils.writeJsonObjectToFile("sessionObjects-StoredItinBefore.json", _sessionObjects);
             CardObj card = new CardObj();
             List<PRSelection> pRSelections = sessionObject.PRSelections;
@@ -212,65 +217,65 @@ namespace CodeWorkVoyWebService.Controllers
 
 
 
-        [HttpGet("TotalNights")]
-        public IActionResult GetTotalNights()
+        [HttpGet("TotalNights/{userId}")]
+        public IActionResult GetTotalNights([FromRoute] string userId)
         {
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             return Ok(sessionObject.SelectedNights);
 
         }
 
-        public void deleteLastTransferNode()
+        public void deleteLastTransferNode(string userId)
         {
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             List<TransferNode> tempNodes = sessionObject.TransferNodes;
             if (tempNodes.Count == 0) return;
             tempNodes.RemoveAt(tempNodes.Count - 1);
 
-            _sessionObjectsService.setSessionObject(userHashId, sessionObject);
+            _sessionObjectsService.setSessionObject(userId, sessionObject);
         }
 
 
-        public void deleteLastHR()
+        public void deleteLastHR(string userId)
         {
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             List<PRSelection> tempSelections = sessionObject.PRSelections;
             if (tempSelections.Count == 0) return;
             tempSelections.RemoveAt(tempSelections.Count - 1);
-            _sessionObjectsService.setSessionObject(userHashId, sessionObject);
+            _sessionObjectsService.setSessionObject(userId, sessionObject);
 
         }
-        [HttpGet("AddNight/{id}")]
-        public IActionResult AddNight([FromRoute] int id)
+        [HttpGet("AddNight/{id}/{userId}")]
+        public IActionResult AddNight([FromRoute] int id, [FromRoute] string userId)
         {
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             sessionObject.PRSelections[id].Nights = sessionObject.PRSelections[id].Nights + 1;
-            _sessionObjectsService.setSessionObject(userHashId, sessionObject);
+            _sessionObjectsService.setSessionObject(userId, sessionObject);
             return Ok(JsonUtils.ConvertJsonStr("Night added"));
         }
 
 
 
-        [HttpGet("RemoveNight/{id}")]
-        public IActionResult RemoveNight([FromRoute] int id)
+        [HttpGet("RemoveNight/{id}/{userId}")]
+        public IActionResult RemoveNight([FromRoute] int id, [FromRoute] string userId)
         {
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
 
             sessionObject.PRSelections[id].Nights = sessionObject.PRSelections[id].Nights - 1;
             if (sessionObject.PRSelections[id].Nights <= 1) { sessionObject.PRSelections[id].Nights = 1; }
             //JsonUtils.writeJsonObjectToFile("pRSelections-RemoveNight.json", _sessionObjects.PRSelections);
-            _sessionObjectsService.setSessionObject(userHashId, sessionObject);
+            _sessionObjectsService.setSessionObject(userId, sessionObject);
             return Ok(JsonUtils.ConvertJsonStr("Night removed"));
         }
 
-        [HttpGet("DelHotel")]
-        public IActionResult DelHotel()
+        [HttpGet("DelHotel/{userId}")]
+        public IActionResult DelHotel([FromRoute] string userId)
         {
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
 
             // Remove last Place hotel and transfer node.
-            deleteLastTransferNode();
-            deleteLastHR();
+            deleteLastTransferNode(userId);
+            deleteLastHR(userId);
 
             // Set selected place and withcar to last place.
             if (sessionObject.PRSelections.Count > 0)
@@ -286,7 +291,7 @@ namespace CodeWorkVoyWebService.Controllers
                 sessionObject.PageStates.FirstPlaceSelected = false;
                 sessionObject.SelectedIndex = -1;
             }
-            _sessionObjectsService.setSessionObject(userHashId, sessionObject);
+            _sessionObjectsService.setSessionObject(userId, sessionObject);
 
             return Ok(JsonUtils.ConvertJsonStr("Last hop deleted"));
             // Rebuild map.
@@ -300,10 +305,10 @@ namespace CodeWorkVoyWebService.Controllers
         }
 
 
-        [HttpGet("AddHotel/{id}/{id2}")]
-        public IActionResult AddHotel([FromRoute] int id, [FromRoute] int id2)
+        [HttpGet("AddHotel/{id}/{id2}/{userId}")]
+        public IActionResult AddHotel([FromRoute] int id, [FromRoute] int id2, [FromRoute] string userId)
         {
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userHashId);
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             _itineraryService.SessionObject = sessionObject;
             sessionObject.SelectedPlaceID = id;
             sessionObject.SelectedPlace = _placeAdapter.getPlaceName(id);
@@ -370,7 +375,7 @@ namespace CodeWorkVoyWebService.Controllers
             //TemplateChangedLabel.Visible = IsTemplateChanged;
             //Response.Redirect("TripBuilder.aspx?place=" + SelectedPlace + "&hotel=" + SelectedHotel);
 
-            _sessionObjectsService.setSessionObject(userHashId, sessionObject);
+            _sessionObjectsService.setSessionObject(userId, sessionObject);
             return Ok(JsonUtils.ConvertJsonStr("Itin added"));
 
         }
