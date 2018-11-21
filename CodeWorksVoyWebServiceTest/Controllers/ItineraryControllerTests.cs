@@ -67,7 +67,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             List<PRSelection> prSelections = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./TestObjects/pRSelections.json");
             List<TransferNode> transferNodes = JsonUtils.getJsonObjectFromFile<List<TransferNode>>("./TestObjects/transferNodes.json");
             CodeWorkVoyWebService.Models.WebData.UserItinerary userItin = JsonUtils.getJsonObjectFromFile<CodeWorkVoyWebService.Models.WebData.UserItinerary>("./TestObjects/userItin.json");
-            List<string> transferStrings = JsonUtils.getJsonObjectFromFile<List<string>>("./TestObjects/transferStrings.json");
+            List<TransferNodeItem> transferNodeItems = JsonUtils.getJsonObjectFromFile<List<TransferNodeItem>>("./TestObjects/transferNodeItems.json");
             List<PlaceState> placeStates = JsonUtils.getJsonObjectFromFile<List<PlaceState>>("./TestObjects/placeStates.json");
             IConfiguration config = TestContainerConfig.InitConfiguration();
              sessionObjects= new SessionObject(config);
@@ -81,7 +81,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             this.mockCardAdapter.SetReturnsDefault<List<PRSelection>>(prSelections);
             this.mockUserItinAdapter.SetReturnsDefault<List<TransferNode>>(transferNodes);       
             this.mockTransferAdapter.SetupAllProperties();
-            this.mockTransferAdapter.SetReturnsDefault<List<string>>(transferStrings);
+            this.mockTransferAdapter.SetReturnsDefault<List<TransferNodeItem>>(transferNodeItems);
             this.mockMapService.SetReturnsDefault<List<PlaceState>>(placeStates);
             this.mockSessionObjectsService.SetReturnsDefault<ISessionObject>(sessionObjects);
 

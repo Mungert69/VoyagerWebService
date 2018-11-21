@@ -33,7 +33,7 @@ namespace CodeWorkVoyWebService.Controllers
         private ITransferAdapter _transferAdapter;
         private IMapService _mapService;
         //private string userHashId="xxxx";
-        private bool createTestJsonFiles =false;
+        private bool createTestJsonFiles =true;
 
         public ItineraryController(ISessionObjectsService sessionObjectsService, IItineraryService itineraryService, IHotelAdapter hotelAdapter, IPlaceAdapter placeAdapter, ICardAdapter cardAdapter, IUserItinAdapter userItinAdapter, ITransferAdapter transferAdapter, IMapService mapService)
         {
@@ -77,8 +77,7 @@ namespace CodeWorkVoyWebService.Controllers
 
             List <PRSelection> pRSelections = new List<PRSelection>();
             List<TransferNode> transferNodes = new List<TransferNode>();
-            List<string> transferStrings = new List<string>();
-            
+             
             if (id != "0")
             {
                 _userItinAdapter.AdminTemplate = true;
@@ -91,14 +90,11 @@ namespace CodeWorkVoyWebService.Controllers
                 if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("pRSelections.json", pRSelections);
 
                 transferNodes = _userItinAdapter.getTransfersNodes(card.ItinId);
-                if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("transferNodes.json", transferNodes);
-                transferStrings = _transferAdapter.getTransferStrings(transferNodes);
-                if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("transferStrings.json", transferStrings);
-
+                //List<TransferNodeItem>  transferNodeItems = _transferAdapter.getTransferNodeItems(transferNodes);
+               
                 itinObj.Card = card;
                 itinObj.PRSelections = pRSelections;
-                itinObj.TransferItems = transferStrings;
-                itinObj.TransferNodes = transferNodes;
+                //itinObj.TransferNodeItems = transferNodeItems;
 
                 if (!isView)
                 {
@@ -134,8 +130,9 @@ namespace CodeWorkVoyWebService.Controllers
             pRSelections = _cardAdapter.updateSelectionWithCards(pRSelections);
 
             List<TransferNode> transferNodes = sessionObject.TransferNodes;
-            List<string> transferStrings = new List<string>();
-            transferStrings = _transferAdapter.getTransferStrings(transferNodes);
+            List<TransferNodeItem>  transferNodeItems = _transferAdapter.getTransferNodeItems(transferNodes);
+            if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("transferNodeItems.json", transferNodeItems);
+
 
             // Update placeStates in sessionObject.
 
@@ -148,7 +145,7 @@ namespace CodeWorkVoyWebService.Controllers
             card.Title = "User Itinerary";
             itinObj.Card = card;
             itinObj.PRSelections = pRSelections;
-            itinObj.TransferItems = transferStrings;
+            itinObj.TransferNodeItems = transferNodeItems;
             itinObj.PlaceStates = placeStates;
             if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("storedItinObj.json", itinObj);
 

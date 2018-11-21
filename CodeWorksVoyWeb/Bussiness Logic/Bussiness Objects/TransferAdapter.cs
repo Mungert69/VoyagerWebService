@@ -12,6 +12,7 @@ using CodeWorkVoyWebService.Models.CubaData;
 using Microsoft.EntityFrameworkCore;
 using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
 using Microsoft.Extensions.Caching.Memory;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 /// <summary>
 /// Summary description for TransferAdapter
 /// </summary>
@@ -36,6 +37,21 @@ public class TransferAdapter : ITransferAdapter
             transferStrings.Add(getTransfers(node.TransferID).TransferItem1);
         }
         return transferStrings;
+    }
+
+    public List<TransferNodeItem> getTransferNodeItems(List<TransferNode> transferNodes)
+    {
+        List<TransferNodeItem> transferNodeItems = new List<TransferNodeItem>();
+        TransferNodeItem transferNodeItem;
+        foreach (TransferNode node in transferNodes)
+        {
+            transferNodeItem = new TransferNodeItem();
+            transferNodeItem.TransferID = node.TransferID;
+            transferNodeItem.WithCar = node.WithCar;
+            transferNodeItem.TransferItem = getTransfers(node.TransferID);
+            transferNodeItems.Add(transferNodeItem);
+        }
+        return transferNodeItems;
     }
     public void setDefaultTransfer(string placeOrigin, string placeDestination) {
         /*
