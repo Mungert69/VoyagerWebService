@@ -6,6 +6,7 @@ using System.Web;
 
 using System.Xml.Linq;
 using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 
 /// <summary>
 /// Summary description for PHSelection
@@ -59,12 +60,12 @@ public class PRSelection
         set { placeID = value; }
     }
 
-    public CardObj PlaceCard { get => placeCard; set => placeCard = value; }
-    public CardObj HotelCard { get => hotelCard; set => hotelCard = value; }
+    public PlaceCardObj PlaceCard { get => placeCard; set => placeCard = value; }
+    public HotelCardObj HotelCard { get => hotelCard; set => hotelCard = value; }
     //public TransferObj Transfer { get => transfer; set => transfer = value; }
 
-    private CardObj placeCard;
-    private CardObj hotelCard;
+    private PlaceCardObj placeCard;
+    private HotelCardObj hotelCard;
     //private TransferObj transfer;
 
 }

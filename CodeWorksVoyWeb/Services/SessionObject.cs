@@ -60,6 +60,7 @@ public class SessionObject : ISessionObject
     private const string ISAGENT = "isagent";
     private const string ISSUPERUSER = "issuperuser";
 
+  
     private IConfiguration _Configuration;
     public SessionObject(IConfiguration configuration) {
         Configuration = configuration;

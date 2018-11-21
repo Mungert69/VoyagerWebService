@@ -71,6 +71,8 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             List<PlaceState> placeStates = JsonUtils.getJsonObjectFromFile<List<PlaceState>>("./TestObjects/placeStates.json");
             IConfiguration config = TestContainerConfig.InitConfiguration();
              sessionObjects= new SessionObject(config);
+
+            // Warning you must remove manually the Configration object from Json for SessionObject
             sessionObjects= JsonUtils.getJsonObjectFromFile<SessionObject>("./TestObjects/sessionObjects-StoredItinBefore.json",sessionObjects);
             
             // Setup Mocks 
@@ -123,7 +125,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             // Act
             ItinObj itinObj = unitUnderTest.GetItinObj(
                 id,
-                templateTypeId);
+                templateTypeId, "xxxx");
             ItinObj itinObjX = JsonUtils.getJsonObjectFromFile<ItinObj>("./TestObjects/itinObj.json");
             CompareLogic compareLogic = new CompareLogic();
             ComparisonResult result = compareLogic.Compare(itinObjX, itinObj);
@@ -144,7 +146,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             var unitUnderTest = itineraryController_StoredItinObj;
 
             // Act
-            StoredItinObj itinObj = unitUnderTest.GetStoredItinObj();
+            StoredItinObj itinObj = unitUnderTest.GetStoredItinObj("xxxx");
             StoredItinObj itinObjX = JsonUtils.getJsonObjectFromFile<StoredItinObj>("./TestObjects/storedItinObj.json");
             CompareLogic compareLogic = new CompareLogic();
             ComparisonResult result = compareLogic.Compare(itinObjX, itinObj);
@@ -168,7 +170,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
 
             // Act
             
-            unitUnderTest.RemoveNight(3);
+            unitUnderTest.RemoveNight(1,"xxxx");
             List<PRSelection> pRSelections =sessionObjects.PRSelections;
             List<PRSelection> pRSelectionsX = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./TestObjects/pRSelections-RemoveNight.json");
             CompareLogic compareLogic = new CompareLogic();
