@@ -89,15 +89,18 @@ namespace CodeWorkVoyWebService.Controllers
                 pRSelections = _cardAdapter.updateSelectionWithCards(pRSelections);
                 if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("pRSelections.json", pRSelections);
 
-                transferNodes = _userItinAdapter.getTransfersNodes(card.ItinId);
-                //List<TransferNodeItem>  transferNodeItems = _transferAdapter.getTransferNodeItems(transferNodes);
-               
+
                 itinObj.Card = card;
                 itinObj.PRSelections = pRSelections;
-                //itinObj.TransferNodeItems = transferNodeItems;
+
 
                 if (!isView)
                 {
+                    transferNodes = _userItinAdapter.getTransfersNodes(card.ItinId);
+                    List<TransferNodeItem> transferNodeItems = _transferAdapter.getTransferNodeItems(transferNodes);
+                    if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("transferNodeItems.json", transferNodeItems);
+                    itinObj.TransferNodeItems = transferNodeItems;
+
                     ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
                     sessionObject.PRSelections = pRSelections;
                     sessionObject.TransferNodes = transferNodes;
@@ -131,9 +134,7 @@ namespace CodeWorkVoyWebService.Controllers
 
             List<TransferNode> transferNodes = sessionObject.TransferNodes;
             List<TransferNodeItem>  transferNodeItems = _transferAdapter.getTransferNodeItems(transferNodes);
-            if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("transferNodeItems.json", transferNodeItems);
-
-
+           
             // Update placeStates in sessionObject.
 
             List<PlaceState> placeStates = _mapService.selectHops(sessionObject);
