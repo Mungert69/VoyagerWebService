@@ -61,19 +61,22 @@ public class HotelAdapter : IHotelAdapter
 
         HotelCardObj card = new HotelCardObj();
         int countryId = 0;
+        int placeNameId = 0;
         try
         {
-            var countryVar = hotelsTable  // your starting point - table in the "from" statement
+            var hotelJoinData = hotelsTable  // your starting point - table in the "from" statement
               .Join(_placeAdapter.PlacesTable, // the source table of the inner join
               h => h.Place,
               p => p.PlaceName,        // Select the primary key (the first part of the "on" clause in an sql "join" statement)
                                        // Select the foreign key (the second part of the "on" clause)
                  (h, p) => new { H = h, P = p }) // selection
-              .Where(joined => joined.H.HotelId == hotelId).Select(s => s.P.CountryId).First();
-            countryId = (int)countryVar;
+              .Where(joined => joined.H.HotelId == hotelId).Select(s => new { s.P.CountryId, s.P.PlaceNameId}).First();
+            countryId = (int)hotelJoinData.CountryId;
+            placeNameId = hotelJoinData.PlaceNameId;
         }
         catch {
             countryId = 0;
+            placeNameId = 0;
         }
         CodeWorkVoyWebService.Models.CubaData.Hotels hotel = this.getHotelEntity(hotelId);
 
@@ -92,7 +95,7 @@ public class HotelAdapter : IHotelAdapter
         card.Panel2 = "";
         card.Panel3 = "";
         card.Subtitle = hotel.Place;
-
+        card.PlaceNameId = placeNameId;
         // We are just skipping if there is no data
         try {
             CodeWorkVoyWebService.Models.CubaData.AccommodationRoomSpecification roomSpec = accommodationRoomSpecificationTable.Where(a => a.AccommodationId == hotelId).First();
