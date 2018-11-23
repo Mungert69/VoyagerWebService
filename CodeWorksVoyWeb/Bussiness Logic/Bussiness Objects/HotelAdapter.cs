@@ -60,19 +60,26 @@ public class HotelAdapter : IHotelAdapter
     {
 
         HotelCardObj card = new HotelCardObj();
-
-        var countryId = hotelsTable  // your starting point - table in the "from" statement
-          .Join(_placeAdapter.PlacesTable, // the source table of the inner join
-          h => h.Place,
-          p => p.PlaceName,        // Select the primary key (the first part of the "on" clause in an sql "join" statement)
-                                   // Select the foreign key (the second part of the "on" clause)
-             (h, p) => new { H = h, P = p }) // selection
-          .Where(joined => joined.H.HotelId == hotelId).Select(s => s.P.CountryId).First();
+        int countryId = 0;
+        try
+        {
+            var countryVar = hotelsTable  // your starting point - table in the "from" statement
+              .Join(_placeAdapter.PlacesTable, // the source table of the inner join
+              h => h.Place,
+              p => p.PlaceName,        // Select the primary key (the first part of the "on" clause in an sql "join" statement)
+                                       // Select the foreign key (the second part of the "on" clause)
+                 (h, p) => new { H = h, P = p }) // selection
+              .Where(joined => joined.H.HotelId == hotelId).Select(s => s.P.CountryId).First();
+            countryId = (int)countryVar;
+        }
+        catch {
+            countryId = 0;
+        }
         CodeWorkVoyWebService.Models.CubaData.Hotels hotel = this.getHotelEntity(hotelId);
 
         //ToDo sort out Hotels table so its got placeIDs
         // card.CountryId = _placeAdapter.getCountryId(Convert.ToInt32(hotel.PlaceId));
-        if (countryId != null)
+        if (countryId != 0)
         {
             card.Country = _voyResAdapter.GetCountryById(Convert.ToInt32(countryId));
 
@@ -575,7 +582,7 @@ public class HotelAdapter : IHotelAdapter
         List<HotelObj> hotelObjs = new List<HotelObj>();
 
         //ToDo countries
-        List<CodeWorkVoyWebService.Models.CubaData.Hotels> table = hotelsTable.Where(h => h.UseIt == "Y").Take(100).ToList();
+        List<CodeWorkVoyWebService.Models.CubaData.Hotels> table = hotelsTable.Where(h => h.UseIt == "Y" && h.Web=="Y" && h.Place.ToLower()!="tour").Take(100).ToList();
         foreach (CodeWorkVoyWebService.Models.CubaData.Hotels row in table)
         {
             hotelObjs.Add(new HotelObj(row.Hotel, row.HotelId));
