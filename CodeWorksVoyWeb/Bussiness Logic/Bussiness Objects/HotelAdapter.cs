@@ -85,6 +85,8 @@ public class HotelAdapter : IHotelAdapter
         card.Panel2 = "";
         card.Panel3 = "";
         card.Subtitle = hotel.Place;
+
+        // We are just skipping if there is no data
         try {
             CodeWorkVoyWebService.Models.CubaData.AccommodationRoomSpecification roomSpec = accommodationRoomSpecificationTable.Where(a => a.AccommodationId == hotelId).First();
             card.AccommodationRoomSpecification = roomSpec;
@@ -98,8 +100,12 @@ public class HotelAdapter : IHotelAdapter
         }
         catch { }
        
-        CodeWorkVoyWebService.Models.CubaData.AccommodationCharacteristics accomCharTable = accommodationCharacteristicsTable.Where(a => a.AccommodationId == hotelId).First();
-        card.AccommodationCharacteristics = accomCharTable;
+        try
+        {
+            CodeWorkVoyWebService.Models.CubaData.AccommodationCharacteristics accomCharTable = accommodationCharacteristicsTable.Where(a => a.AccommodationId == hotelId).First();
+            card.AccommodationCharacteristics = accomCharTable;
+        }
+        catch { }
         try {
             CodeWorkVoyWebService.Models.CubaData.AccommodationAllInclusiveFacilities accomAllIncTable = accommodationAllInclusiveFacilitiesTable.Where(a => a.AccommodationId == hotelId).First();
             card.AccommodationAllInclusiveFacilities = accomAllIncTable;
@@ -569,7 +575,7 @@ public class HotelAdapter : IHotelAdapter
         List<HotelObj> hotelObjs = new List<HotelObj>();
 
         //ToDo countries
-        List<CodeWorkVoyWebService.Models.CubaData.Hotels> table = hotelsTable.Where(h => h.UseIt == "Y").Take(10).ToList();
+        List<CodeWorkVoyWebService.Models.CubaData.Hotels> table = hotelsTable.Where(h => h.UseIt == "Y").Take(100).ToList();
         foreach (CodeWorkVoyWebService.Models.CubaData.Hotels row in table)
         {
             hotelObjs.Add(new HotelObj(row.Hotel, row.HotelId));
