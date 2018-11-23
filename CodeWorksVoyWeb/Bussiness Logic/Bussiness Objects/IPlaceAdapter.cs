@@ -1,6 +1,5 @@
-﻿using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
-using System.Collections.Generic;
-using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
+﻿using System.Collections.Generic;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 using CodeWorkVoyWebService.Models.CubaData;
 
 public interface IPlaceAdapter
@@ -22,7 +21,7 @@ public interface IPlaceAdapter
     string getPlaceNight(int selectedPlaceID);
     string getPlacePicName(int placeID);
     List<string> getPlacePics(int selectedPlaceID);
-    List<PlaceObj> getPlaces(bool orderAlphabetic);
+    List<PlaceObj> getPlaces(bool orderAlphabetic, int countryId);
     List<PlaceObj> getPlacesByCountry(int countryID);
     string getPlaceSEO(int selectedPlaceID);
     string getPlaceShortInfo(int selectedPlaceID);

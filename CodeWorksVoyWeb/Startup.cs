@@ -41,6 +41,7 @@ namespace CodeWorksVoyWeb
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddSessionStateTempDataProvider();
             services.AddMemoryCache();
+            services.AddResponseCompression();
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAnyOrigin",
@@ -87,7 +88,7 @@ namespace CodeWorksVoyWeb
             {
                 app.UseHsts();
             }
-
+            app.UseResponseCompression();
             app.UseCors("AllowAnyOrigin");
             app.UseHttpsRedirection();
             app.UseMvc(routes =>

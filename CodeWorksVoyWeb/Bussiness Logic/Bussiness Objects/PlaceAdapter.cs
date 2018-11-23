@@ -216,18 +216,18 @@ public class PlaceAdapter : IPlaceAdapter
         return countryName;
     }
 */
-    public  List<PlaceObj> getPlaces(bool orderAlphabetic){
+    public  List<PlaceObj> getPlaces(bool orderAlphabetic, int countryId){
         List<PlaceObj> placeObjs = new List<PlaceObj>();
 
         // PlacesTableAdapter adapt = new PlacesTableAdapter();
         List<CodeWorkVoyWebService.Models.CubaData.Places> table;
         
         if (orderAlphabetic) {
-            table  = placesTable.Where(p => p.UseIt == "Y"  && p.ZoomLevel>0 ).OrderBy(p => p.PlaceName).ToList();
+            table  = placesTable.Where(p => p.UseIt == "Y"  && p.ZoomLevel>0 && p.CountryId==countryId).OrderBy(p => p.PlaceName).ToList();
         }
         else
         {
-             table  = placesTable.Where(p => p.UseIt == "Y" && p.ZoomLevel > 0).ToList();
+             table  = placesTable.Where(p => p.UseIt == "Y" && p.ZoomLevel > 0 && p.CountryId == countryId).ToList();
         }
 
         foreach (CodeWorkVoyWebService.Models.CubaData.Places row in table)

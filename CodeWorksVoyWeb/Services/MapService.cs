@@ -93,7 +93,7 @@ public class MapService : IMapService
     {
         // PlaceAdapter placeAdapter = new PlaceAdapter();
         //TransferAdapter transferAdapter = new TransferAdapter();
-        List<PlaceObj> placeObjs = _placeAdapter.getPlaces(false);
+        List<PlaceObj> placeObjs = _placeAdapter.getPlaces(false,1);
 
         if (sessionObj.PlaceStates == null) {
             sessionObj.PlaceStates = new PlaceStates(placeObjs);

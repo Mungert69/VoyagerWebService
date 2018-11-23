@@ -68,7 +68,7 @@ namespace CodeWorkVoyWebService.Controllers
         public IEnumerable<PlaceCardObj> GetPlaceCards( [FromRoute] int templateTypeId, [FromRoute] int detailLevel)
         {
             //ToDo country code ie (true,1) below
-            List<PlaceObj> places = _placeAdapter.getPlaces(true);
+            List<PlaceObj> places = _placeAdapter.getPlaces(true,1);
             List<PlaceCardObj> cards=new List<PlaceCardObj>();
             foreach (PlaceObj place in places) {
                 cards.Add(getCardFromPlace(place.PlaceID));
@@ -85,7 +85,7 @@ namespace CodeWorkVoyWebService.Controllers
         [HttpGet]
         public IEnumerable<PlaceObj> GetPlaces()
         {
-            return _placeAdapter.getPlaces(true);
+            return _placeAdapter.getPlaces(true,1);
         }
 
     }
