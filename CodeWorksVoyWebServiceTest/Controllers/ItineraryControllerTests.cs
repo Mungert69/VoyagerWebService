@@ -63,7 +63,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
         private void CreateItineraryControllers()
         {
             // Setup concret objects for tests
-            CardObj cardObj = JsonUtils.getJsonObjectFromFile<CardObj>("./TestObjects/card.json");
+            TripCardObj cardObj = JsonUtils.getJsonObjectFromFile<TripCardObj>("./TestObjects/card.json");
             List<PRSelection> prSelections = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./TestObjects/pRSelections.json");
             List<TransferNode> transferNodes = JsonUtils.getJsonObjectFromFile<List<TransferNode>>("./TestObjects/transferNodes.json");
             CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = JsonUtils.getJsonObjectFromFile<CodeWorksVoyWebService.Models.WebData.UserItinerary>("./TestObjects/userItin.json");

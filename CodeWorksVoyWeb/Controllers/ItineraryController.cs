@@ -33,7 +33,7 @@ namespace CodeWorksVoyWebService.Controllers
         private ITransferAdapter _transferAdapter;
         private IMapService _mapService;
         //private string userHashId="xxxx";
-        private bool createTestJsonFiles =false;
+        private bool createTestJsonFiles =true;
 
         public ItineraryController(ISessionObjectsService sessionObjectsService, IItineraryService itineraryService, IHotelAdapter hotelAdapter, IPlaceAdapter placeAdapter, ICardAdapter cardAdapter, IUserItinAdapter userItinAdapter, ITransferAdapter transferAdapter, IMapService mapService)
         {
@@ -97,6 +97,8 @@ namespace CodeWorksVoyWebService.Controllers
                 if (!isView)
                 {
                     transferNodes = _userItinAdapter.getTransfersNodes(card.ItinId);
+                    if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("transferNodes.json", transferNodes);
+
                     List<TransferNodeItem> transferNodeItems = _transferAdapter.getTransferNodeItems(transferNodes);
                     if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("transferNodeItems.json", transferNodeItems);
                     itinObj.TransferNodeItems = transferNodeItems;

@@ -9,11 +9,11 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
     public class ItinObj
     {
 
-        private CardObj card;
+        private TripCardObj card;
         private List<PRSelection> pRSelections;
         private List<TransferNodeItem> transferNodeItems;
 
-        public CardObj Card { get => card; set => card = value; }
+        public TripCardObj Card { get => card; set => card = value; }
         public List<PRSelection> PRSelections { get => pRSelections; set => pRSelections = value; }
         public List<TransferNodeItem> TransferNodeItems { get => transferNodeItems; set => transferNodeItems = value; }
     }
