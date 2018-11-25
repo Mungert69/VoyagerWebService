@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace CodeWorkVoyWebService.Models.UserData
+namespace CodeWorksVoyWebService.Models.UserData
 {
     public partial class UserDataContext : DbContext
     {

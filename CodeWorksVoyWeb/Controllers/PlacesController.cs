@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
-using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 
 
-namespace CodeWorkVoyWebService.Controllers
+namespace CodeWorksVoyWebService.Controllers
 {
     [Route("api/[controller]")]
     [EnableCors("AllowAnyOrigin")]
@@ -48,11 +48,11 @@ namespace CodeWorkVoyWebService.Controllers
 
         // GET: api/Places/StyleCards/43
         [HttpGet("StyleCards/{templateTypeId}")]
-        public IEnumerable<CodeWorkVoyWebService.Models.WebData.Card> GetPlaceStyleCards([FromRoute] int templateTypeId)
+        public IEnumerable<CodeWorksVoyWebService.Models.WebData.Card> GetPlaceStyleCards([FromRoute] int templateTypeId)
         {
             //ToDo country code ie (true,1) below
            
-            List<CodeWorkVoyWebService.Models.WebData.Card> styleCards = new List<CodeWorkVoyWebService.Models.WebData.Card>();
+            List<CodeWorksVoyWebService.Models.WebData.Card> styleCards = new List<CodeWorksVoyWebService.Models.WebData.Card>();
             styleCards=_cardAdapter.GetStyleCards(templateTypeId);
                
 

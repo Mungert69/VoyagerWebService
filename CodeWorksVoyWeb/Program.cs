@@ -18,7 +18,7 @@ namespace CodeWorksVoyWeb
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args).UseUrls("http://50.25.0.31:10202/")
+            WebHost.CreateDefaultBuilder(args).UseUrls("http://127.0.0.1:10202/")
                 .UseStartup<Startup>();
 
     }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using CodeWorkVoyWebService.Bussiness_Logic.Utils;
-using CodeWorkVoyWebService.Services;
+using CodeWorksVoyWebService.Bussiness_Logic.Utils;
+using CodeWorksVoyWebService.Services;
 using CodeWorksVoyWebService.Services;
 
-namespace CodeWorkVoyWebService.Controllers
+namespace CodeWorksVoyWebService.Controllers
 {
     [Route("api/[controller]")]
     [EnableCors("AllowAnyOrigin")]

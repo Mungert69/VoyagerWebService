@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 
 using System.Xml.Linq;
-using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 
 /// <summary>

@@ -8,8 +8,9 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using System.Text;
-using CodeWorkVoyWebService.Models.CubaData;
-using CodeWorkVoyWebService.Models.VoyagerReserve;
+using CodeWorksVoyWebService.Models.CubaData;
+using CodeWorksVoyWebService.Models.VoyagerReserve;
+using CodeWorksVoyWebService.Models.WebData;
 
 /// <summary>
 /// Summary description for PriceCalc
@@ -21,15 +22,16 @@ public class PriceService : IPriceService
     private ISessionObject sessionObject;
     private CubaDataContext _context;
     private VoyagerReserveContext _contextRes;
+    private WebDataContext _contextWeb;
 
     public ISessionObject SessionObject { get => sessionObject; set => sessionObject = value; }
 
-    public PriceService(VoyagerReserveContext contextRes, IPlaceAdapter placeAdapter, IHotelAdapter hotelAdapter, CubaDataContext context)
+    public PriceService(VoyagerReserveContext contextRes, IPlaceAdapter placeAdapter, IHotelAdapter hotelAdapter, CubaDataContext context, WebDataContext contextWeb)
     {
         _contextRes = contextRes;
         _placeAdapter = placeAdapter;
         _hotelAdapter = hotelAdapter;
-       
+        _contextWeb = contextWeb;
         _context = context;
     }
 
@@ -139,7 +141,7 @@ public class PriceService : IPriceService
     {
         decimal multiplier = 1.30M;
 
-        CodeWorkVoyWebService.Models.CubaData.PriceMultiplyier row= _context.PriceMultiplyier.Where(p => p.Id == centers).First();
+        CodeWorksVoyWebService.Models.CubaData.PriceMultiplyier row= _context.PriceMultiplyier.Where(p => p.Id == centers).First();
         multiplier = Convert.ToDecimal(row.Multiplier);
         return multiplier;
     }
@@ -149,16 +151,16 @@ public class PriceService : IPriceService
         decimal flightCost = 0;
 
 
-        List<CodeWorkVoyWebService.Models.CubaData.FlightCosts> tableOut = _context.FlightCosts.Where(f => f.FlightId == outFlightID && f.UseIt == "Y").ToList();
+        List<CodeWorksVoyWebService.Models.CubaData.FlightCosts> tableOut = _context.FlightCosts.Where(f => f.FlightId == outFlightID && f.UseIt == "Y").ToList();
         //DateTime selectedDateTime = new DateTime();
-        foreach (CodeWorkVoyWebService.Models.CubaData.FlightCosts row in tableOut)
+        foreach (CodeWorksVoyWebService.Models.CubaData.FlightCosts row in tableOut)
         {
             flightCost = Convert.ToDecimal(row.Cost);
         }
         if (flightCost == 0) {
-            List<CodeWorkVoyWebService.Models.VoyagerReserve.Suppliers> suppTable = _contextRes.Suppliers.Where(s => s.SupplierId == supplierId).ToList();
+            List<CodeWorksVoyWebService.Models.VoyagerReserve.Suppliers> suppTable = _contextRes.Suppliers.Where(s => s.SupplierId == supplierId).ToList();
 
-            foreach (CodeWorkVoyWebService.Models.VoyagerReserve.Suppliers row in suppTable)
+            foreach (CodeWorksVoyWebService.Models.VoyagerReserve.Suppliers row in suppTable)
             {
                 flightCost = Convert.ToDecimal(row.DefaultPrice);
             }
@@ -169,8 +171,8 @@ public class PriceService : IPriceService
 
     public decimal getPSC(int supplierID, string airportCode)
     {
-        List<CodeWorkVoyWebService.Models.CubaData.Psc> table = _context.Psc.Where(p => p.DepAirport == airportCode && p.SupplierId == supplierID).ToList();
-        foreach (CodeWorkVoyWebService.Models.CubaData.Psc row in table)
+        List<CodeWorksVoyWebService.Models.CubaData.Psc> table = _context.Psc.Where(p => p.DepAirport == airportCode && p.SupplierId == supplierID).ToList();
+        foreach (CodeWorksVoyWebService.Models.CubaData.Psc row in table)
         {
             return Convert.ToDecimal(row.Dep);
         }
@@ -183,7 +185,7 @@ public class PriceService : IPriceService
         decimal repCharge = 0;
 
 
-        CodeWorkVoyWebService.Models.CubaData.PricesOther row = _context.PricesOther.Where(p => p.Name == "RepCharge").First();
+        CodeWorksVoyWebService.Models.CubaData.PricesOther row = _context.PricesOther.Where(p => p.Name == "RepCharge").First();
 
         repCharge = Convert.ToDecimal(row.Price);
 
@@ -196,7 +198,7 @@ public class PriceService : IPriceService
         // Set apt to supplierID apt price.
         decimal apt = 0;
 
-        CodeWorkVoyWebService.Models.CubaData.Aptrates row = _context.Aptrates.Where(a => a.TaxCode == "ZZ" && a.SupplierId == supplierID).OrderByDescending(a => a.StartDate).First();
+        CodeWorksVoyWebService.Models.CubaData.Aptrates row = _context.Aptrates.Where(a => a.TaxCode == "ZZ" && a.SupplierId == supplierID).OrderByDescending(a => a.StartDate).First();
 
         apt = Convert.ToDecimal(row.Aptrate);
 
@@ -225,7 +227,7 @@ public class PriceService : IPriceService
         startDate = startDate.AddMinutes(-1);
         DateTime endDate;
         //ContractRatesTableAdapter adaptPrices;
-        List<CodeWorkVoyWebService.Models.CubaData.ContractRates> tablePrices;
+        List<CodeWorksVoyWebService.Models.CubaData.ContractRates> tablePrices;
         foreach (PRSelection selection in prSelections)
         {
             if (selection.HotelID != 0)
@@ -241,7 +243,7 @@ public class PriceService : IPriceService
                 //adaptPrices = new ContractRatesTableAdapter();
                 tablePrices = _context.ContractRates.Where(c => c.HotelId == currentHotelID && (c.StartDate >= startDate && c.StartDate <= endDate)).ToList();
                 decimal tempPrice = 0;
-                foreach (CodeWorkVoyWebService.Models.CubaData.ContractRates row in tablePrices)
+                foreach (CodeWorksVoyWebService.Models.CubaData.ContractRates row in tablePrices)
                 {
                     if (selection.OldPrice)
                     {
@@ -275,14 +277,14 @@ public class PriceService : IPriceService
         List<TransferPriceObj> transferPriceObjs = new List<TransferPriceObj>();
 
         // Get Transfer Price
-        List<CodeWorkVoyWebService.Models.CubaData.TransferLogic> transTable;
+        List<CodeWorksVoyWebService.Models.CubaData.TransferLogic> transTable;
 
         //DefaultTransfersTableAdapter defAdapt = new DefaultTransfersTableAdapter();
         foreach (TransferNode transNode in transferNodes)
         {
 
             transTable = _context.TransferLogic.Where(t => t.Id == transNode.TransferID).ToList();
-            foreach (CodeWorkVoyWebService.Models.CubaData.TransferLogic transRow in transTable)
+            foreach (CodeWorksVoyWebService.Models.CubaData.TransferLogic transRow in transTable)
             {
                 TransferPriceObj transferPriceObj = new TransferPriceObj();
                 transferPriceObj.Description = transRow.Origin + " - " + transRow.Destination;
@@ -316,6 +318,7 @@ public class PriceService : IPriceService
     public int getNearestTimeID()
     {
         /*
+        Code
         ItinTemplateTimeIDlookupTableAdapter adaptLookup = new ItinTemplateTimeIDlookupTableAdapter();
         PriceData.ItinTemplateTimeIDlookupDataTable tableLookup = adaptLookup.GetData();
         DateTime now = DateTime.Now;
@@ -332,8 +335,7 @@ public class PriceService : IPriceService
                 break;
             }
         }
-        return timeID;
-        */
+        return timeID;*/
         return 0;
     }
 

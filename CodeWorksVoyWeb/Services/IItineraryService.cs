@@ -1,4 +1,4 @@
-﻿namespace CodeWorkVoyWebService.Services
+﻿namespace CodeWorksVoyWebService.Services
 {
     public interface IItineraryService
     {

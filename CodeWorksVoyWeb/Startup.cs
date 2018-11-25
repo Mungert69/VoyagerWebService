@@ -11,12 +11,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
-using CodeWorkVoyWebService.Models.CubaData;
-using CodeWorkVoyWebService.Models.UserData;
-using CodeWorkVoyWebService.Models.VoyagerReserve;
-using CodeWorkVoyWebService.Models.WebData;
-using CodeWorkVoyWebService.Services;
+using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
+using CodeWorksVoyWebService.Models.CubaData;
+using CodeWorksVoyWebService.Models.UserData;
+using CodeWorksVoyWebService.Models.VoyagerReserve;
+using CodeWorksVoyWebService.Models.WebData;
+using CodeWorksVoyWebService.Services;
 using CodeWorksVoyWebService.Services;
 
 namespace CodeWorksVoyWeb

@@ -7,10 +7,10 @@ using System.Web;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Text;
-using CodeWorkVoyWebService.Models.CubaData;
-using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
-using CodeWorkVoyWebService.Models.VoyagerReserve;
-using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
+using CodeWorksVoyWebService.Models.CubaData;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Models.VoyagerReserve;
+using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
@@ -21,17 +21,17 @@ using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 public class PlaceAdapter : IPlaceAdapter
 {
    // private readonly CubaDataContext _context;
-   private readonly List<CodeWorkVoyWebService.Models.CubaData.Places> placesTable;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.AirportNodes> airportNodesTable;
+   private readonly List<CodeWorksVoyWebService.Models.CubaData.Places> placesTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.AirportNodes> airportNodesTable;
     private readonly VoyagerReserveContext _contextRes;
     private readonly IPicturesAdapter _picturesAdapter;
     private readonly IVoyResAdapter _voyResAdapter;
     //private IMemoryCache _cache;
-    public List<CodeWorkVoyWebService.Models.CubaData.Places> PlacesTable{ get => placesTable; }
+    public List<CodeWorksVoyWebService.Models.CubaData.Places> PlacesTable{ get => placesTable; }
     public PlaceAdapter(CubaDataContext context, IMemoryCache cache,IVoyResAdapter voyResAdapter ,VoyagerReserveContext reserveContext, IPicturesAdapter picturesAdapter)
     {
-        placesTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.Places>(ref cache, context, placesTable, "PlacesTable");
-        airportNodesTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.AirportNodes>(ref cache, context, airportNodesTable, "AirportNodesTable");
+        placesTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.Places>(ref cache, context, placesTable, "PlacesTable");
+        airportNodesTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.AirportNodes>(ref cache, context, airportNodesTable, "AirportNodesTable");
 
 
         _voyResAdapter = voyResAdapter;
@@ -181,7 +181,7 @@ public class PlaceAdapter : IPlaceAdapter
         int countryId = 0;
         try
         {
-            CodeWorkVoyWebService.Models.CubaData.Places place = placesTable.Where(p => p.UseIt == "Y" && p.ZoomLevel > 0 && p.PlaceNameId == placeNameId).First();
+            CodeWorksVoyWebService.Models.CubaData.Places place = placesTable.Where(p => p.UseIt == "Y" && p.ZoomLevel > 0 && p.PlaceNameId == placeNameId).First();
             countryId = Convert.ToInt32(place.CountryId);
         }
         catch { }
@@ -194,8 +194,8 @@ public class PlaceAdapter : IPlaceAdapter
         string countryName = "";
         try
         {
-            CodeWorkVoyWebService.Models.CubaData.Places place = placesTable.Where(p => p.UseIt == "Y" && p.ZoomLevel > 0 && p.PlaceName == placeName).First();
-            CodeWorkVoyWebService.Models.VoyagerReserve.Countries country = _contextRes.Countries.Where(c => c.CountryId == place.CountryId).First();
+            CodeWorksVoyWebService.Models.CubaData.Places place = placesTable.Where(p => p.UseIt == "Y" && p.ZoomLevel > 0 && p.PlaceName == placeName).First();
+            CodeWorksVoyWebService.Models.VoyagerReserve.Countries country = _contextRes.Countries.Where(c => c.CountryId == place.CountryId).First();
             countryName = country.CountryName;
         }
         catch {}
@@ -220,7 +220,7 @@ public class PlaceAdapter : IPlaceAdapter
         List<PlaceObj> placeObjs = new List<PlaceObj>();
 
         // PlacesTableAdapter adapt = new PlacesTableAdapter();
-        List<CodeWorkVoyWebService.Models.CubaData.Places> table;
+        List<CodeWorksVoyWebService.Models.CubaData.Places> table;
         
         if (orderAlphabetic) {
             table  = placesTable.Where(p => p.UseIt == "Y"  && p.ZoomLevel>0 && p.CountryId==countryId).OrderBy(p => p.PlaceName).ToList();
@@ -230,7 +230,7 @@ public class PlaceAdapter : IPlaceAdapter
              table  = placesTable.Where(p => p.UseIt == "Y" && p.ZoomLevel > 0 && p.CountryId == countryId).ToList();
         }
 
-        foreach (CodeWorkVoyWebService.Models.CubaData.Places row in table)
+        foreach (CodeWorksVoyWebService.Models.CubaData.Places row in table)
         {
             PlaceObj placeObj = new PlaceObj();
             placeObj.PlaceID = row.PlaceNameId;
@@ -244,7 +244,7 @@ public class PlaceAdapter : IPlaceAdapter
     }
 
 
-    public CodeWorkVoyWebService.Models.CubaData.Places getPlaceEntity(int placeNameId)
+    public CodeWorksVoyWebService.Models.CubaData.Places getPlaceEntity(int placeNameId)
     {
         
         var row = placesTable.Where(p => p.PlaceNameId==placeNameId).First();

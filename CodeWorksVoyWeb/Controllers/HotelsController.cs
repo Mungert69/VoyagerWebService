@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
-using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
-using CodeWorkVoyWebService.Models.CubaData;
+using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Models.CubaData;
 using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 
-namespace CodeWorkVoyWebService.Controllers
+namespace CodeWorksVoyWebService.Controllers
 {
     [Route("api/[controller]")]
     [EnableCors("AllowAnyOrigin")]
@@ -57,9 +57,9 @@ namespace CodeWorkVoyWebService.Controllers
 
         // GET: api/Hotels/StyleCards/43
         [HttpGet("StyleCards/{templateTypeId}")]
-        public IEnumerable<CodeWorkVoyWebService.Models.WebData.Card> GetHotelStyleCards([FromRoute] int templateTypeId)
+        public IEnumerable<CodeWorksVoyWebService.Models.WebData.Card> GetHotelStyleCards([FromRoute] int templateTypeId)
         {
-             List<CodeWorkVoyWebService.Models.WebData.Card> styleCards = new List<CodeWorkVoyWebService.Models.WebData.Card>();
+             List<CodeWorksVoyWebService.Models.WebData.Card> styleCards = new List<CodeWorksVoyWebService.Models.WebData.Card>();
             styleCards = _cardAdapter.GetStyleCards(templateTypeId);
 
             return styleCards;

@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using CodeWorkVoyWebService.Models.UserData;
-using CodeWorkVoyWebService.Models.WebData;
+using CodeWorksVoyWebService.Models.UserData;
+using CodeWorksVoyWebService.Models.WebData;
 
 public interface IUserItinAdapter
 {
     bool AdminTemplate { get; set; }
 
     void deleteUserItin(int itinID);
-    CodeWorkVoyWebService.Models.WebData.UserItinerary getAdminItin(int userItinID);
+    CodeWorksVoyWebService.Models.WebData.UserItinerary getAdminItin(int userItinID);
     List<AdminItinTemplates> getAdminTemplateItins(int templateTypeId);
-    List<CodeWorkVoyWebService.Models.WebData.UserItinerary> getAllAdminItins();
+    List<CodeWorksVoyWebService.Models.WebData.UserItinerary> getAllAdminItins();
     List<ItinTemplateObj> getAllItinTemplates();
     List<PRSelection> getItinHotels(int itinID);
     int getItinID(int userItinID);
@@ -32,7 +32,7 @@ public interface IUserItinAdapter
     List<string> getTripStagePicFileNames(int stageID);
     List<ItinTemplateObj> getTypeItinTemplates(string type);
     UserItinObj getUserAdminItin(int userItinID);
-    CodeWorkVoyWebService.Models.UserData.UserItinerary getUserItin(int userItinID);
+    CodeWorksVoyWebService.Models.UserData.UserItinerary getUserItin(int userItinID);
     UserItinObj getUserItinEntity(int userItinID);
     List<UserItinObj> getUserItins(int userID);
     void insertTransferNodes(List<TransferNode> transferNodes, int itinID);

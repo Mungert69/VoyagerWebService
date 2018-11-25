@@ -10,10 +10,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data.SqlClient;
 using System.Globalization;
-using CodeWorkVoyWebService.Models.CubaData;
-using CodeWorkVoyWebService.Models.WebData;
-using CodeWorkVoyWebService.Models.UserData;
-using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
+using CodeWorksVoyWebService.Models.CubaData;
+using CodeWorksVoyWebService.Models.WebData;
+using CodeWorksVoyWebService.Models.UserData;
+using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
 using Microsoft.Extensions.Caching.Memory;
 
 /// <summary>
@@ -23,13 +23,13 @@ public class UserItinAdapter : IUserItinAdapter
 {
 
     //private readonly WebDataContext _contextAdmin;
-    private readonly List<CodeWorkVoyWebService.Models.WebData.AdminItinTemplates> adminItinTemplatesTable;
-    private readonly List<CodeWorkVoyWebService.Models.WebData.UserItinerary> adminUserItineraryTable;
-    private readonly List<CodeWorkVoyWebService.Models.WebData.ItinPlaces> adminItinPlacesTable;
-    private readonly List<CodeWorkVoyWebService.Models.WebData.UserTransfers> adminUserTransfersTable;
-    private readonly List<CodeWorkVoyWebService.Models.UserData.UserItinerary> userUserItineraryTable;
-    private readonly List<CodeWorkVoyWebService.Models.UserData.ItinPlaces> userItinPlacesTable;
-    private readonly List<CodeWorkVoyWebService.Models.UserData.UserTransfers> userUserTransfersTable;
+    private readonly List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> adminItinTemplatesTable;
+    private readonly List<CodeWorksVoyWebService.Models.WebData.UserItinerary> adminUserItineraryTable;
+    private readonly List<CodeWorksVoyWebService.Models.WebData.ItinPlaces> adminItinPlacesTable;
+    private readonly List<CodeWorksVoyWebService.Models.WebData.UserTransfers> adminUserTransfersTable;
+    private readonly List<CodeWorksVoyWebService.Models.UserData.UserItinerary> userUserItineraryTable;
+    private readonly List<CodeWorksVoyWebService.Models.UserData.ItinPlaces> userItinPlacesTable;
+    private readonly List<CodeWorksVoyWebService.Models.UserData.UserTransfers> userUserTransfersTable;
    // private readonly UserDataContext _contextUser;
     private bool adminTemplate;
 
@@ -38,15 +38,15 @@ public class UserItinAdapter : IUserItinAdapter
 
     public UserItinAdapter(IMemoryCache cache, WebDataContext contextAdmin, UserDataContext contextUser)
     {
-        adminItinTemplatesTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.WebData.AdminItinTemplates>(ref cache, contextAdmin, adminItinTemplatesTable, "AdminItinTemplatesTable");
+        adminItinTemplatesTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates>(ref cache, contextAdmin, adminItinTemplatesTable, "AdminItinTemplatesTable");
 
-        adminUserItineraryTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.WebData.UserItinerary>(ref cache, contextAdmin, adminUserItineraryTable, "AdminUserItineraryTable");
-        adminItinPlacesTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.WebData.ItinPlaces>(ref cache, contextAdmin, adminItinPlacesTable, "AdminItinPlacesTable");
-        adminUserTransfersTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.WebData.UserTransfers>(ref cache, contextAdmin, adminUserTransfersTable, "AdminUserTransfersTable");
+        adminUserItineraryTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.WebData.UserItinerary>(ref cache, contextAdmin, adminUserItineraryTable, "AdminUserItineraryTable");
+        adminItinPlacesTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.WebData.ItinPlaces>(ref cache, contextAdmin, adminItinPlacesTable, "AdminItinPlacesTable");
+        adminUserTransfersTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.WebData.UserTransfers>(ref cache, contextAdmin, adminUserTransfersTable, "AdminUserTransfersTable");
 
-        userUserItineraryTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.UserData.UserItinerary>(ref cache, contextUser, userUserItineraryTable, "UserUserItineraryTable");
-        userItinPlacesTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.UserData.ItinPlaces>(ref cache, contextAdmin, userItinPlacesTable, "UserItinPlacesTable");
-        userUserTransfersTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.UserData.UserTransfers>(ref cache, contextAdmin, userUserTransfersTable, "UserUserTransfersTable");
+        userUserItineraryTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.UserData.UserItinerary>(ref cache, contextUser, userUserItineraryTable, "UserUserItineraryTable");
+        userItinPlacesTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.UserData.ItinPlaces>(ref cache, contextAdmin, userItinPlacesTable, "UserItinPlacesTable");
+        userUserTransfersTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.UserData.UserTransfers>(ref cache, contextAdmin, userUserTransfersTable, "UserUserTransfersTable");
 
         //_contextAdmin = contextAdmin;
         //_contextUser = contextUser;
@@ -62,9 +62,9 @@ public class UserItinAdapter : IUserItinAdapter
 
         if (adminTemplate)
         {
-            List<CodeWorkVoyWebService.Models.WebData.UserTransfers> table = adminUserTransfersTable.Where(u => u.ItinId == ItinId).ToList();
+            List<CodeWorksVoyWebService.Models.WebData.UserTransfers> table = adminUserTransfersTable.Where(u => u.ItinId == ItinId).ToList();
             List<int> transferIDs = new List<int>();
-            foreach (CodeWorkVoyWebService.Models.WebData.UserTransfers row in table)
+            foreach (CodeWorksVoyWebService.Models.WebData.UserTransfers row in table)
             {
                 TransferNode userObj = new TransferNode();
                 userObj.TransferID = Convert.ToInt32(row.TransferId);
@@ -74,9 +74,9 @@ public class UserItinAdapter : IUserItinAdapter
         }
         else {
 
-            List<CodeWorkVoyWebService.Models.UserData.UserTransfers> table = userUserTransfersTable.Where(u => u.ItinId == ItinId).ToList();
+            List<CodeWorksVoyWebService.Models.UserData.UserTransfers> table = userUserTransfersTable.Where(u => u.ItinId == ItinId).ToList();
             List<int> transferIDs = new List<int>();
-            foreach (CodeWorkVoyWebService.Models.UserData.UserTransfers row in table)
+            foreach (CodeWorksVoyWebService.Models.UserData.UserTransfers row in table)
             {
                 TransferNode userObj = new TransferNode();
                 userObj.TransferID = Convert.ToInt32(row.TransferId);
@@ -95,9 +95,9 @@ public class UserItinAdapter : IUserItinAdapter
 
         if (adminTemplate)
         {
-            List<CodeWorkVoyWebService.Models.WebData.ItinPlaces> tableItinP = adminItinPlacesTable.Where(u => u.ItinId == itinID).ToList();
+            List<CodeWorksVoyWebService.Models.WebData.ItinPlaces> tableItinP = adminItinPlacesTable.Where(u => u.ItinId == itinID).ToList();
 
-            foreach (CodeWorkVoyWebService.Models.WebData.ItinPlaces rowItinP in tableItinP)
+            foreach (CodeWorksVoyWebService.Models.WebData.ItinPlaces rowItinP in tableItinP)
             {
                 PRSelection userPlaceObj = new PRSelection();
                 userPlaceObj.Hotel = rowItinP.Hotel;
@@ -111,9 +111,9 @@ public class UserItinAdapter : IUserItinAdapter
 
         }
         else {
-            List<CodeWorkVoyWebService.Models.UserData.ItinPlaces> tableItinP = userItinPlacesTable.Where(u => u.ItinId == itinID).ToList();
+            List<CodeWorksVoyWebService.Models.UserData.ItinPlaces> tableItinP = userItinPlacesTable.Where(u => u.ItinId == itinID).ToList();
 
-            foreach (CodeWorkVoyWebService.Models.UserData.ItinPlaces rowItinP in tableItinP)
+            foreach (CodeWorksVoyWebService.Models.UserData.ItinPlaces rowItinP in tableItinP)
             {
                 PRSelection userPlaceObj = new PRSelection();
                 userPlaceObj.Hotel = rowItinP.Hotel;
@@ -131,9 +131,9 @@ public class UserItinAdapter : IUserItinAdapter
     }
 
 
-    public CodeWorkVoyWebService.Models.UserData.UserItinerary getUserItin(int userItinID)
+    public CodeWorksVoyWebService.Models.UserData.UserItinerary getUserItin(int userItinID)
     {
-        CodeWorkVoyWebService.Models.UserData.UserItinerary userItin;
+        CodeWorksVoyWebService.Models.UserData.UserItinerary userItin;
 
         userItin = userUserItineraryTable.Where(u => u.UserItinId == userItinID).First();
 
@@ -141,9 +141,9 @@ public class UserItinAdapter : IUserItinAdapter
         return userItin;
     }
 
-     public CodeWorkVoyWebService.Models.WebData.UserItinerary getAdminItin(int userItinID)
+     public CodeWorksVoyWebService.Models.WebData.UserItinerary getAdminItin(int userItinID)
     {
-        CodeWorkVoyWebService.Models.WebData.UserItinerary userItin;
+        CodeWorksVoyWebService.Models.WebData.UserItinerary userItin;
 
         userItin = adminUserItineraryTable.Where(u => u.UserItinId == userItinID).First();
 
@@ -151,9 +151,9 @@ public class UserItinAdapter : IUserItinAdapter
         return userItin;
     }
 
-    public List<CodeWorkVoyWebService.Models.WebData.AdminItinTemplates> getAdminTemplateItins(int templateTypeId)
+    public List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> getAdminTemplateItins(int templateTypeId)
     {
-        List<CodeWorkVoyWebService.Models.WebData.AdminItinTemplates> adminTemplates;
+        List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> adminTemplates;
 
         adminTemplates = adminItinTemplatesTable.Where(a => a.TemplateTypeId == templateTypeId).ToList();
 
@@ -161,9 +161,9 @@ public class UserItinAdapter : IUserItinAdapter
         return adminTemplates;
     }
 
-    public List<CodeWorkVoyWebService.Models.WebData.UserItinerary> getAllAdminItins()
+    public List<CodeWorksVoyWebService.Models.WebData.UserItinerary> getAllAdminItins()
     {
-        List<CodeWorkVoyWebService.Models.WebData.UserItinerary> userItins;
+        List<CodeWorksVoyWebService.Models.WebData.UserItinerary> userItins;
 
         userItins = adminUserItineraryTable.ToList();
 

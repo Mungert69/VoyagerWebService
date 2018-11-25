@@ -8,10 +8,10 @@ using System.Xml.Linq;
 
 using System.Collections.Generic;
 using System.Text;
-using CodeWorkVoyWebService.Models.CubaData;
-using CodeWorkVoyWebService.Models.VoyagerReserve;
-using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
-using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
+using CodeWorksVoyWebService.Models.CubaData;
+using CodeWorksVoyWebService.Models.VoyagerReserve;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
@@ -22,13 +22,13 @@ public class HotelAdapter : IHotelAdapter
 
 {
     //private readonly CubaDataContext _context;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.Hotels> hotelsTable;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.ContractRates> contractRatesTable;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.AccommodationDescription> accommodationDescriptionTable;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.AccommodationRoomSpecification> accommodationRoomSpecificationTable;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.AccommodationCharacteristics> accommodationCharacteristicsTable;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.AccommodationAllInclusiveFacilities> accommodationAllInclusiveFacilitiesTable;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.AccommodationSelfCater> accommodationSelfCaterTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.Hotels> hotelsTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.ContractRates> contractRatesTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.AccommodationDescription> accommodationDescriptionTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.AccommodationRoomSpecification> accommodationRoomSpecificationTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.AccommodationCharacteristics> accommodationCharacteristicsTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.AccommodationAllInclusiveFacilities> accommodationAllInclusiveFacilitiesTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.AccommodationSelfCater> accommodationSelfCaterTable;
 
     // private readonly VoyagerReserveContext _contextRes;
     private readonly IPlaceAdapter _placeAdapter;
@@ -36,14 +36,14 @@ public class HotelAdapter : IHotelAdapter
     private readonly IVoyResAdapter _voyResAdapter;
     public HotelAdapter(CubaDataContext context, IMemoryCache cache, IVoyResAdapter voyResAdapter, IPicturesAdapter picturesAdapter, IPlaceAdapter placeAdapter)
     {
-        hotelsTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.Hotels>(ref cache, context, hotelsTable, "HotelsTable");
-        accommodationDescriptionTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.AccommodationDescription>(ref cache, context, accommodationDescriptionTable, "AccommodationDescriptionTable");
-        accommodationRoomSpecificationTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.AccommodationRoomSpecification>(ref cache, context, accommodationRoomSpecificationTable, "AccommodationRoomSpecificationTable");
-        accommodationCharacteristicsTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.AccommodationCharacteristics>(ref cache, context, accommodationCharacteristicsTable, "AccommodationCharacteristicsTable");
-        accommodationAllInclusiveFacilitiesTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.AccommodationAllInclusiveFacilities>(ref cache, context, accommodationAllInclusiveFacilitiesTable, "AccommodationAllInclusiveFacilitiesTable");
-        accommodationSelfCaterTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.AccommodationSelfCater>(ref cache, context, accommodationSelfCaterTable, "AccommodationSelfCaterTable");
+        hotelsTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.Hotels>(ref cache, context, hotelsTable, "HotelsTable");
+        accommodationDescriptionTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.AccommodationDescription>(ref cache, context, accommodationDescriptionTable, "AccommodationDescriptionTable");
+        accommodationRoomSpecificationTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.AccommodationRoomSpecification>(ref cache, context, accommodationRoomSpecificationTable, "AccommodationRoomSpecificationTable");
+        accommodationCharacteristicsTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.AccommodationCharacteristics>(ref cache, context, accommodationCharacteristicsTable, "AccommodationCharacteristicsTable");
+        accommodationAllInclusiveFacilitiesTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.AccommodationAllInclusiveFacilities>(ref cache, context, accommodationAllInclusiveFacilitiesTable, "AccommodationAllInclusiveFacilitiesTable");
+        accommodationSelfCaterTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.AccommodationSelfCater>(ref cache, context, accommodationSelfCaterTable, "AccommodationSelfCaterTable");
 
-        contractRatesTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.ContractRates>(ref cache, context, contractRatesTable, "ContractRatesTable");
+        contractRatesTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.ContractRates>(ref cache, context, contractRatesTable, "ContractRatesTable");
 
 
 
@@ -78,7 +78,7 @@ public class HotelAdapter : IHotelAdapter
             countryId = 0;
             placeNameId = 0;
         }
-        CodeWorkVoyWebService.Models.CubaData.Hotels hotel = this.getHotelEntity(hotelId);
+        CodeWorksVoyWebService.Models.CubaData.Hotels hotel = this.getHotelEntity(hotelId);
 
         //ToDo sort out Hotels table so its got placeIDs
         // card.CountryId = _placeAdapter.getCountryId(Convert.ToInt32(hotel.PlaceId));
@@ -98,33 +98,33 @@ public class HotelAdapter : IHotelAdapter
         card.PlaceNameId = placeNameId;
         // We are just skipping if there is no data
         try {
-            CodeWorkVoyWebService.Models.CubaData.AccommodationRoomSpecification roomSpec = accommodationRoomSpecificationTable.Where(a => a.AccommodationId == hotelId).First();
+            CodeWorksVoyWebService.Models.CubaData.AccommodationRoomSpecification roomSpec = accommodationRoomSpecificationTable.Where(a => a.AccommodationId == hotelId).First();
             card.AccommodationRoomSpecification = roomSpec;
         }
         catch { }
        
         try
         {
-            CodeWorkVoyWebService.Models.CubaData.AccommodationDescription accomDescTable = accommodationDescriptionTable.Where(a => a.AccommodationId == hotelId).First();
+            CodeWorksVoyWebService.Models.CubaData.AccommodationDescription accomDescTable = accommodationDescriptionTable.Where(a => a.AccommodationId == hotelId).First();
             card.AccommodationDescription = accomDescTable;
         }
         catch { }
        
         try
         {
-            CodeWorkVoyWebService.Models.CubaData.AccommodationCharacteristics accomCharTable = accommodationCharacteristicsTable.Where(a => a.AccommodationId == hotelId).First();
+            CodeWorksVoyWebService.Models.CubaData.AccommodationCharacteristics accomCharTable = accommodationCharacteristicsTable.Where(a => a.AccommodationId == hotelId).First();
             card.AccommodationCharacteristics = accomCharTable;
         }
         catch { }
         try {
-            CodeWorkVoyWebService.Models.CubaData.AccommodationAllInclusiveFacilities accomAllIncTable = accommodationAllInclusiveFacilitiesTable.Where(a => a.AccommodationId == hotelId).First();
+            CodeWorksVoyWebService.Models.CubaData.AccommodationAllInclusiveFacilities accomAllIncTable = accommodationAllInclusiveFacilitiesTable.Where(a => a.AccommodationId == hotelId).First();
             card.AccommodationAllInclusiveFacilities = accomAllIncTable;
         }
         catch { }
 
        
         try {
-            CodeWorkVoyWebService.Models.CubaData.AccommodationSelfCater accomSelfTable = accommodationSelfCaterTable.Where(a => a.AccommodationId == hotelId).First();
+            CodeWorksVoyWebService.Models.CubaData.AccommodationSelfCater accomSelfTable = accommodationSelfCaterTable.Where(a => a.AccommodationId == hotelId).First();
             card.AccommodationSelfCater = accomSelfTable;
         }
         catch { }
@@ -174,10 +174,10 @@ public class HotelAdapter : IHotelAdapter
         return hotelsTable.Where(h => h.HotelId == hotelID).Select(h => h.Hotel).First();
     }
 
-    public CodeWorkVoyWebService.Models.CubaData.Hotels getHotelEntity(int hotelId)
+    public CodeWorksVoyWebService.Models.CubaData.Hotels getHotelEntity(int hotelId)
     {
 
-        CodeWorkVoyWebService.Models.CubaData.Hotels row;
+        CodeWorksVoyWebService.Models.CubaData.Hotels row;
 
         row = hotelsTable.Where(h => h.HotelId == hotelId).First();
 
@@ -585,8 +585,8 @@ public class HotelAdapter : IHotelAdapter
         List<HotelObj> hotelObjs = new List<HotelObj>();
 
         //ToDo countries
-        List<CodeWorkVoyWebService.Models.CubaData.Hotels> table = hotelsTable.Where(h => h.UseIt == "Y" && h.Web=="Y" && h.Place.ToLower()!="tour").Take(100).ToList();
-        foreach (CodeWorkVoyWebService.Models.CubaData.Hotels row in table)
+        List<CodeWorksVoyWebService.Models.CubaData.Hotels> table = hotelsTable.Where(h => h.UseIt == "Y" && h.Web=="Y" && h.Place.ToLower()!="tour").Take(100).ToList();
+        foreach (CodeWorksVoyWebService.Models.CubaData.Hotels row in table)
         {
             hotelObjs.Add(new HotelObj(row.Hotel, row.HotelId));
         }
@@ -602,8 +602,8 @@ public class HotelAdapter : IHotelAdapter
 
         //PlaceAdapter placeAdapter = new PlaceAdapter();
         string placeName = _placeAdapter.getPlaceName(selectedPlaceID);
-        List<CodeWorkVoyWebService.Models.CubaData.Hotels> table = hotelsTable.Where(h => h.Place == placeName && h.UseIt == "Y").ToList();
-        foreach (CodeWorkVoyWebService.Models.CubaData.Hotels row in table)
+        List<CodeWorksVoyWebService.Models.CubaData.Hotels> table = hotelsTable.Where(h => h.Place == placeName && h.UseIt == "Y").ToList();
+        foreach (CodeWorksVoyWebService.Models.CubaData.Hotels row in table)
         {
             hotelObjs.Add(new HotelObj(row.Hotel, row.HotelId));
         }

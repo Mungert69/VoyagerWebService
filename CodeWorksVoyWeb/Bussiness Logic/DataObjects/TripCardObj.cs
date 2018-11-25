@@ -1,4 +1,4 @@
-﻿using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
+﻿using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;

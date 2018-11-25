@@ -8,9 +8,9 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using System.Data.SqlClient;
-using CodeWorkVoyWebService.Models.CubaData;
+using CodeWorksVoyWebService.Models.CubaData;
 using Microsoft.EntityFrameworkCore;
-using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
+using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
 using Microsoft.Extensions.Caching.Memory;
 using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 /// <summary>
@@ -20,10 +20,10 @@ public class TransferAdapter : ITransferAdapter
 {
     //private readonly CubaDataContext _context;
     private readonly IPlaceAdapter _placeAdapter;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.TransferLogic> transferLogicTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.TransferLogic> transferLogicTable;
     public TransferAdapter(IMemoryCache cache,CubaDataContext context, IPlaceAdapter placeAdapter)
 	{
-        transferLogicTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.TransferLogic>(ref cache, context, transferLogicTable, "TransferLogicTable");
+        transferLogicTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.TransferLogic>(ref cache, context, transferLogicTable, "TransferLogicTable");
 
         //_context = context;
         _placeAdapter = placeAdapter;
@@ -168,7 +168,7 @@ public class TransferAdapter : ITransferAdapter
     }
     public TransferObj getTransfers(int transferID) {
         TransferObj transferObj = new TransferObj();
-        CodeWorkVoyWebService.Models.CubaData.TransferLogic transfer = transferLogicTable.Where(t => t.Id==transferID).First();
+        CodeWorksVoyWebService.Models.CubaData.TransferLogic transfer = transferLogicTable.Where(t => t.Id==transferID).First();
        
             transferObj.CarHireCopy1 = transfer.CarHireCopy1;
             transferObj.CarHireCopy2 = transfer.CarHireCopy2;

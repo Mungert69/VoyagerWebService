@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CodeWorkVoyWebService.Models.WebData
+namespace CodeWorksVoyWebService.Models.WebData
 {
     public partial class CubaMenuMaster
     {

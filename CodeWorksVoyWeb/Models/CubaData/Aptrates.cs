@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CodeWorkVoyWebService.Models.CubaData
+namespace CodeWorksVoyWebService.Models.CubaData
 {
     public partial class Aptrates
     {

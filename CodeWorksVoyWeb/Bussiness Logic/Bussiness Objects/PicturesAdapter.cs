@@ -7,10 +7,10 @@ using System.Web;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Text;
-using CodeWorkVoyWebService.Models.CubaData;
-using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
-using CodeWorkVoyWebService.Models.VoyagerReserve;
-using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
+using CodeWorksVoyWebService.Models.CubaData;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Models.VoyagerReserve;
+using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -20,13 +20,13 @@ using Microsoft.Extensions.Caching.Memory;
 public class PicturesAdapter : IPicturesAdapter
 {
     // private readonly CubaDataContext _context;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.Pictures> picturesTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.Pictures> picturesTable;
     private readonly VoyagerReserveContext _contextRes;
     //private IMemoryCache _cache;
 
     public PicturesAdapter(CubaDataContext context, IMemoryCache cache, VoyagerReserveContext reserveContext)
     {
-        picturesTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.Pictures>(ref cache, context, picturesTable, "PicturesTable");
+        picturesTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.Pictures>(ref cache, context, picturesTable, "PicturesTable");
 
         _contextRes = reserveContext;
         _contextRes.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;

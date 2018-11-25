@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace CodeWorkVoyWebService.Models.CubaData
+namespace CodeWorksVoyWebService.Models.CubaData
 {
     public partial class CubaDataContext : DbContext
     {

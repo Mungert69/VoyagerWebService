@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace CodeWorkVoyWebService.Models.VoyagerReserve
+namespace CodeWorksVoyWebService.Models.VoyagerReserve
 {
     public partial class VoyagerReserveContext : DbContext
     {

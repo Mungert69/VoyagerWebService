@@ -3,11 +3,11 @@ using KellermanSoftware.CompareNetObjects;
 using Moq;
 using System;
 using System.Collections.Generic;
-using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
-using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
-using CodeWorkVoyWebService.Bussiness_Logic.Utils;
-using CodeWorkVoyWebService.Controllers;
-using CodeWorkVoyWebService.Services;
+using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Bussiness_Logic.Utils;
+using CodeWorksVoyWebService.Controllers;
+using CodeWorksVoyWebService.Services;
 using Xunit;
 using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 using CodeWorksVoyWebServiceTest.Controllers.Mocks;
@@ -66,7 +66,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             CardObj cardObj = JsonUtils.getJsonObjectFromFile<CardObj>("./TestObjects/card.json");
             List<PRSelection> prSelections = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./TestObjects/pRSelections.json");
             List<TransferNode> transferNodes = JsonUtils.getJsonObjectFromFile<List<TransferNode>>("./TestObjects/transferNodes.json");
-            CodeWorkVoyWebService.Models.WebData.UserItinerary userItin = JsonUtils.getJsonObjectFromFile<CodeWorkVoyWebService.Models.WebData.UserItinerary>("./TestObjects/userItin.json");
+            CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = JsonUtils.getJsonObjectFromFile<CodeWorksVoyWebService.Models.WebData.UserItinerary>("./TestObjects/userItin.json");
             List<TransferNodeItem> transferNodeItems = JsonUtils.getJsonObjectFromFile<List<TransferNodeItem>>("./TestObjects/transferNodeItems.json");
             List<PlaceState> placeStates = JsonUtils.getJsonObjectFromFile<List<PlaceState>>("./TestObjects/placeStates.json");
             IConfiguration config = TestContainerConfig.InitConfiguration();
@@ -77,7 +77,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             
             // Setup Mocks 
             this.mockUserItinAdapter.SetupAllProperties();
-            this.mockUserItinAdapter.SetReturnsDefault<CodeWorkVoyWebService.Models.WebData.UserItinerary>(userItin);
+            this.mockUserItinAdapter.SetReturnsDefault<CodeWorksVoyWebService.Models.WebData.UserItinerary>(userItin);
             this.mockCardAdapter.SetReturnsDefault<List<PRSelection>>(prSelections);
             this.mockUserItinAdapter.SetReturnsDefault<List<TransferNode>>(transferNodes);       
             this.mockTransferAdapter.SetupAllProperties();

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
-using CodeWorkVoyWebService.Models.CubaData;
+using CodeWorksVoyWebService.Models.CubaData;
 
 public interface IPlaceAdapter
 {

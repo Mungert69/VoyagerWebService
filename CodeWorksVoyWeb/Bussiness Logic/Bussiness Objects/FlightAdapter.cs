@@ -6,9 +6,9 @@ using System.Web;
 
 using System.Xml.Linq;
 using System.Collections.Generic;
-using CodeWorkVoyWebService.Models.CubaData;
-using CodeWorkVoyWebService.Models.VoyagerReserve;
-using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
+using CodeWorksVoyWebService.Models.CubaData;
+using CodeWorksVoyWebService.Models.VoyagerReserve;
+using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
 using Microsoft.Extensions.Caching.Memory;
 
 /// <summary>
@@ -16,24 +16,24 @@ using Microsoft.Extensions.Caching.Memory;
 /// </summary>
 public class FlightAdapter : IFlightAdapter
 {
-    private readonly List<CodeWorkVoyWebService.Models.VoyagerReserve.Suppliers> suppliersTable;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.AirportCodes> airportCodesTable;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.DefaultAirports> defaultAirportsTable;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.Airports> airportsTable;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.FlightTable> flightTable;
-    private readonly List<CodeWorkVoyWebService.Models.CubaData.FlightTableInbound> flightInboundTable;
+    private readonly List<CodeWorksVoyWebService.Models.VoyagerReserve.Suppliers> suppliersTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.AirportCodes> airportCodesTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.DefaultAirports> defaultAirportsTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.Airports> airportsTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.FlightTable> flightTable;
+    private readonly List<CodeWorksVoyWebService.Models.CubaData.FlightTableInbound> flightInboundTable;
     //private readonly CubaDataContext _context;
     //private readonly VoyagerReserveContext _contextRes;
     public FlightAdapter(IMemoryCache cache,CubaDataContext context, VoyagerReserveContext contextRes)
     {
-        suppliersTable=FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.VoyagerReserve.Suppliers>(ref cache, contextRes,  suppliersTable, "SuppliersTable");
-        airportCodesTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.AirportCodes>(ref cache, context, airportCodesTable, "AirportCodesTable");
-        defaultAirportsTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.DefaultAirports>(ref cache, context, defaultAirportsTable, "DefaultAirportsTable");
-        airportsTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.Airports>(ref cache, context, airportsTable, "AirportsTable");
+        suppliersTable=FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.VoyagerReserve.Suppliers>(ref cache, contextRes,  suppliersTable, "SuppliersTable");
+        airportCodesTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.AirportCodes>(ref cache, context, airportCodesTable, "AirportCodesTable");
+        defaultAirportsTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.DefaultAirports>(ref cache, context, defaultAirportsTable, "DefaultAirportsTable");
+        airportsTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.Airports>(ref cache, context, airportsTable, "AirportsTable");
 
-        flightTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.FlightTable>(ref cache, context, flightTable, "FlightTable");
+        flightTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.FlightTable>(ref cache, context, flightTable, "FlightTable");
 
-        flightInboundTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.CubaData.FlightTableInbound>(ref cache, context, flightInboundTable, "FlightInboundTable");
+        flightInboundTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.FlightTableInbound>(ref cache, context, flightInboundTable, "FlightInboundTable");
 
         //_context = context;
         //_contextRes = contextRes;
@@ -47,11 +47,11 @@ public class FlightAdapter : IFlightAdapter
     public  List<FlightObj> getAirlines(int countryFlag)
     {
         List<FlightObj> flightObjs = new List<FlightObj>();
-        List<CodeWorkVoyWebService.Models.VoyagerReserve.Suppliers> table=suppliersTable.Where(s => s.SupplierType == "Airline" && s.UseIt == true).ToList();
+        List<CodeWorksVoyWebService.Models.VoyagerReserve.Suppliers> table=suppliersTable.Where(s => s.SupplierType == "Airline" && s.UseIt == true).ToList();
         int test;
 
      
-        foreach (CodeWorkVoyWebService.Models.VoyagerReserve.Suppliers row in table)
+        foreach (CodeWorksVoyWebService.Models.VoyagerReserve.Suppliers row in table)
         {
             FlightObj flightObj = new FlightObj(row.SupplierName, Convert.ToInt32(row.SupplierId));
             test = Convert.ToInt32(row.CountryFlag) & countryFlag;
@@ -87,7 +87,7 @@ public class FlightAdapter : IFlightAdapter
         */
         var table = airportsTable.Where(a => a.Aid == supplierID).ToList();
         airportObjs.Add(new AirportObj());
-        foreach (CodeWorkVoyWebService.Models.CubaData.Airports row in table)
+        foreach (CodeWorksVoyWebService.Models.CubaData.Airports row in table)
         {
             AirportObj airportObj = new AirportObj();
             airportObj.AirportName = row.DepAirport;
@@ -120,9 +120,9 @@ public class FlightAdapter : IFlightAdapter
     {
         List<FlightObj> flightObjs = new List<FlightObj>();
 
-        List<CodeWorkVoyWebService.Models.CubaData.FlightTable> table = flightTable.Where(f => f.UseIt == "Y" && f.SupplierId == supplierID && (f.FlightDepartureDate >= date && f.FlightDepartureDate <= endDate)).OrderBy(f => f.FlightDepartureDate).ToList();
+        List<CodeWorksVoyWebService.Models.CubaData.FlightTable> table = flightTable.Where(f => f.UseIt == "Y" && f.SupplierId == supplierID && (f.FlightDepartureDate >= date && f.FlightDepartureDate <= endDate)).OrderBy(f => f.FlightDepartureDate).ToList();
         flightObjs.Add(new FlightObj());
-        foreach (CodeWorkVoyWebService.Models.CubaData.FlightTable row in table)
+        foreach (CodeWorksVoyWebService.Models.CubaData.FlightTable row in table)
         {
             FlightObj flightObj = new FlightObj();
             flightObj.FlightDepartureDate = Convert.ToDateTime(row.FlightDepartureDate);
@@ -173,9 +173,9 @@ public class FlightAdapter : IFlightAdapter
     {
         List<FlightObj> flightObjs = new List<FlightObj>();
 
-        List<CodeWorkVoyWebService.Models.CubaData.FlightTableInbound> table = flightInboundTable.Where(f => f.UseIt == "Y" && f.SupplierId == supplierID && (f.FlightDepartureDate >= date && f.FlightDepartureDate <= endDate)).OrderBy(f => f.FlightDepartureDate).ToList();
+        List<CodeWorksVoyWebService.Models.CubaData.FlightTableInbound> table = flightInboundTable.Where(f => f.UseIt == "Y" && f.SupplierId == supplierID && (f.FlightDepartureDate >= date && f.FlightDepartureDate <= endDate)).OrderBy(f => f.FlightDepartureDate).ToList();
         flightObjs.Add(new FlightObj());
-        foreach (CodeWorkVoyWebService.Models.CubaData.FlightTableInbound row in table)
+        foreach (CodeWorksVoyWebService.Models.CubaData.FlightTableInbound row in table)
         {
             FlightObj flightObj = new FlightObj();
             flightObj.FlightDepartureDate = Convert.ToDateTime(row.FlightDepartureDate);

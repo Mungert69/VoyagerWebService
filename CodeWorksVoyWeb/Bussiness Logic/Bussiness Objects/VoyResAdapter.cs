@@ -8,10 +8,10 @@ using System.Xml.Linq;
 
 using System.Collections.Generic;
 using System.Text;
-using CodeWorkVoyWebService.Models.CubaData;
-using CodeWorkVoyWebService.Models.VoyagerReserve;
-using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
-using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
+using CodeWorksVoyWebService.Models.CubaData;
+using CodeWorksVoyWebService.Models.VoyagerReserve;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 /// <summary>
@@ -21,13 +21,13 @@ public class VoyResAdapter : IVoyResAdapter
 
 {
 
-    private readonly List<CodeWorkVoyWebService.Models.VoyagerReserve.Countries> countriesTable;
+    private readonly List<CodeWorksVoyWebService.Models.VoyagerReserve.Countries> countriesTable;
 
     
 
     public VoyResAdapter(IMemoryCache cache, VoyagerReserveContext contextRes)
     {
-        countriesTable = FactoryUtils.CheckCache<CodeWorkVoyWebService.Models.VoyagerReserve.Countries>(ref cache, contextRes, countriesTable, "CountriesTable");
+        countriesTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.VoyagerReserve.Countries>(ref cache, contextRes, countriesTable, "CountriesTable");
 
        
 

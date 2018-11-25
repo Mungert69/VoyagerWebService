@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects
+namespace CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects
 {
 
 

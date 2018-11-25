@@ -7,33 +7,33 @@ using System.Web;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Text;
-using CodeWorkVoyWebService.Models.CubaData;
-using CodeWorkVoyWebService.Models.WebData;
+using CodeWorksVoyWebService.Models.CubaData;
+using CodeWorksVoyWebService.Models.WebData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 
-namespace CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects
+namespace CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects
 {
     public class CardAdapter : ICardAdapter
     {
 
         //private readonly CubaDataContext _context;
         //private readonly WebDataContext _contextWebData;
-        private readonly List<CodeWorkVoyWebService.Models.WebData.Card> cardTable;
+        private readonly List<CodeWorksVoyWebService.Models.WebData.Card> cardTable;
         private readonly IPlaceAdapter _placeAdapter;
         private readonly IHotelAdapter _hotelAdapter;
 
 
         public CardAdapter(CubaDataContext context, IMemoryCache cache, WebDataContext contextWebData, IPlaceAdapter placeAdapter, IHotelAdapter hotelAdapter)
         {
-            cache.TryGetValue<List<CodeWorkVoyWebService.Models.WebData.Card>>("CardTable", out cardTable);
+            cache.TryGetValue<List<CodeWorksVoyWebService.Models.WebData.Card>>("CardTable", out cardTable);
             if (cardTable == null)
             {
                 cache.CreateEntry("CardTable");
                 cardTable = contextWebData.Card.ToList();
-                cache.Set<List<CodeWorkVoyWebService.Models.WebData.Card>>("CardTable", cardTable);
+                cache.Set<List<CodeWorksVoyWebService.Models.WebData.Card>>("CardTable", cardTable);
             }
             _placeAdapter = placeAdapter;
             _hotelAdapter = hotelAdapter;
@@ -78,14 +78,14 @@ namespace CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects
             return src;
         }
 
-        public static object SetPropValue(ref CodeWorkVoyWebService.Models.WebData.Card src, string propName, string value)
+        public static object SetPropValue(ref CodeWorksVoyWebService.Models.WebData.Card src, string propName, string value)
         {
             src.GetType().GetProperty(propName).SetValue(src, value, null);
             return src;
         }
 
 
-        private CodeWorkVoyWebService.Models.WebData.Card SetFieldHiddenOnValueZero(CodeWorkVoyWebService.Models.WebData.Card card, string firstField, string secondField) {
+        private CodeWorksVoyWebService.Models.WebData.Card SetFieldHiddenOnValueZero(CodeWorksVoyWebService.Models.WebData.Card card, string firstField, string secondField) {
 
             if (Convert.ToInt32(GetPropValue(card, firstField)) == 0)
             {
@@ -101,18 +101,18 @@ namespace CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects
             return card;
         }
 
-        public List<CodeWorkVoyWebService.Models.WebData.Card> GetStyleCards(int templateTypeId) {
-            List<CodeWorkVoyWebService.Models.WebData.Card> styleCards = new List<CodeWorkVoyWebService.Models.WebData.Card>();
+        public List<CodeWorksVoyWebService.Models.WebData.Card> GetStyleCards(int templateTypeId) {
+            List<CodeWorksVoyWebService.Models.WebData.Card> styleCards = new List<CodeWorksVoyWebService.Models.WebData.Card>();
             var detailLevels = cardTable.Where(c => c.CardTemplateType == templateTypeId ).Select(s => s.CardElementDetailLevel).ToList();
             foreach (int detailLevel in detailLevels) {
                 styleCards.Add(this.GetCardData(templateTypeId, detailLevel));
             }
             return styleCards;
         }
-        public CodeWorkVoyWebService.Models.WebData.Card GetCardData(int templateTypeId, int detailLevel)
+        public CodeWorksVoyWebService.Models.WebData.Card GetCardData(int templateTypeId, int detailLevel)
         {
 
-            CodeWorkVoyWebService.Models.WebData.Card card = cardTable.Where(c => c.CardTemplateType == templateTypeId && c.CardElementDetailLevel == detailLevel).First();
+            CodeWorksVoyWebService.Models.WebData.Card card = cardTable.Where(c => c.CardTemplateType == templateTypeId && c.CardElementDetailLevel == detailLevel).First();
 
 
             List<string> firstFields = new List<string>();

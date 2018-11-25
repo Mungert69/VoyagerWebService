@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CodeWorkVoyWebService.Models.UserData
+namespace CodeWorksVoyWebService.Models.UserData
 {
     public partial class UserTransfers
     {

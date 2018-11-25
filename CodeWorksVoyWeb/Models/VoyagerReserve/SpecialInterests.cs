@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CodeWorkVoyWebService.Models.VoyagerReserve
+namespace CodeWorksVoyWebService.Models.VoyagerReserve
 {
     public partial class SpecialInterests
     {

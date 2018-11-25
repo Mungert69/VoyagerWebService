@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects;
-using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
-using CodeWorkVoyWebService.Bussiness_Logic.Utils;
+using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Bussiness_Logic.Utils;
 
-using CodeWorkVoyWebService.Services;
+using CodeWorksVoyWebService.Services;
 using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 using Microsoft.AspNetCore.Http;
 using CodeWorksVoyWebService.Bussiness_Logic.Utils;
@@ -15,7 +15,7 @@ using CodeWorksVoyWebService.Services;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace CodeWorkVoyWebService.Controllers
+namespace CodeWorksVoyWebService.Controllers
 {
     [Route("api/[controller]")]
     [EnableCors("AllowAnyOrigin")]
@@ -159,7 +159,7 @@ namespace CodeWorkVoyWebService.Controllers
 
             TripCardObj card = new TripCardObj();
 
-            CodeWorkVoyWebService.Models.WebData.UserItinerary userItin = _userItinAdapter.getAdminItin(userItinId);
+            CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = _userItinAdapter.getAdminItin(userItinId);
             if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("userItin.json", userItin);
 
             card.Id = userItin.UserItinId;
@@ -187,12 +187,12 @@ namespace CodeWorkVoyWebService.Controllers
 
             _userItinAdapter.AdminTemplate = true;
 
-            List<CodeWorkVoyWebService.Models.WebData.AdminItinTemplates> adminTemplates = _userItinAdapter.getAdminTemplateItins(templateTypeId);
+            List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> adminTemplates = _userItinAdapter.getAdminTemplateItins(templateTypeId);
 
             //List<CodeWorkVoyWebService.Models.WebData.UserItinerary> userItins = _userItinAdapter.getAdminTemplateItins();
             List<TripCardObj> cards = new List<TripCardObj>();
             int counter = 0;
-            foreach (CodeWorkVoyWebService.Models.WebData.AdminItinTemplates adminTemplate in adminTemplates)
+            foreach (CodeWorksVoyWebService.Models.WebData.AdminItinTemplates adminTemplate in adminTemplates)
             {
                 cards.Add(getCardFromItinerary(Convert.ToInt32(adminTemplate.AdminItinId), templateTypeId));
                 counter++;
@@ -205,11 +205,11 @@ namespace CodeWorkVoyWebService.Controllers
 
         // GET: api/Interary/StyleCards/43
         [HttpGet("StyleCards/{templateTypeId}")]
-        public IEnumerable<CodeWorkVoyWebService.Models.WebData.Card> GetItineraryStyleCards([FromRoute] int templateTypeId)
+        public IEnumerable<CodeWorksVoyWebService.Models.WebData.Card> GetItineraryStyleCards([FromRoute] int templateTypeId)
         {
             //TODO country code ie (true,1) below
 
-            List<CodeWorkVoyWebService.Models.WebData.Card> styleCards = new List<CodeWorkVoyWebService.Models.WebData.Card>();
+            List<CodeWorksVoyWebService.Models.WebData.Card> styleCards = new List<CodeWorksVoyWebService.Models.WebData.Card>();
             styleCards = _cardAdapter.GetStyleCards(templateTypeId);
 
             return styleCards;

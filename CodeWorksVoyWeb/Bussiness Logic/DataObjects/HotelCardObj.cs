@@ -1,5 +1,5 @@
-﻿using CodeWorkVoyWebService.Bussiness_Logic.DataObjects;
-using CodeWorkVoyWebService.Models.CubaData;
+﻿using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Models.CubaData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +11,11 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
     {
         private string hotelFeatures;
         private int placeNameId;
-        private CodeWorkVoyWebService.Models.CubaData.AccommodationRoomSpecification accommodationRoomSpecification;
-        private CodeWorkVoyWebService.Models.CubaData.AccommodationDescription accommodationDescription;
-        private CodeWorkVoyWebService.Models.CubaData.AccommodationCharacteristics accommodationCharacteristics;
-        private CodeWorkVoyWebService.Models.CubaData.AccommodationSelfCater accommodationSelfCater;
-        private CodeWorkVoyWebService.Models.CubaData.AccommodationAllInclusiveFacilities accommodationAllInclusiveFacilities;
+        private CodeWorksVoyWebService.Models.CubaData.AccommodationRoomSpecification accommodationRoomSpecification;
+        private CodeWorksVoyWebService.Models.CubaData.AccommodationDescription accommodationDescription;
+        private CodeWorksVoyWebService.Models.CubaData.AccommodationCharacteristics accommodationCharacteristics;
+        private CodeWorksVoyWebService.Models.CubaData.AccommodationSelfCater accommodationSelfCater;
+        private CodeWorksVoyWebService.Models.CubaData.AccommodationAllInclusiveFacilities accommodationAllInclusiveFacilities;
         public AccommodationRoomSpecification AccommodationRoomSpecification { get => accommodationRoomSpecification; set => accommodationRoomSpecification = value; }
         public AccommodationDescription AccommodationDescription { get => accommodationDescription; set => accommodationDescription = value; }
         public AccommodationCharacteristics AccommodationCharacteristics { get => accommodationCharacteristics; set => accommodationCharacteristics = value; }

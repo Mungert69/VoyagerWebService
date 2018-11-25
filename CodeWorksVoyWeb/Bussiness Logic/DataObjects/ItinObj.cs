@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CodeWorkVoyWebService.Bussiness_Logic.DataObjects
+namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
 {
     public class ItinObj
     {

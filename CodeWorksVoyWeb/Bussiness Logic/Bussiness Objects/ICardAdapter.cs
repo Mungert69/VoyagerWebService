@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using CodeWorkVoyWebService.Models.WebData;
+using CodeWorksVoyWebService.Models.WebData;
 
-namespace CodeWorkVoyWebService.Bussiness_Logic.Bussiness_Objects
+namespace CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects
 {
     public interface ICardAdapter
     {
