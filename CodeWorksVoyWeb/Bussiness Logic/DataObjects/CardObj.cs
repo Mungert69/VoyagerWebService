@@ -9,7 +9,7 @@ namespace CodeWorkVoyWebService.Bussiness_Logic.DataObjects
     public class CardObj 
     {
         private int id;
-        private int itinId;
+
         private string title;
         private string pureHtml;
         private string subtitle;
@@ -29,8 +29,6 @@ namespace CodeWorkVoyWebService.Bussiness_Logic.DataObjects
         private string descriptionShort;
         private string descriptionLong;
         private string country;
-        private string placeFeatures;
-        private string hotelFeatures;
         private string longitude;
         private string latitude;
         private int countryId;
@@ -44,7 +42,7 @@ namespace CodeWorkVoyWebService.Bussiness_Logic.DataObjects
         public string Latitude { get => latitude; set => latitude = value; }
         public int Id { get => id; set => id = value; }
         public int CountryId { get => countryId; set => countryId = value; }
-        public int ItinId { get => itinId; set => itinId = value; }
+
         public int TypeId { get => typeId; set => typeId = value; }
 
 
@@ -66,8 +64,7 @@ namespace CodeWorkVoyWebService.Bussiness_Logic.DataObjects
         public string Panel8 { get => panel8; set => panel8 = value; }
         public string Panel9 { get => panel9; set => panel9 = value; }
         public string PureHtml { get => pureHtml; set => pureHtml = value; }
-        public string PlaceFeatures { get => placeFeatures; set => placeFeatures = value; }
-        public string HotelFeatures { get => hotelFeatures; set => hotelFeatures = value; }
+      
     }
 
    

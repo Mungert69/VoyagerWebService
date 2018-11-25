@@ -5,7 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Bussiness Logic\APIObjects\" />
+    <Compile Remove="Bussiness Logic\APIObjects\**" />
+    <Content Remove="Bussiness Logic\APIObjects\**" />
+    <EmbeddedResource Remove="Bussiness Logic\APIObjects\**" />
+    <None Remove="Bussiness Logic\APIObjects\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

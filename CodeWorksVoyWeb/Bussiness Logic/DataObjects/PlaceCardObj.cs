@@ -11,7 +11,7 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
     {
 
         private PlaceState placeState;
-
+        private string placeFeatures;
 
 
         public PlaceCardObj()

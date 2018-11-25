@@ -33,7 +33,7 @@ namespace CodeWorkVoyWebService.Controllers
         private ITransferAdapter _transferAdapter;
         private IMapService _mapService;
         //private string userHashId="xxxx";
-        private bool createTestJsonFiles =true;
+        private bool createTestJsonFiles =false;
 
         public ItineraryController(ISessionObjectsService sessionObjectsService, IItineraryService itineraryService, IHotelAdapter hotelAdapter, IPlaceAdapter placeAdapter, ICardAdapter cardAdapter, IUserItinAdapter userItinAdapter, ITransferAdapter transferAdapter, IMapService mapService)
         {
@@ -73,7 +73,7 @@ namespace CodeWorkVoyWebService.Controllers
 
             // Prevent buffer over run.
             if ((userId !=null && userId.Length > 36) || id.Length>10 ) return itinObj;
-            CardObj card = new CardObj();
+            TripCardObj card = new TripCardObj();
 
             List <PRSelection> pRSelections = new List<PRSelection>();
             List<TransferNode> transferNodes = new List<TransferNode>();
@@ -128,7 +128,7 @@ namespace CodeWorkVoyWebService.Controllers
         {
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("sessionObjects-StoredItinBefore.json", sessionObject);
-            CardObj card = new CardObj();
+            TripCardObj card = new TripCardObj();
             List<PRSelection> pRSelections = sessionObject.PRSelections;
             pRSelections = _cardAdapter.updateSelectionWithCards(pRSelections);
 
@@ -154,10 +154,10 @@ namespace CodeWorkVoyWebService.Controllers
         }
 
 
-        private CardObj getCardFromItinerary(int userItinId, int templateTypeId)
+        private TripCardObj getCardFromItinerary(int userItinId, int templateTypeId)
         {
 
-            CardObj card = new CardObj();
+            TripCardObj card = new TripCardObj();
 
             CodeWorkVoyWebService.Models.WebData.UserItinerary userItin = _userItinAdapter.getAdminItin(userItinId);
             if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("userItin.json", userItin);
@@ -182,7 +182,7 @@ namespace CodeWorkVoyWebService.Controllers
 
         // GET: api/Itinerary/Cards/43
         [HttpGet("Cards/{templateTypeId}")]
-        public IEnumerable<CardObj> GetItineraryCards([FromRoute] int templateTypeId)
+        public IEnumerable<TripCardObj> GetItineraryCards([FromRoute] int templateTypeId)
         {
 
             _userItinAdapter.AdminTemplate = true;
@@ -190,7 +190,7 @@ namespace CodeWorkVoyWebService.Controllers
             List<CodeWorkVoyWebService.Models.WebData.AdminItinTemplates> adminTemplates = _userItinAdapter.getAdminTemplateItins(templateTypeId);
 
             //List<CodeWorkVoyWebService.Models.WebData.UserItinerary> userItins = _userItinAdapter.getAdminTemplateItins();
-            List<CardObj> cards = new List<CardObj>();
+            List<TripCardObj> cards = new List<TripCardObj>();
             int counter = 0;
             foreach (CodeWorkVoyWebService.Models.WebData.AdminItinTemplates adminTemplate in adminTemplates)
             {

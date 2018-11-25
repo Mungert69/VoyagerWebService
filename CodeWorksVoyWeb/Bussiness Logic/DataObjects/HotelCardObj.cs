@@ -9,6 +9,7 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
 {
     public class HotelCardObj : CardObj
     {
+        private string hotelFeatures;
         private int placeNameId;
         private CodeWorkVoyWebService.Models.CubaData.AccommodationRoomSpecification accommodationRoomSpecification;
         private CodeWorkVoyWebService.Models.CubaData.AccommodationDescription accommodationDescription;
@@ -21,5 +22,6 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
         public AccommodationSelfCater AccommodationSelfCater { get => accommodationSelfCater; set => accommodationSelfCater = value; }
         public AccommodationAllInclusiveFacilities AccommodationAllInclusiveFacilities { get => accommodationAllInclusiveFacilities; set => accommodationAllInclusiveFacilities = value; }
         public int PlaceNameId { get => placeNameId; set => placeNameId = value; }
+        public string HotelFeatures { get => hotelFeatures; set => hotelFeatures = value; }
     }
 }
