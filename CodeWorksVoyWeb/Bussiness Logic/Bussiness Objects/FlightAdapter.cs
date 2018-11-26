@@ -101,18 +101,18 @@ public class FlightAdapter : IFlightAdapter
     public  List<FlightObj> getOutFlightsByDateRange(int supplierID, DateTime date, DateTime startDate)
     {
         List<FlightObj> flightObjs = new List<FlightObj>();
-        /*
-        FlightTableTableAdapter adapt = new FlightTableTableAdapter();
-        FlightData.FlightTableDataTable table = adapt.GetOutFlightsByDateRange(supplierID, startDate,date);
 
-        foreach (FlightData.FlightTableRow row in table)
+        List<CodeWorksVoyWebService.Models.CubaData.FlightTable> table = flightTable.Where(f => f.UseIt == "Y" && f.SupplierId == supplierID && (f.FlightDepartureDate >= startDate && f.FlightDepartureDate <= date)).ToList();
+        flightObjs.Add(new FlightObj());
+        foreach (CodeWorksVoyWebService.Models.CubaData.FlightTable row in table)
         {
             FlightObj flightObj = new FlightObj();
-            flightObj.FlightDepartureDate = row.FlightDepartureDate;
+            flightObj.FlightDepartureDate = Convert.ToDateTime(row.FlightDepartureDate);
             flightObj.DepartureTime = row.DepartureTime;
-            flightObj.OutFlightID= row.FlightID;
+
+            flightObj.OutFlightID = Convert.ToInt32(row.FlightId);
             flightObjs.Add(flightObj);
-        }*/
+        }
         return flightObjs;
     }
 

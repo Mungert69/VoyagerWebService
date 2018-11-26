@@ -9,6 +9,22 @@ using System.Web;
 public class ItinTemplateObj
 {
 
+
+    public ItinTemplateObj( int adminItinID, int templateTypeId, decimal price, int timeId)
+    {
+
+        this.adminItinID = adminItinID;
+        this.templateTypeId = TemplateTypeId;
+        this.price = price;
+        this.timeId = timeId;
+    }
+
+    private int timeId;
+
+    private decimal price;
+
+    private int  templateTypeId;
+
     private int countID;
 
     public int CountID
@@ -91,9 +107,17 @@ public class ItinTemplateObj
 
     private int displayOrder;
 
+    public ItinTemplateObj()
+    {
+    }
+
     public int DisplayOrder
     {
         get { return displayOrder; }
         set { displayOrder = value; }
     }
+
+    public int TemplateTypeId { get => templateTypeId; set => templateTypeId = value; }
+    public decimal Price { get => price; set => price = value; }
+    public int TimeId { get => timeId; set => timeId = value; }
 }

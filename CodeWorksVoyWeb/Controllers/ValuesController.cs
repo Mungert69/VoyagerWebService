@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CodeWorksVoyWebService.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodeWorksVoyWeb.Controllers
@@ -10,6 +11,23 @@ namespace CodeWorksVoyWeb.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private IPriceService _priceService;
+        private ISessionObjectsService _sessionObjectsService;
+
+        public ValuesController(ISessionObjectsService sessionObjectsService, IPriceService priceService)
+        {
+            _sessionObjectsService = sessionObjectsService;
+            _priceService = priceService;
+        }
+
+        // GET api/values/AllPrices
+        [HttpGet("AllPrices")]
+        public ActionResult<string> GetAllPrices()
+        {
+            _priceService.SessionObject= _sessionObjectsService.getSessionObject("Admin");
+            return _priceService.updateItinTemplatePrices();
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
