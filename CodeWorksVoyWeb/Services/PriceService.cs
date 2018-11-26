@@ -508,11 +508,15 @@ public class PriceService : IPriceService
     public string updateItinTemplatePrices()
     {
         List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
-        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableWrite = _contextWeb.ItinTemplateTimeId.ToList();
+        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableDel = _contextWeb.ItinTemplateTimeId.ToList();
 
         // ItinTemplateTimeIDTableAdapter adaptWrite = new ItinTemplateTimeIDTableAdapter();
         //adaptWrite.DeleteQuery();
-       List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> tableTemplate = _contextWeb.AdminItinTemplates.ToList();
+
+        CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId timeIdEntity;
+        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableWrite = _contextWeb.ItinTemplateTimeId.ToList();
+
+        List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> tableTemplate = _contextWeb.AdminItinTemplates.ToList();
 
         //AdminTemplatesTableAdapter adaptTemplate = new AdminTemplatesTableAdapter();
         //AdminItinData.AdminTemplatesDataTable tableTemplate = adaptTemplate.GetData();
@@ -569,7 +573,11 @@ public class PriceService : IPriceService
                     getPrice();
                   
                     string debugStr = SessionObject.PriceBrakeDown;
-                    //adaptWrite.InsertQuery(rowTemplate.AdminItinID, rowLookup.TimeID, SessionObject.TotalCost);
+                    timeIdEntity = new CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId();
+                    timeIdEntity.TimeId= rowLookup.TimeId;
+                    timeIdEntity.UserItinId = (int)rowTemplate.AdminItinId;
+                    timeIdEntity.Price = SessionObject.TotalCost;
+                    tableWrite.Add(timeIdEntity);
                     if (SessionObject.Flight.FlightCost == 0) {
                         str.Append("<br/>Successfully update price where IndexName=" + rowTemplate.AccordianName + " Date range=" + rowLookup.TimeRangeName + "<span STYLE='color : #FF0000;'> Price=" + SessionObject.TotalCost + "</span> Date used was : " + SessionObject.Flight.StartDate);
                  
@@ -587,7 +595,10 @@ public class PriceService : IPriceService
 
             }
         }
-        
+        _contextWeb.ItinTemplateTimeId.RemoveRange(tableDel);
+        _contextWeb.SaveChanges();
+        _contextWeb.ItinTemplateTimeId.AddRange(tableWrite);
+        _contextWeb.SaveChanges();
         return str.ToString();
           
     }
