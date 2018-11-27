@@ -28,10 +28,11 @@ namespace CodeWorksVoyWebService.Controllers
         private IUserItinAdapter _userItinAdapter;
         private ITransferAdapter _transferAdapter;
         private IMapService _mapService;
+        private IPriceService _priceService;
         //private string userHashId="xxxx";
-        private bool createTestJsonFiles =true;
+        private bool createTestJsonFiles =false;
 
-        public ItineraryController(ISessionObjectsService sessionObjectsService, IItineraryService itineraryService, IHotelAdapter hotelAdapter, IPlaceAdapter placeAdapter, ICardAdapter cardAdapter, IUserItinAdapter userItinAdapter, ITransferAdapter transferAdapter, IMapService mapService)
+        public ItineraryController(ISessionObjectsService sessionObjectsService, IItineraryService itineraryService, IHotelAdapter hotelAdapter, IPlaceAdapter placeAdapter, ICardAdapter cardAdapter, IUserItinAdapter userItinAdapter, ITransferAdapter transferAdapter, IMapService mapService, IPriceService priceService)
         {
 
             _sessionObjectsService = sessionObjectsService;
@@ -42,6 +43,7 @@ namespace CodeWorksVoyWebService.Controllers
             _userItinAdapter = userItinAdapter;
             _transferAdapter = transferAdapter;
             _mapService = mapService;
+            _priceService = priceService;
         }
 
 
@@ -79,10 +81,14 @@ namespace CodeWorksVoyWebService.Controllers
                 _userItinAdapter.AdminTemplate = true;
 
                 card = getCardFromItinerary(Convert.ToInt32(id), templateTypeId);
-                if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("card.json", card);
-
+                card.getPriceString(_priceService);
                 pRSelections = _userItinAdapter.getItinPlaces(card.ItinId);
+                card.getNights(pRSelections);
+                card.Stages = pRSelections.Count;
+                card.getPlaceObjs(pRSelections);
                 pRSelections = _cardAdapter.updateSelectionWithCards(pRSelections);
+
+                if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("card.json", card);
                 if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("pRSelections.json", pRSelections);
 
 
@@ -169,6 +175,7 @@ namespace CodeWorksVoyWebService.Controllers
             card.CountryId = 0;
             card.Country = "";
             card.TypeId = templateTypeId;
+           
 
             List<string> strList = new List<string>();
             strList.Add("");

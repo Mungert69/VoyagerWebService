@@ -12,7 +12,6 @@ public interface IPriceService
     HotelPriceObj getHotelPrice(DateTime intDate, List<PRSelection> prSelections);
     List<ItinTemplateTimeObj> getItinTemplatePrices(int userItinID);
     List<ItinTemplateTimeObj> getItinTemplateTimeObjs(int timeID);
-    List<ItinTemplateTimeObj> getItinTemplateTimeObjsEscorted(int timeID);
     int getNearestTimeID();
     decimal getPrice();
     decimal getPriceMultiplier(int centers);

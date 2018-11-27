@@ -23,6 +23,9 @@ public class ItinTemplateTimeObj
         get { return timeID; }
         set { timeID = value; }
     }
+
+    private string timeIdName;
+
     private decimal price;
 
     public decimal Price
@@ -55,4 +58,5 @@ public class ItinTemplateTimeObj
         set { templateType = value; }
     }
 
+    public string TimeIdName { get => timeIdName; set => timeIdName = value; }
 }

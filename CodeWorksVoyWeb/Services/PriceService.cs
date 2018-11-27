@@ -408,6 +408,7 @@ public class PriceService : IPriceService
         List<ItinTemplateTimeObj> timeObjs = new List<ItinTemplateTimeObj>();
 
         List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableTimeId= _contextWeb.ItinTemplateTimeId.Where(t => t.UserItinId == userItinId).ToList();
+        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
 
         int timeID = getNearestTimeID();
         foreach (CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId row in tableTimeId)
@@ -422,37 +423,13 @@ public class PriceService : IPriceService
                 timeObj.Price = Convert.ToDecimal(row.Price);
             }
             timeObj.TimeID = Convert.ToInt32(row.TimeId);
+            timeObj.TimeIdName = tableLookup.Where(t => t.TimeId == timeObj.TimeID).Select (s => s.TimeRangeName).First();
             timeObjs.Add(timeObj);
         }
         return timeObjs;
     }
 
 
-
-
-    public List<ItinTemplateTimeObj> getItinTemplateTimeObjsEscorted(int timeId)
-    {
-        List<ItinTemplateTimeObj> timeObjs = new List<ItinTemplateTimeObj>();
-        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdescorted> tableTimeId = _contextWeb.ItinTemplateTimeIdescorted.Where(t => t.TimeId == timeId).ToList();
-
-        int timeID = getNearestTimeID();
-        foreach (CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdescorted row in tableTimeId)
-        {
-            ItinTemplateTimeObj timeObj = new ItinTemplateTimeObj();
-            timeObj.TemplateType = row.TemplateName;
-            if (row.TimeId < timeID)
-            {
-                timeObj.Price = Convert.ToDecimal(row.Price) * 1.0M;
-            }
-            else
-            {
-                timeObj.Price = Convert.ToDecimal(row.Price);
-            }
-            timeObj.TimeID = Convert.ToInt32(row.TimeId);
-            timeObjs.Add(timeObj);
-        }
-        return timeObjs;
-    }
 
 
     public List<ItinTemplateTimeObj> getItinTemplateTimeObjs(int timeId)

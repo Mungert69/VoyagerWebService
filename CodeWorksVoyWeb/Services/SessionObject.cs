@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using Microsoft.Extensions.Configuration;
-
+using Newtonsoft.Json;
 
 public class SessionObject : ISessionObject
 {
@@ -60,8 +60,10 @@ public class SessionObject : ISessionObject
     private const string ISAGENT = "isagent";
     private const string ISSUPERUSER = "issuperuser";
 
-  
+    [JsonIgnore]
     private IConfiguration _Configuration;
+
+    
     public SessionObject(IConfiguration configuration) {
         Configuration = configuration;
     }
