@@ -197,11 +197,19 @@ namespace CodeWorksVoyWebService.Controllers
             //List<CodeWorkVoyWebService.Models.WebData.UserItinerary> userItins = _userItinAdapter.getAdminTemplateItins();
             List<TripCardObj> cards = new List<TripCardObj>();
             int counter = 0;
+            TripCardObj card;
+            List<PRSelection> pRSelections = new List<PRSelection>();
             foreach (CodeWorksVoyWebService.Models.WebData.AdminItinTemplates adminTemplate in adminTemplates)
             {
-                cards.Add(getCardFromItinerary(Convert.ToInt32(adminTemplate.AdminItinId), templateTypeId));
+                card = new TripCardObj();
+                card = getCardFromItinerary(Convert.ToInt32(adminTemplate.AdminItinId), templateTypeId);
+                card.getPriceString(_priceService);
+                pRSelections = _userItinAdapter.getItinPlaces(card.ItinId);
+                card.getNights(pRSelections);
+                card.Stages = pRSelections.Count;
+                card.getPlaceObjs(pRSelections);             
                 counter++;
-                if (counter == 20) break;
+               
             }
 
             return cards;
