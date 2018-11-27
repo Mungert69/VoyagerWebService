@@ -207,7 +207,8 @@ namespace CodeWorksVoyWebService.Controllers
                 pRSelections = _userItinAdapter.getItinPlaces(card.ItinId);
                 card.getNights(pRSelections);
                 card.Stages = pRSelections.Count;
-                card.getPlaceObjs(pRSelections);             
+                card.getPlaceObjs(pRSelections);
+                cards.Add(card);
                 counter++;
                
             }
