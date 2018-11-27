@@ -8,10 +8,6 @@ using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 using CodeWorksVoyWebService.Bussiness_Logic.Utils;
 
 using CodeWorksVoyWebService.Services;
-using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
-using Microsoft.AspNetCore.Http;
-using CodeWorksVoyWebService.Bussiness_Logic.Utils;
-using CodeWorksVoyWebService.Services;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
