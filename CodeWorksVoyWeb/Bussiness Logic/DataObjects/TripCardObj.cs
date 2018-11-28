@@ -18,6 +18,7 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
         private int nights = 0;
         private int stages=0;
         private List<PlaceObj> placeObjs;
+        private List<string> picFileNames;
         public int ItinId { get => itinId; set => itinId = value; }
         public decimal Price { get => price; set => price = value; }
         public DateTime TravelDate { get => travelDate; set => travelDate = value; }
@@ -26,6 +27,7 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
         public int Nights { get => nights; set => nights = value; }
         public int Stages { get => stages; set => stages = value; }
         public List<PlaceObj> PlaceObjs { get => placeObjs; set => placeObjs = value; }
+        public List<string> PicFileNames1 { get => picFileNames; set => picFileNames = value; }
 
         public void getPriceString(IPriceService priceService) {
             List<ItinTemplateTimeObj> itinTemplatePrices = priceService.getItinTemplatePrices(base.Id);
@@ -57,5 +59,21 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
             }
             PlaceObjs = placeObjs ;
         }
+
+        public void getTripPics(List<PRSelection> pRSelections) {
+            List<string> fileNames = new List<string>();
+            PlaceCardObj placeCard;
+            foreach (PRSelection selection in pRSelections)
+            {
+                placeCard = selection.PlaceCard ;
+                foreach (String fileName in placeCard.PicFileNames) {
+                    fileNames.Add(fileName);
+                }
+               
+               
+            }
+            picFileNames=fileNames;
+        }
+
     }
 }

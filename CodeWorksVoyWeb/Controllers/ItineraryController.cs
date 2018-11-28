@@ -83,10 +83,12 @@ namespace CodeWorksVoyWebService.Controllers
                 card = getCardFromItinerary(Convert.ToInt32(id), templateTypeId);
                 card.getPriceString(_priceService);
                 pRSelections = _userItinAdapter.getItinPlaces(card.ItinId);
+                pRSelections = _cardAdapter.updateSelectionWithCards(pRSelections);
                 card.getNights(pRSelections);
                 card.Stages = pRSelections.Count;
                 card.getPlaceObjs(pRSelections);
-                pRSelections = _cardAdapter.updateSelectionWithCards(pRSelections);
+                card.getTripPics(pRSelections);
+
 
                 if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("card.json", card);
                 if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("pRSelections.json", pRSelections);
@@ -169,7 +171,7 @@ namespace CodeWorksVoyWebService.Controllers
             card.Id = userItin.UserItinId;
             card.ItinId = userItin.ItinId;
             card.Title = userItin.ItinName;
-            card.Panel1 = userItin.Seotext;
+            card.DescriptionShort = userItin.Seotext;
             card.Longitude = "";
             card.Latitude = "";
             card.CountryId = 0;
@@ -205,9 +207,11 @@ namespace CodeWorksVoyWebService.Controllers
                 card = getCardFromItinerary(Convert.ToInt32(adminTemplate.AdminItinId), templateTypeId);
                 card.getPriceString(_priceService);
                 pRSelections = _userItinAdapter.getItinPlaces(card.ItinId);
+                pRSelections = _cardAdapter.updateSelectionWithCards(pRSelections);
                 card.getNights(pRSelections);
                 card.Stages = pRSelections.Count;
                 card.getPlaceObjs(pRSelections);
+                card.getTripPics(pRSelections);
                 cards.Add(card);
                 counter++;
                
