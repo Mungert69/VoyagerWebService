@@ -27,7 +27,7 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
         public int Nights { get => nights; set => nights = value; }
         public int Stages { get => stages; set => stages = value; }
         public List<PlaceObj> PlaceObjs { get => placeObjs; set => placeObjs = value; }
-        public List<string> PicFileNames1 { get => picFileNames; set => picFileNames = value; }
+        
 
         public void getPriceString(IPriceService priceService) {
             List<ItinTemplateTimeObj> itinTemplatePrices = priceService.getItinTemplatePrices(base.Id);
@@ -72,7 +72,7 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
                
                
             }
-            picFileNames=fileNames;
+            base.PicFileNames=fileNames;
         }
 
     }
