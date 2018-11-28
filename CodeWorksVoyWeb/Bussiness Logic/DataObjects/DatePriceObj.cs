@@ -9,24 +9,25 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
     {
 
         private DateTime date;
-        private Decimal price;
+        private Decimal exactPrice;
         private String dateStr;
 
         public DatePriceObj(decimal price, string dateStr)
         {
-            this.price = price;
+            this.exactPrice = price;
             this.dateStr = dateStr;
         }
 
         public DatePriceObj(String dateStr, decimal price, DateTime date)
         {
             this.dateStr = dateStr;
-            this.price = price;
+            this.exactPrice = price;
             this.date = date;
         }
 
         public DateTime Date { get => date; set => date = value; }
-        public decimal Price { get => price; set => price = value; }
+        public decimal ExactPrice { get => exactPrice; set => exactPrice = value; }
         public string DateStr { get => dateStr; set => dateStr = value; }
+        public int Price { get => (int)exactPrice; }
     }
 }
