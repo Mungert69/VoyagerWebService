@@ -41,7 +41,7 @@ public class PriceService : IPriceService
 
     public ISessionObject SessionObject { get => sessionObject; set => sessionObject = value; }
 
-    public PriceService(IMemoryCache cache,IConfiguration configuration, VoyagerReserveContext contextRes, IPlaceAdapter placeAdapter, IHotelAdapter hotelAdapter, IFlightAdapter flightAdapter,ITransferAdapter transferAdapter, IUserItinAdapter userItinAdapter, CubaDataContext context, WebDataContext contextWeb)
+    public PriceService(IMemoryCache cache, IConfiguration configuration, VoyagerReserveContext contextRes, IPlaceAdapter placeAdapter, IHotelAdapter hotelAdapter, IFlightAdapter flightAdapter, ITransferAdapter transferAdapter, IUserItinAdapter userItinAdapter, CubaDataContext context, WebDataContext contextWeb)
     {
         suppliersTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.VoyagerReserve.Suppliers>(ref cache, contextRes, suppliersTable, "SuppliersTable");
         priceMultiplyierTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.PriceMultiplyier>(ref cache, context, priceMultiplyierTable, "PriceMultiplyierTable");
@@ -156,7 +156,8 @@ public class PriceService : IPriceService
             SessionObject.TotalCost = (hotelPrice + SessionObject.Flight.FlightCost + xFer) * multiplier + apt + repCharge + psc;
             return SessionObject.TotalCost;
         }
-        catch {
+        catch
+        {
             // Not catching exceptions as we want to be able to bypass price calc when things are not ready.
             return 0;
         }
@@ -169,7 +170,7 @@ public class PriceService : IPriceService
     {
         decimal multiplier = 1.30M;
 
-        CodeWorksVoyWebService.Models.CubaData.PriceMultiplyier row= priceMultiplyierTable.Where(p => p.Id == centers).First();
+        CodeWorksVoyWebService.Models.CubaData.PriceMultiplyier row = priceMultiplyierTable.Where(p => p.Id == centers).First();
         multiplier = Convert.ToDecimal(row.Multiplier);
         return multiplier;
     }
@@ -185,7 +186,8 @@ public class PriceService : IPriceService
         {
             flightCost = Convert.ToDecimal(row.Cost);
         }
-        if (flightCost == 0) {
+        if (flightCost == 0)
+        {
             List<CodeWorksVoyWebService.Models.VoyagerReserve.Suppliers> suppTable = suppliersTable.Where(s => s.SupplierId == supplierId).ToList();
 
             foreach (CodeWorksVoyWebService.Models.VoyagerReserve.Suppliers row in suppTable)
@@ -332,13 +334,15 @@ public class PriceService : IPriceService
         return transferPriceObjs;
     }
 
-    private decimal getTransferPrice(int groundID) {
-        try { 
-        decimal price = Convert.ToDecimal(defaultTransfersTable.Where(d => d.TransferId == groundID).Select(d => d.Price).First());
-        return price;
-    }
-    catch (Exception e){return 0;}
-       
+    private decimal getTransferPrice(int groundID)
+    {
+        try
+        {
+            decimal price = Convert.ToDecimal(defaultTransfersTable.Where(d => d.TransferId == groundID).Select(d => d.Price).First());
+            return price;
+        }
+        catch (Exception e) { return 0; }
+
     }
 
     public int getNearestTimeID()
@@ -366,8 +370,8 @@ public class PriceService : IPriceService
     public List<DateTime> getTimeIDDates()
     {
         List<DateTime> timeObjs = new List<DateTime>();
-        
-       List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableTimeIdLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
+
+        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableTimeIdLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
 
 
         foreach (CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup row in tableTimeIdLookup)
@@ -384,16 +388,18 @@ public class PriceService : IPriceService
     public List<DateTime> getTimeIDDatesAdjusted()
     {
         List<DateTime> timeObjs = new List<DateTime>();
-        
-           int nowTimeID = getNearestTimeID();
-       List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableTimeIdLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
+
+        int nowTimeID = getNearestTimeID();
+        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableTimeIdLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
 
 
         foreach (CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup row in tableTimeIdLookup)
-        {      
+        {
+            int nowYear = DateTime.Now.Year;
+            DateTime nowYearDate = new DateTime(nowYear, Convert.ToDateTime(row.Date).Month, Convert.ToDateTime(row.Date).Day);
             DateTime timeObj = new DateTime();
-            if (row.TimeId < nowTimeID) { timeObj = Convert.ToDateTime(row.Date).AddYears(1); }
-            else { timeObj = Convert.ToDateTime(row.Date); }
+            if (row.TimeId < nowTimeID) { timeObj = nowYearDate.AddYears(1); }
+            else { timeObj = nowYearDate; }
 
             timeObjs.Add(timeObj);
         }
@@ -407,7 +413,7 @@ public class PriceService : IPriceService
     {
         List<ItinTemplateTimeObj> timeObjs = new List<ItinTemplateTimeObj>();
 
-        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableTimeId= _contextWeb.ItinTemplateTimeId.Where(t => t.UserItinId == userItinId).ToList();
+        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableTimeId = _contextWeb.ItinTemplateTimeId.Where(t => t.UserItinId == userItinId).ToList();
         List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
 
         int timeID = getNearestTimeID();
@@ -423,7 +429,7 @@ public class PriceService : IPriceService
                 timeObj.Price = Convert.ToDecimal(row.Price);
             }
             timeObj.TimeID = Convert.ToInt32(row.TimeId);
-            timeObj.TimeIdName = tableLookup.Where(t => t.TimeId == timeObj.TimeID).Select (s => s.TimeRangeName).First();
+            timeObj.TimeIdName = tableLookup.Where(t => t.TimeId == timeObj.TimeID).Select(s => s.TimeRangeName).First();
             timeObjs.Add(timeObj);
         }
         return timeObjs;
@@ -437,7 +443,7 @@ public class PriceService : IPriceService
         List<ItinTemplateTimeObj> timeObjs = new List<ItinTemplateTimeObj>();
         int timeID = getNearestTimeID();
 
-        List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> tableAdminTemplates= _contextWeb.AdminItinTemplates.ToList();
+        List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> tableAdminTemplates = _contextWeb.AdminItinTemplates.ToList();
         List<CodeWorksVoyWebService.Models.WebData.TemplateTypes> tableTemplateTypes = _contextWeb.TemplateTypes.ToList();
         List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableTimeIds = _contextWeb.ItinTemplateTimeId.ToList();
 
@@ -447,11 +453,11 @@ public class PriceService : IPriceService
                   t => t.UserItinId,        // Select the primary key (the first part of the "on" clause in an sql "join" statement)
                                             // Select the foreign key (the second part of the "on" clause)
                      (a, t) => new { A = a, T = t }) // selection
-                  .Where(joined => joined.T.TimeId == timeId).Select(s => new ItinTemplateObj( (int)s.A.AdminItinId ,(int)s.A.TemplateTypeId, (decimal)s.T.Price, (int)s.T.TimeId)).ToList();
+                  .Where(joined => joined.T.TimeId == timeId).Select(s => new ItinTemplateObj((int)s.A.AdminItinId, (int)s.A.TemplateTypeId, (decimal)s.T.Price, (int)s.T.TimeId)).ToList();
         foreach (var row in joinedTable)
         {
-            
-            CodeWorksVoyWebService.Models.WebData.TemplateTypes templateTypeRow = tableTemplateTypes.Where(t => t.TemplateTypeId==row.TemplateTypeId ).First();
+
+            CodeWorksVoyWebService.Models.WebData.TemplateTypes templateTypeRow = tableTemplateTypes.Where(t => t.TemplateTypeId == row.TemplateTypeId).First();
             ItinTemplateTimeObj timeObj = new ItinTemplateTimeObj();
             timeObj.TemplateType = templateTypeRow.TemplateType;
             timeObj.TemplateTypeID = row.TemplateTypeId;
@@ -471,15 +477,18 @@ public class PriceService : IPriceService
         return timeObjs;
     }
 
-    public DateTime adjustDate(DateTime adjustDate){
-     DateTime now = DateTime.Now;
-     DateTime adjustedDate = new DateTime(now.Year, adjustDate.Month, adjustDate.Day);
-                    if (now < adjustedDate) { return adjustDate; }
-                    else {
-                        now = now.AddYears(1);
-                        return  new DateTime(now.Year, adjustDate.Month, adjustDate.Day);
-                  
-                    }
+    public DateTime adjustDate(DateTime adjustDate)
+    {
+        DateTime now = DateTime.Now;
+        DateTime adjustedDate = new DateTime(now.Year, adjustDate.Month, adjustDate.Day);
+        if (now < adjustedDate) { return adjustedDate; }
+        else
+        {
+            now = now.AddYears(1);
+            return new DateTime(now.Year, adjustDate.Month, adjustDate.Day);
+
+        }
+
     }
 
     public string updateItinTemplatePrices()
@@ -502,8 +511,8 @@ public class PriceService : IPriceService
         _userItinAdapter.AdminTemplate = true;
 
 
-         SessionObject.Flight.SupplierID=Convert.ToInt16(_configuration.GetSection("AppConfiguration")["DefaultFlightSupplierIDForTemplatePriceCalc"]);
-       
+        SessionObject.Flight.SupplierID = Convert.ToInt16(_configuration.GetSection("AppConfiguration")["DefaultFlightSupplierIDForTemplatePriceCalc"]);
+
         StringBuilder str = new StringBuilder();
 
         foreach (CodeWorksVoyWebService.Models.WebData.AdminItinTemplates rowTemplate in tableTemplate)
@@ -519,25 +528,26 @@ public class PriceService : IPriceService
                     SessionObject.TransferNodes = _userItinAdapter.getTransfersNodes(itinID);
 
                     DateTime useDate = adjustDate(Convert.ToDateTime(rowLookup.Date));
-                    if (rowLookup.TimeId == 4 && rowLookup.TimeId == 14) {
+                    if (rowLookup.TimeId == 4 && rowLookup.TimeId == 14)
+                    {
                         int distance = 7;
                         if (rowLookup.TimeId == 4) distance = 24;
 
                         SessionObject.Flight.StartDate = getFlightDate(useDate, distance, true, SessionObject.Flight.SupplierID);
-                 
+
                     }
                     else
                     {
                         SessionObject.Flight.StartDate = getFlightDate(useDate, 3, false, SessionObject.Flight.SupplierID);
                     }
-                        int totalNights = 0;
+                    int totalNights = 0;
                     foreach (PRSelection selection in SessionObject.PRSelections)
                     {
                         totalNights += selection.Nights;
                     }
                     SessionObject.Flight.EndDate = SessionObject.Flight.StartDate.AddDays(totalNights);
 
-                   
+
 
                     List<FlightObj> flightObjs = _flightAdapter.getOutFlightsByDateRange(SessionObject.Flight.SupplierID, SessionObject.Flight.StartDate, SessionObject.Flight.StartDate);
                     SessionObject.Flight.OutFlightID = 0;
@@ -547,27 +557,28 @@ public class PriceService : IPriceService
                         SessionObject.Flight.OutFlightID = row.OutFlightID;
                         break;
                     }
-                
+
                     getPrice();
-                  
+
                     string debugStr = SessionObject.PriceBrakeDown;
 
                     timeIdEntity = new CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId();
-                    timeIdEntity.TimeId= rowLookup.TimeId;
+                    timeIdEntity.TimeId = rowLookup.TimeId;
                     timeIdEntity.UserItinId = (int)rowTemplate.AdminItinId;
                     timeIdEntity.Price = SessionObject.TotalCost;
                     tableWrite.Add(timeIdEntity);
-                  
-                    if (SessionObject.Flight.FlightCost == 0) {
+
+                    if (SessionObject.Flight.FlightCost == 0)
+                    {
                         str.Append("<br/>Successfully update price where IndexName=" + rowTemplate.AccordianName + " Date range=" + rowLookup.TimeRangeName + "<span STYLE='color : #FF0000;'> Price=" + SessionObject.TotalCost + "</span> Date used was : " + SessionObject.Flight.StartDate);
-                 
+
                     }
                     else
                     {
                         str.Append("<br/>Successfully update price where IndexName=" + rowTemplate.AccordianName + " Date range=" + rowLookup.TimeRangeName + " Price=" + SessionObject.TotalCost + " Date used was : " + SessionObject.Flight.StartDate);
                     }
-                    str.Append("<br/>"+debugStr+"<br/>");
-                    }
+                    str.Append("<br/>" + debugStr + "<br/>");
+                }
                 catch (Exception ex)
                 {
                     str.Append("<br/>Failed to  update price where IndexName=" + rowTemplate.AccordianName + " Date range=" + rowLookup.TimeRangeName + "<br/>Error was : " + ex.Message);
@@ -575,34 +586,35 @@ public class PriceService : IPriceService
 
             }
         }
-      
+
         _contextWeb.ItinTemplateTimeId.AddRange(tableWrite);
         _contextWeb.SaveChanges();
         return str.ToString();
-          
+
     }
 
     private DateTime getFlightDate(DateTime startDate, int distance, bool highest, int supplierID)
     {
-        
-        DateTime date = new DateTime();
-        
-       
-        date = getFlightID(startDate, distance,highest, supplierID);
-        if (!highest && date!=DateTime.MinValue) return date;
 
-        date = getFlightID(startDate.AddYears(-1), distance,highest, supplierID);
+        DateTime date = new DateTime();
+
+
+        date = getFlightID(startDate, distance, highest, supplierID);
         if (!highest && date != DateTime.MinValue) return date;
-        
+
+        date = getFlightID(startDate.AddYears(-1), distance, highest, supplierID);
+        if (!highest && date != DateTime.MinValue) return date;
+
         return date;
     }
 
-    private DateTime getFlightID(DateTime startDate, int distance, bool highest, int supplierID) {
+    private DateTime getFlightID(DateTime startDate, int distance, bool highest, int supplierID)
+    {
         DateTime date = new DateTime();
         DateTime highDate = new DateTime();
-        
+
         int outFlightID = 0;
-        decimal highPrice=0;
+        decimal highPrice = 0;
 
         for (int i = 0; i < distance; i++)
         {
@@ -623,14 +635,16 @@ public class PriceService : IPriceService
                     highDate = date;
                     break;
                 }
-                else {
-                    decimal price=getFlightCost(outFlightID,supplierID);
-                    if (price > highPrice) {
+                else
+                {
+                    decimal price = getFlightCost(outFlightID, supplierID);
+                    if (price > highPrice)
+                    {
                         highPrice = price;
                         highDate = date;
                     };
                 }
-                
+
             }
             date = startDate.AddDays(-i);
             flightObjs = _flightAdapter.getOutFlightsByDateRange(supplierID, date, date);
@@ -644,12 +658,14 @@ public class PriceService : IPriceService
                     outFlightID = row.OutFlightID;
 
                 }
-                if (!highest) { 
+                if (!highest)
+                {
                     highDate = date;
-                    break; }
+                    break;
+                }
                 else
                 {
-                    decimal price = getFlightCost(outFlightID,supplierID);
+                    decimal price = getFlightCost(outFlightID, supplierID);
                     if (price > highPrice)
                     {
                         highPrice = price;

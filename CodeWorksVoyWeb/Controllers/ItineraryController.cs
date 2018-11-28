@@ -78,10 +78,12 @@ namespace CodeWorksVoyWebService.Controllers
              
             if (id != "0")
             {
-                _userItinAdapter.AdminTemplate = true;
 
+                //TODO .getDatePriceObjs will not be called for a userItin.
+                _userItinAdapter.AdminTemplate = true;
                 card = getCardFromItinerary(Convert.ToInt32(id), templateTypeId);
-                card.getPriceString(_priceService);
+                card.getDatePriceObjs(_priceService);
+
                 pRSelections = _userItinAdapter.getItinPlaces(card.ItinId);
                 pRSelections = _cardAdapter.updateSelectionWithCards(pRSelections);
                 card.getNights(pRSelections);
@@ -205,7 +207,7 @@ namespace CodeWorksVoyWebService.Controllers
             {
                 card = new TripCardObj();
                 card = getCardFromItinerary(Convert.ToInt32(adminTemplate.AdminItinId), templateTypeId);
-                card.getPriceString(_priceService);
+                card.getDatePriceObjs(_priceService);
                 pRSelections = _userItinAdapter.getItinPlaces(card.ItinId);
                 pRSelections = _cardAdapter.updateSelectionWithCards(pRSelections);
                 card.getNights(pRSelections);

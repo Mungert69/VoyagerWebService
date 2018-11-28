@@ -26,6 +26,8 @@ public class ItinTemplateTimeObj
 
     private string timeIdName;
 
+    private DateTime date;
+
     private decimal price;
 
     public decimal Price
@@ -59,4 +61,5 @@ public class ItinTemplateTimeObj
     }
 
     public string TimeIdName { get => timeIdName; set => timeIdName = value; }
+    public DateTime Date { get => date; set => date = value; }
 }

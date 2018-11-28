@@ -18,7 +18,8 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
         private int nights = 0;
         private int stages=0;
         private List<PlaceObj> placeObjs;
-        private List<string> picFileNames;
+            private List<DatePriceObj> datePriceObjs;
+
         public int ItinId { get => itinId; set => itinId = value; }
         public decimal Price { get => price; set => price = value; }
         public DateTime TravelDate { get => travelDate; set => travelDate = value; }
@@ -27,7 +28,7 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
         public int Nights { get => nights; set => nights = value; }
         public int Stages { get => stages; set => stages = value; }
         public List<PlaceObj> PlaceObjs { get => placeObjs; set => placeObjs = value; }
-        
+        public List<DatePriceObj> DatePriceObjs { get => datePriceObjs; set => datePriceObjs = value; }
 
         public void getPriceString(IPriceService priceService) {
             List<ItinTemplateTimeObj> itinTemplatePrices = priceService.getItinTemplatePrices(base.Id);
@@ -37,6 +38,20 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
                 str.Append(obj.TimeIdName + " £" + Convert.ToInt32(obj.Price) + "  ");
             }
             pricesStr = str.ToString();
+        }
+
+        public void getDatePriceObjs(IPriceService priceService)
+        {
+            List<ItinTemplateTimeObj> itinTemplatePrices = priceService.getItinTemplatePrices(base.Id);
+            List<ItinTemplateTimeObj> sortedList = itinTemplatePrices.OrderBy(o => o.TimeID).ToList();
+            List<DatePriceObj> datePriceObjs = new List<DatePriceObj>();
+            DatePriceObj datePriceObj;
+            foreach (ItinTemplateTimeObj obj in sortedList)
+            {
+                datePriceObj=new DatePriceObj(obj.Price, obj.TimeIdName);
+                datePriceObjs.Add(datePriceObj);
+            }
+            DatePriceObjs = datePriceObjs;
         }
         public void getNights(List<PRSelection> pRSelections) {
             int totalNights = 0;
