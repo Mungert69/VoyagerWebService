@@ -9,7 +9,7 @@ namespace CodeWorksVoyWebService.Models.WebData
         public int? CardTemplateType { get; set; }
         public int? CardElementDetailLevel { get; set; }
         public int? CardElementCardsPerRow { get; set; }
-        public bool Card1ElementShare { get; set; }
+        public bool? Card1ElementShare { get; set; }
         public string Card1ElementShareStyle { get; set; }
         public bool? Card1ElementBookmark { get; set; }
         public string Card1ElementBookmarkStyle { get; set; }

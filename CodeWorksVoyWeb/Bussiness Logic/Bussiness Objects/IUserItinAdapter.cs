@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CodeWorksVoyWebService.Models.WebData;
 
 public interface IUserItinAdapter
@@ -31,7 +30,6 @@ public interface IUserItinAdapter
     UserItinObj getUserAdminItin(int userItinID);
     UserItinObj getUserItinEntity(int userItinID);
     List<UserItinObj> getUserItins(int userID);
-    void insertTransferNodes(List<TransferNode> transferNodes, int itinID);
-    ItinIntObj insertUserItin(List<PRSelection> prSelections, int userID, int outFlightID, int inFlightID, string selectedDepAirport, DateTime startDate, DateTime endDate, int selectedNights, string supplier, decimal totalCost, int supplierID, string depAirport);
+    void insertUserItin(List<TransferNode> transferNodes, List<PRSelection> prSelections, ISessionObject sessionObject, string user);
     void updateUserItin(int userItinID, int userID);
 }

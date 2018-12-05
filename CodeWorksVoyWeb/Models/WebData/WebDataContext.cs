@@ -62,8 +62,12 @@ namespace CodeWorksVoyWebService.Models.WebData
         public virtual DbSet<SettingsComponents> SettingsComponents { get; set; }
         public virtual DbSet<SettingsFont> SettingsFont { get; set; }
         public virtual DbSet<SettingsFontColour> SettingsFontColour { get; set; }
+        public virtual DbSet<SettingsFontLetterspacing> SettingsFontLetterspacing { get; set; }
         public virtual DbSet<SettingsFontSize> SettingsFontSize { get; set; }
+        public virtual DbSet<SettingsFontTexttransform> SettingsFontTexttransform { get; set; }
         public virtual DbSet<SettingsFontWeight> SettingsFontWeight { get; set; }
+        public virtual DbSet<SettingsFontWordwrap> SettingsFontWordwrap { get; set; }
+        public virtual DbSet<SettingsPosition> SettingsPosition { get; set; }
         public virtual DbSet<SettingsStageTitle> SettingsStageTitle { get; set; }
         public virtual DbSet<SettingsTags> SettingsTags { get; set; }
         public virtual DbSet<SettingsTagsStore> SettingsTagsStore { get; set; }
@@ -1019,6 +1023,13 @@ namespace CodeWorksVoyWebService.Models.WebData
                 entity.Property(e => e.FontColourData).IsUnicode(false);
             });
 
+            modelBuilder.Entity<SettingsFontLetterspacing>(entity =>
+            {
+                entity.HasKey(e => e.PKey);
+
+                entity.Property(e => e.PKey).HasColumnName("pKey");
+            });
+
             modelBuilder.Entity<SettingsFontSize>(entity =>
             {
                 entity.HasKey(e => e.PKey);
@@ -1030,6 +1041,19 @@ namespace CodeWorksVoyWebService.Models.WebData
                 entity.Property(e => e.FontSizeData).IsUnicode(false);
             });
 
+            modelBuilder.Entity<SettingsFontTexttransform>(entity =>
+            {
+                entity.HasKey(e => e.PKey);
+
+                entity.Property(e => e.PKey)
+                    .HasColumnName("pKey")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.FontTexttransform).IsUnicode(false);
+
+                entity.Property(e => e.FontTexttransformData).IsUnicode(false);
+            });
+
             modelBuilder.Entity<SettingsFontWeight>(entity =>
             {
                 entity.HasKey(e => e.PKey);
@@ -1039,6 +1063,36 @@ namespace CodeWorksVoyWebService.Models.WebData
                 entity.Property(e => e.FontWeight).IsUnicode(false);
 
                 entity.Property(e => e.FontWeightData).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<SettingsFontWordwrap>(entity =>
+            {
+                entity.HasKey(e => e.PKey);
+
+                entity.Property(e => e.PKey)
+                    .HasColumnName("pKey")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.SettingsFontWordwrap1)
+                    .HasColumnName("SettingsFontWordwrap")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SettingsFontWordwrapData).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<SettingsPosition>(entity =>
+            {
+                entity.HasKey(e => e.PKey);
+
+                entity.Property(e => e.PKey)
+                    .HasColumnName("pKey")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.SettingsPosition1)
+                    .HasColumnName("SettingsPosition")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SettingsPositionData).IsUnicode(false);
             });
 
             modelBuilder.Entity<SettingsStageTitle>(entity =>
@@ -1183,14 +1237,11 @@ namespace CodeWorksVoyWebService.Models.WebData
 
                 entity.Property(e => e.UserItinId).HasColumnName("UserItinID");
 
-                entity.Property(e => e.Airline)
-                    .IsRequired()
-                    .HasMaxLength(20);
+                entity.Property(e => e.Airline).HasMaxLength(20);
 
                 entity.Property(e => e.AirlineId).HasColumnName("AirlineID");
 
                 entity.Property(e => e.Airport)
-                    .IsRequired()
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
@@ -1217,13 +1268,11 @@ namespace CodeWorksVoyWebService.Models.WebData
                 entity.Property(e => e.ReturnTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Seotext)
-                    .IsRequired()
                     .HasColumnName("SEOText")
                     .IsUnicode(false)
                     .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.Seotitle)
-                    .IsRequired()
                     .HasColumnName("SEOTitle")
                     .IsUnicode(false)
                     .HasDefaultValueSql("('')");
@@ -1243,6 +1292,11 @@ namespace CodeWorksVoyWebService.Models.WebData
                     .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.Uuid)
+                    .HasColumnName("UUID")
+                    .HasMaxLength(36)
+                    .HasDefaultValueSql("('$admintemplate$')");
             });
 
             modelBuilder.Entity<UserTransfers>(entity =>

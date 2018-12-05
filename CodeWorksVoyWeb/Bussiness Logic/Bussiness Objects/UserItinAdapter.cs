@@ -127,7 +127,72 @@ public class UserItinAdapter : IUserItinAdapter
         return userItins;
     }
 
-   
+
+    public void insertUserItin(List<TransferNode> transferNodes, List<PRSelection> prSelections, ISessionObject sessionObject, string user)
+    {
+        CodeWorksVoyWebService.Models.WebData.UserItinerary userItinerary = new CodeWorksVoyWebService.Models.WebData.UserItinerary();
+        //int itinID = Convert.ToInt32(getMaxItinId()) + 1;
+        _contextAdmin.UserItinerary.Add(userItinerary);
+        _contextAdmin.SaveChanges();
+        int userItinId = userItinerary.UserItinId;
+        userItinerary = _contextAdmin.UserItinerary.Where(u => u.UserItinId == userItinId).First();
+        userItinerary.ItinId = userItinId;
+       // userItinerary.UUID=user;
+        userItinerary.OutFlightId = sessionObject.Flight.OutFlightID;
+        userItinerary.InFlightId = sessionObject.Flight.InFlightID;
+        userItinerary.DepAirport = sessionObject.Flight.DepartAirport;
+        userItinerary.DepartTime = sessionObject.Flight.StartDate;
+        userItinerary.ReturnTime = sessionObject.Flight.EndDate;
+        userItinerary.Nights = sessionObject.SelectedNights;
+        userItinerary.Airline = sessionObject.Flight.Supplier;
+        userItinerary.AirlineId = sessionObject.Flight.SupplierID;
+        userItinerary.TotalCost = sessionObject.TotalCost;
+        userItinerary.PriceDateStamp = DateTime.Now;
+
+
+
+
+        ; // Yes it's here
+
+        StringBuilder itinNameBuilder = new StringBuilder(); ;
+        foreach (PRSelection selection in prSelections)
+        {
+            itinNameBuilder.Append(selection.Place.Substring(0, 3) + "-");
+        }
+        string itinName = itinNameBuilder.ToString().Substring(0, itinNameBuilder.ToString().Length - 1);
+        if (itinName.Length > 16) itinName.Substring(0, 16);
+        userItinerary.ItinName = itinName;
+        _contextAdmin.SaveChanges();
+
+
+
+        foreach (PRSelection selection in prSelections)
+        {
+            CodeWorksVoyWebService.Models.WebData.ItinPlaces itinPlaces = new CodeWorksVoyWebService.Models.WebData.ItinPlaces();
+
+            itinPlaces.ItinId = userItinId;
+            itinPlaces.Place = selection.Place;
+            itinPlaces.PlaceId = selection.PlaceID;
+            itinPlaces.Hotel = selection.Hotel;
+            itinPlaces.Nights = selection.Nights;
+            itinPlaces.HotelId = selection.HotelID;
+            _contextAdmin.ItinPlaces.Add(itinPlaces);
+        }
+        _contextAdmin.SaveChanges();
+
+        foreach (TransferNode transferNode in transferNodes)
+        {
+            CodeWorksVoyWebService.Models.WebData.UserTransfers userTransfers = new CodeWorksVoyWebService.Models.WebData.UserTransfers();
+            userTransfers.ItinId = userItinId;
+            userTransfers.TransferId = transferNode.TransferID;
+            userTransfers.WithCar = transferNode.WithCar;
+            _contextAdmin.UserTransfers.Add(userTransfers);
+        }
+        _contextAdmin.SaveChanges();
+
+    }
+
+
 
     public string getTemplateTypeByAdminItinID(int AdminItinID)
     {
@@ -648,48 +713,10 @@ public class UserItinAdapter : IUserItinAdapter
 
   
 
-    public ItinIntObj insertUserItin(List<PRSelection> prSelections, int userID, int outFlightID, int inFlightID, string selectedDepAirport, DateTime startDate, DateTime endDate, int selectedNights, string supplier, decimal totalCost, int supplierID, string depAirport)
-    {
-        CodeWorksVoyWebService.Models.WebData.UserItinerary userItinerary = new CodeWorksVoyWebService.Models.WebData.UserItinerary();
-        //int itinID = Convert.ToInt32(getMaxItinId()) + 1;
-        _contextAdmin.UserItinerary.Add(userItinerary);
-        _contextAdmin.SaveChanges();
-
-        int itinId = userItinerary.ItinId; // Yes it's here
-
-        StringBuilder itinNameBuilder = new StringBuilder(); ;
-        foreach (PRSelection selection in prSelections)
-        {
-            itinNameBuilder.Append(selection.Place.Substring(0, 3) + "-");
-        }
-        string itinName = itinNameBuilder.ToString().Substring(0, itinNameBuilder.ToString().Length - 1);
-        if (itinName.Length > 16) itinName.Substring(0, 16);
-        adaptUserItin.Insert(userID, itinName, outFlightID, inFlightID, itinID, selectedDepAirport, startDate, endDate, selectedNights, supplier, supplierID, totalCost, DateTime.Now, depAirport);
-         foreach (PRSelection selection in prSelections)
-        {
-            adaptItinPlaces.InsertQuery(itinID, selection.Place, selection.PlaceID, selection.Hotel, selection.Nights, selection.HotelID);
-        }
-        int userItinID = Convert.ToInt32(adaptUserScalar.GetMaxUserItinID());*/
-        ItinIntObj itinObj = new ItinIntObj();
-        //itinObj.ItinID = itinID;
-        //itinObj.UserItinID = userItinID;
-        return itinObj;
-    }
-
-
     public void deleteUserItin(int itinID)
     {
         // adaptUserItin.UpdateUserIDToZero(itinID);
         //adaptItinPlaces.DeleteQuery(itinID);
-    }
-
-
-    public void insertTransferNodes(List<TransferNode> transferNodes, int itinID)
-    {
-        foreach (TransferNode transferNode in transferNodes)
-        {
-            //adaptUserTransfer.InsertQuery(itinID, transferNode.TransferID, transferNode.WithCar);
-        }
     }
 
 

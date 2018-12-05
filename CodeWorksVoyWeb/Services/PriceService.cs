@@ -508,7 +508,6 @@ public class PriceService : IPriceService
         //AdminTemplatesTableAdapter adaptTemplate = new AdminTemplatesTableAdapter();
         //AdminItinData.AdminTemplatesDataTable tableTemplate = adaptTemplate.GetData();
 
-        _userItinAdapter.AdminTemplate = true;
 
 
         SessionObject.Flight.SupplierID = Convert.ToInt16(_configuration.GetSection("AppConfiguration")["DefaultFlightSupplierIDForTemplatePriceCalc"]);
