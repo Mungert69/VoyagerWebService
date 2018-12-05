@@ -522,7 +522,7 @@ public class PriceService : IPriceService
                 try
                 {
                     CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = _userItinAdapter.getAdminItin(Convert.ToInt32(rowTemplate.AdminItinId));
-                    int itinID = userItin.ItinId;
+                    int itinID = (int)userItin.ItinId;
                     SessionObject.PRSelections = _userItinAdapter.getItinPlaces(itinID);
                     SessionObject.TransferNodes = _userItinAdapter.getTransfersNodes(itinID);
 
