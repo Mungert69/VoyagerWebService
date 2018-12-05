@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using CodeWorksVoyWebService.Models.UserData;
 using CodeWorksVoyWebService.Models.WebData;
 
 public interface IUserItinAdapter
 {
-    bool AdminTemplate { get; set; }
-
     void deleteUserItin(int itinID);
-    CodeWorksVoyWebService.Models.WebData.UserItinerary getAdminItin(int userItinID);
+    UserItinerary getAdminItin(int userItinID);
     List<AdminItinTemplates> getAdminTemplateItins(int templateTypeId);
-    List<CodeWorksVoyWebService.Models.WebData.UserItinerary> getAllAdminItins();
+    List<UserItinerary> getAllAdminItins();
     List<ItinTemplateObj> getAllItinTemplates();
     List<PRSelection> getItinHotels(int itinID);
     int getItinID(int userItinID);
@@ -32,7 +29,6 @@ public interface IUserItinAdapter
     List<string> getTripStagePicFileNames(int stageID);
     List<ItinTemplateObj> getTypeItinTemplates(string type);
     UserItinObj getUserAdminItin(int userItinID);
-    CodeWorksVoyWebService.Models.UserData.UserItinerary getUserItin(int userItinID);
     UserItinObj getUserItinEntity(int userItinID);
     List<UserItinObj> getUserItins(int userID);
     void insertTransferNodes(List<TransferNode> transferNodes, int itinID);

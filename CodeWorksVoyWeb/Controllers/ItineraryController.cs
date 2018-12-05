@@ -80,7 +80,6 @@ namespace CodeWorksVoyWebService.Controllers
             {
 
                 //TODO .getDatePriceObjs will not be called for a userItin.
-                _userItinAdapter.AdminTemplate = true;
                 card = getCardFromItinerary(Convert.ToInt32(id), templateTypeId);
                 card.getDatePriceObjs(_priceService);
 
@@ -194,7 +193,6 @@ namespace CodeWorksVoyWebService.Controllers
         public IEnumerable<TripCardObj> GetItineraryCards([FromRoute] int templateTypeId)
         {
 
-            _userItinAdapter.AdminTemplate = true;
 
             List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> adminTemplates = _userItinAdapter.getAdminTemplateItins(templateTypeId);
 

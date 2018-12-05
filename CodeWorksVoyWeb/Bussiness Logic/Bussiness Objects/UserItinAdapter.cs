@@ -22,21 +22,17 @@ using Microsoft.Extensions.Caching.Memory;
 public class UserItinAdapter : IUserItinAdapter
 {
 
-    //private readonly WebDataContext _contextAdmin;
+    private readonly WebDataContext _contextAdmin;
     private readonly List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> adminItinTemplatesTable;
     private readonly List<CodeWorksVoyWebService.Models.WebData.UserItinerary> adminUserItineraryTable;
     private readonly List<CodeWorksVoyWebService.Models.WebData.ItinPlaces> adminItinPlacesTable;
     private readonly List<CodeWorksVoyWebService.Models.WebData.UserTransfers> adminUserTransfersTable;
-    private readonly List<CodeWorksVoyWebService.Models.UserData.UserItinerary> userUserItineraryTable;
-    private readonly List<CodeWorksVoyWebService.Models.UserData.ItinPlaces> userItinPlacesTable;
-    private readonly List<CodeWorksVoyWebService.Models.UserData.UserTransfers> userUserTransfersTable;
+
    // private readonly UserDataContext _contextUser;
     private bool adminTemplate;
 
-    public bool AdminTemplate { get => adminTemplate; set => adminTemplate = value; }
 
-
-    public UserItinAdapter(IMemoryCache cache, WebDataContext contextAdmin, UserDataContext contextUser)
+    public UserItinAdapter(IMemoryCache cache, WebDataContext contextAdmin)
     {
         adminItinTemplatesTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates>(ref cache, contextAdmin, adminItinTemplatesTable, "AdminItinTemplatesTable");
 
@@ -44,11 +40,8 @@ public class UserItinAdapter : IUserItinAdapter
         adminItinPlacesTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.WebData.ItinPlaces>(ref cache, contextAdmin, adminItinPlacesTable, "AdminItinPlacesTable");
         adminUserTransfersTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.WebData.UserTransfers>(ref cache, contextAdmin, adminUserTransfersTable, "AdminUserTransfersTable");
 
-        userUserItineraryTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.UserData.UserItinerary>(ref cache, contextUser, userUserItineraryTable, "UserUserItineraryTable");
-        userItinPlacesTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.UserData.ItinPlaces>(ref cache, contextAdmin, userItinPlacesTable, "UserItinPlacesTable");
-        userUserTransfersTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.UserData.UserTransfers>(ref cache, contextAdmin, userUserTransfersTable, "UserUserTransfersTable");
-
-        //_contextAdmin = contextAdmin;
+       
+        _contextAdmin = contextAdmin;
         //_contextUser = contextUser;
     }
 
@@ -60,8 +53,7 @@ public class UserItinAdapter : IUserItinAdapter
         List<TransferNode> transferNodeObjs = new List<TransferNode>();
 
 
-        if (adminTemplate)
-        {
+       
             List<CodeWorksVoyWebService.Models.WebData.UserTransfers> table = adminUserTransfersTable.Where(u => u.ItinId == ItinId).ToList();
             List<int> transferIDs = new List<int>();
             foreach (CodeWorksVoyWebService.Models.WebData.UserTransfers row in table)
@@ -71,19 +63,7 @@ public class UserItinAdapter : IUserItinAdapter
                 userObj.WithCar = row.WithCar;
                 transferNodeObjs.Add(userObj);
             }
-        }
-        else {
-
-            List<CodeWorksVoyWebService.Models.UserData.UserTransfers> table = userUserTransfersTable.Where(u => u.ItinId == ItinId).ToList();
-            List<int> transferIDs = new List<int>();
-            foreach (CodeWorksVoyWebService.Models.UserData.UserTransfers row in table)
-            {
-                TransferNode userObj = new TransferNode();
-                userObj.TransferID = Convert.ToInt32(row.TransferId);
-                userObj.WithCar = row.WithCar;
-                transferNodeObjs.Add(userObj);
-            }
-        }
+       
 
 
         return transferNodeObjs;
@@ -93,8 +73,7 @@ public class UserItinAdapter : IUserItinAdapter
     {
         List<PRSelection> userPlaceObjs = new List<PRSelection>();
 
-        if (adminTemplate)
-        {
+       
             List<CodeWorksVoyWebService.Models.WebData.ItinPlaces> tableItinP = adminItinPlacesTable.Where(u => u.ItinId == itinID).ToList();
 
             foreach (CodeWorksVoyWebService.Models.WebData.ItinPlaces rowItinP in tableItinP)
@@ -109,37 +88,14 @@ public class UserItinAdapter : IUserItinAdapter
 
             }
 
-        }
-        else {
-            List<CodeWorksVoyWebService.Models.UserData.ItinPlaces> tableItinP = userItinPlacesTable.Where(u => u.ItinId == itinID).ToList();
-
-            foreach (CodeWorksVoyWebService.Models.UserData.ItinPlaces rowItinP in tableItinP)
-            {
-                PRSelection userPlaceObj = new PRSelection();
-                userPlaceObj.Hotel = rowItinP.Hotel;
-                userPlaceObj.HotelID = Convert.ToInt32(rowItinP.HotelId);
-                userPlaceObj.Nights = Convert.ToInt32(rowItinP.Nights);
-                userPlaceObj.Place = rowItinP.Place;
-                userPlaceObj.PlaceID = Convert.ToInt32(rowItinP.PlaceId);
-                userPlaceObjs.Add(userPlaceObj);
-
-            }
-        }
+       
 
 
         return userPlaceObjs;
     }
 
 
-    public CodeWorksVoyWebService.Models.UserData.UserItinerary getUserItin(int userItinID)
-    {
-        CodeWorksVoyWebService.Models.UserData.UserItinerary userItin;
 
-        userItin = userUserItineraryTable.Where(u => u.UserItinId == userItinID).First();
-
-
-        return userItin;
-    }
 
      public CodeWorksVoyWebService.Models.WebData.UserItinerary getAdminItin(int userItinID)
     {
@@ -690,10 +646,17 @@ public class UserItinAdapter : IUserItinAdapter
         //adaptUserItin.UpdateUserID(userID, userItinID);
     }
 
+  
+
     public ItinIntObj insertUserItin(List<PRSelection> prSelections, int userID, int outFlightID, int inFlightID, string selectedDepAirport, DateTime startDate, DateTime endDate, int selectedNights, string supplier, decimal totalCost, int supplierID, string depAirport)
     {
-        /*
-        int itinID = Convert.ToInt32(adaptUserScalar.GetMaxItinID()) + 1;
+        CodeWorksVoyWebService.Models.WebData.UserItinerary userItinerary = new CodeWorksVoyWebService.Models.WebData.UserItinerary();
+        //int itinID = Convert.ToInt32(getMaxItinId()) + 1;
+        _contextAdmin.UserItinerary.Add(userItinerary);
+        _contextAdmin.SaveChanges();
+
+        int itinId = userItinerary.ItinId; // Yes it's here
+
         StringBuilder itinNameBuilder = new StringBuilder(); ;
         foreach (PRSelection selection in prSelections)
         {

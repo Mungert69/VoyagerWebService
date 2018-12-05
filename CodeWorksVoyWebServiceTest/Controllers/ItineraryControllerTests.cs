@@ -35,6 +35,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
         private readonly ITestOutputHelper output;
         private SessionObject sessionObjects;
         private Mock<ISessionObjectsService> mockSessionObjectsService;
+        private Mock<IPriceService> mockPrintService;
 
 
 
@@ -53,6 +54,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             this.mockTransferAdapter = this.mockRepository.Create<ITransferAdapter>();
             this.mockMapService = this.mockRepository.Create<IMapService>();
             this.mockSessionObjectsService = this.mockRepository.Create<ISessionObjectsService>();
+            this.mockPrintService = this.mockRepository.Create<IPriceService>();
         }
 
         public void Dispose()
@@ -96,7 +98,8 @@ namespace CodeWorksVoyWebServiceTest.Controllers
                this.mockCardAdapter.Object,
                this.mockUserItinAdapter.Object,
                this.mockTransferAdapter.Object,
-               this.mockMapService.Object);
+               this.mockMapService.Object,
+               this.mockPrintService.Object);
 
            
             itineraryController =new ItineraryController(
@@ -107,7 +110,8 @@ namespace CodeWorksVoyWebServiceTest.Controllers
                 this.mockCardAdapter.Object,
                 this.mockUserItinAdapter.Object,
                 this.mockTransferAdapter.Object,
-                this.mockMapService.Object);
+                this.mockMapService.Object,
+               this.mockPrintService.Object);
 
            
         }
