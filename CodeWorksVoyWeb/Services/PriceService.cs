@@ -154,6 +154,7 @@ public class PriceService : IPriceService
 
 
             SessionObject.TotalCost = (hotelPrice + SessionObject.Flight.FlightCost + xFer) * multiplier + apt + repCharge + psc;
+            SessionObject.TotalCost=Math.Truncate(100 * SessionObject.TotalCost) / 100;
             return SessionObject.TotalCost;
         }
         catch
@@ -491,24 +492,53 @@ public class PriceService : IPriceService
 
     }
 
+    public void createPriceFromDate(DateTime useDate, int timeId) {
+       
+        if (timeId == 4 && timeId == 14)
+        {
+            int distance = 7;
+            if (timeId == 4) distance = 24;
+
+            SessionObject.Flight.StartDate = getFlightDate(useDate, distance, true, SessionObject.Flight.SupplierID);
+
+        }
+        else
+        {
+            SessionObject.Flight.StartDate = getFlightDate(useDate, 3, false, SessionObject.Flight.SupplierID);
+        }
+        int totalNights = 0;
+        foreach (PRSelection selection in SessionObject.PRSelections)
+        {
+            totalNights += selection.Nights;
+        }
+        SessionObject.Flight.EndDate = SessionObject.Flight.StartDate.AddDays(totalNights);
+        SessionObject.SelectedNights = totalNights;
+
+
+        List<FlightObj> flightObjs = _flightAdapter.getOutFlightsByDateRange(SessionObject.Flight.SupplierID, SessionObject.Flight.StartDate, SessionObject.Flight.StartDate);
+        SessionObject.Flight.OutFlightID = 0;
+        foreach (FlightObj row in flightObjs)
+        {
+
+            SessionObject.Flight.OutFlightID = row.OutFlightID;
+            break;
+        }
+
+        getPrice();
+
+
+    }
     public string updateItinTemplatePrices()
     {
         List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
         List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableDel = _contextWeb.ItinTemplateTimeId.ToList();
         _contextWeb.ItinTemplateTimeId.RemoveRange(tableDel);
         _contextWeb.SaveChanges();
-        // ItinTemplateTimeIDTableAdapter adaptWrite = new ItinTemplateTimeIDTableAdapter();
-        //adaptWrite.DeleteQuery();
 
         CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId timeIdEntity;
         List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableWrite = _contextWeb.ItinTemplateTimeId.ToList();
 
         List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> tableTemplate = _contextWeb.AdminItinTemplates.ToList();
-
-        //AdminTemplatesTableAdapter adaptTemplate = new AdminTemplatesTableAdapter();
-        //AdminItinData.AdminTemplatesDataTable tableTemplate = adaptTemplate.GetData();
-
-
 
         SessionObject.Flight.SupplierID = Convert.ToInt16(_configuration.GetSection("AppConfiguration")["DefaultFlightSupplierIDForTemplatePriceCalc"]);
 
@@ -525,39 +555,9 @@ public class PriceService : IPriceService
                     int itinID = (int)userItin.ItinId;
                     SessionObject.PRSelections = _userItinAdapter.getItinPlaces(itinID);
                     SessionObject.TransferNodes = _userItinAdapter.getTransfersNodes(itinID);
-
                     DateTime useDate = adjustDate(Convert.ToDateTime(rowLookup.Date));
-                    if (rowLookup.TimeId == 4 && rowLookup.TimeId == 14)
-                    {
-                        int distance = 7;
-                        if (rowLookup.TimeId == 4) distance = 24;
 
-                        SessionObject.Flight.StartDate = getFlightDate(useDate, distance, true, SessionObject.Flight.SupplierID);
-
-                    }
-                    else
-                    {
-                        SessionObject.Flight.StartDate = getFlightDate(useDate, 3, false, SessionObject.Flight.SupplierID);
-                    }
-                    int totalNights = 0;
-                    foreach (PRSelection selection in SessionObject.PRSelections)
-                    {
-                        totalNights += selection.Nights;
-                    }
-                    SessionObject.Flight.EndDate = SessionObject.Flight.StartDate.AddDays(totalNights);
-
-
-
-                    List<FlightObj> flightObjs = _flightAdapter.getOutFlightsByDateRange(SessionObject.Flight.SupplierID, SessionObject.Flight.StartDate, SessionObject.Flight.StartDate);
-                    SessionObject.Flight.OutFlightID = 0;
-                    foreach (FlightObj row in flightObjs)
-                    {
-
-                        SessionObject.Flight.OutFlightID = row.OutFlightID;
-                        break;
-                    }
-
-                    getPrice();
+                    createPriceFromDate(useDate,rowLookup.TimeId);
 
                     string debugStr = SessionObject.PriceBrakeDown;
 

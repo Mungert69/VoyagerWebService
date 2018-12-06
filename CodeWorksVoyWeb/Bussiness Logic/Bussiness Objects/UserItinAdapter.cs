@@ -16,6 +16,7 @@ using CodeWorksVoyWebService.Models.UserData;
 using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.EntityFrameworkCore;
+using CodeWorksVoyWebService.Bussiness_Logic.Utils;
 
 /// <summary>
 /// Summary description for UserItinAdapter
@@ -28,8 +29,8 @@ public class UserItinAdapter : IUserItinAdapter
     private readonly List<CodeWorksVoyWebService.Models.WebData.UserItinerary> adminUserItineraryTable;
     private readonly List<CodeWorksVoyWebService.Models.WebData.ItinPlaces> adminItinPlacesTable;
     private readonly List<CodeWorksVoyWebService.Models.WebData.UserTransfers> adminUserTransfersTable;
-
-   // private readonly UserDataContext _contextUser;
+    private bool createTestJsonFiles = true;
+    // private readonly UserDataContext _contextUser;
     private bool adminTemplate;
 
 
@@ -129,7 +130,7 @@ public class UserItinAdapter : IUserItinAdapter
     }
 
 
-    public void insertUserItin(List<TransferNode> transferNodes, List<PRSelection> prSelections, ISessionObject sessionObject, string user)
+    public int insertUserItin(List<TransferNode> transferNodes, List<PRSelection> prSelections, ISessionObject sessionObject, string user)
     {
         CodeWorksVoyWebService.Models.WebData.UserItinerary userItinerary = new CodeWorksVoyWebService.Models.WebData.UserItinerary();
         //int itinID = Convert.ToInt32(getMaxItinId()) + 1;
@@ -163,6 +164,7 @@ public class UserItinAdapter : IUserItinAdapter
         
         _contextAdmin.Entry(userItinerary).State = EntityState.Modified;
         _contextAdmin.SaveChanges();
+        if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("userItineraryObj.json", userItinerary);
 
 
 
@@ -190,6 +192,7 @@ public class UserItinAdapter : IUserItinAdapter
         }
         _contextAdmin.SaveChanges();
 
+        return userItinId;
     }
 
 

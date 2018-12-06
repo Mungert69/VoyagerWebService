@@ -70,9 +70,9 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = JsonUtils.getJsonObjectFromFile<CodeWorksVoyWebService.Models.WebData.UserItinerary>("./TestObjects/userItin.json");
             List<TransferNodeItem> transferNodeItems = JsonUtils.getJsonObjectFromFile<List<TransferNodeItem>>("./TestObjects/transferNodeItems.json");
             List<PlaceState> placeStates = JsonUtils.getJsonObjectFromFile<List<PlaceState>>("./TestObjects/placeStates.json");
+
             ServiceFactory serviceFactory = new ServiceFactory();
-            var serviceProvider = serviceFactory.Services.BuildServiceProvider();
-           
+            var serviceProvider = serviceFactory.Services.BuildServiceProvider();         
             IConfiguration config = serviceProvider.GetService<IConfiguration>();
             IPriceService priceService = serviceProvider.GetService<IPriceService>();
 

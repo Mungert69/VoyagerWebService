@@ -1,20 +1,11 @@
 ﻿using System;
-using System.Data;
-using System.Configuration;
 using System.Linq;
-using System.Web;
-
-using System.Xml.Linq;
-
 using System.Collections.Generic;
 using System.Text;
 using CodeWorksVoyWebService.Models.CubaData;
-using CodeWorksVoyWebService.Models.VoyagerReserve;
 using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 /// <summary>
 /// Summary description for HotelAdapter
 /// </summary>
@@ -540,11 +531,7 @@ public class HotelAdapter : IHotelAdapter
     public int getPriceCount(int currentHotelID, DateTime startDate, DateTime endDate)
     {
         int count = 0;
-        /*
-        ContractRatesTableAdapter adaptPrices = new ContractRatesTableAdapter();
-        HotelData.ContractRatesDataTable tablePrices = adaptPrices.GetHotelPrices(currentHotelID, startDate, endDate);
-        return tablePrices.Rows.Count;*/
-        try
+         try
         {
             count = contractRatesTable.Where(c => c.HotelId == currentHotelID && (c.StartDate >= startDate && c.StartDate <= endDate)).Count();
         }

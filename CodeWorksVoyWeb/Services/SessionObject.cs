@@ -63,7 +63,6 @@ public class SessionObject : ISessionObject
     [JsonIgnore]
     private IConfiguration _Configuration;
 
-    
     public SessionObject(IConfiguration configuration) {
         Configuration = configuration;
     }

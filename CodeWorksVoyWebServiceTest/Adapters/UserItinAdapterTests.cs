@@ -2,21 +2,15 @@
 using Moq;
 using System;
 using System.Collections.Generic;
-using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
-using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 using CodeWorksVoyWebService.Bussiness_Logic.Utils;
 using CodeWorksVoyWebService.Services;
 using Xunit;
-using CodeWorksVoyWebServiceTest.Controllers.Mocks;
-using CodeWorksVoyWebServiceTest.Utils;
+using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Xunit.Abstractions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using CodeWorksVoyWebService.Models.CubaData;
 using CodeWorksVoyWebService.Models.WebData;
-using CodeWorksVoyWebService.Models.VoyagerReserve;
-using CodeWorksVoyWebService.Models.UserData;
 using Microsoft.EntityFrameworkCore;
 
 namespace CodeWorksVoyWebServiceTest.Adapters
@@ -25,24 +19,19 @@ namespace CodeWorksVoyWebServiceTest.Adapters
     {
         private MockRepository mockRepository;
 
-        private Mock<ISessionObject> mockSessionObjects;
-        private Mock<IItineraryService> mockItineraryService;
-        private Mock<IHotelAdapter> mockHotelAdapter;
-        private Mock<IPlaceAdapter> mockPlaceAdapter;
-        private Mock<ICardAdapter> mockCardAdapter;
-        private Mock<IUserItinAdapter> mockUserItinAdapter;
-        private Mock<ITransferAdapter> mockTransferAdapter;
-        private Mock<IMapService> mockMapService;
+       
         private UserItinAdapter userItinAdapter;
         private readonly ITestOutputHelper output;
 
         private SessionObject sessionObjects;
         private List<PRSelection> prSelections;
         private List<TransferNode> transferNodes;
-
+        private IPriceService priceService;
+        private WebDataContext contextAdmin;
 
         private Mock<ISessionObjectsService> mockSessionObjectsService;
-        private Mock<IPriceService> mockPrintService;
+
+
 
 
 
@@ -53,15 +42,6 @@ namespace CodeWorksVoyWebServiceTest.Adapters
             this.mockRepository = new MockRepository(MockBehavior.Default);
 
 
-            this.mockItineraryService = this.mockRepository.Create<IItineraryService>();
-            this.mockHotelAdapter = this.mockRepository.Create<IHotelAdapter>();
-            this.mockPlaceAdapter = this.mockRepository.Create<IPlaceAdapter>();
-            this.mockCardAdapter = this.mockRepository.Create<ICardAdapter>();
-            this.mockUserItinAdapter = this.mockRepository.Create<IUserItinAdapter>();
-            this.mockTransferAdapter = this.mockRepository.Create<ITransferAdapter>();
-            this.mockMapService = this.mockRepository.Create<IMapService>();
-            this.mockSessionObjectsService = this.mockRepository.Create<ISessionObjectsService>();
-            this.mockPrintService = this.mockRepository.Create<IPriceService>();
         }
 
         public void Dispose()
@@ -71,62 +51,56 @@ namespace CodeWorksVoyWebServiceTest.Adapters
 
         private void CreateUserItinAdapter()
         {
+           
+            // Setup Dependency Injection
+            ServiceFactory serviceFactory = new ServiceFactory();
+            ServiceProvider serviceProvider = serviceFactory.Services.BuildServiceProvider();
+            IMemoryCache cache = serviceProvider.GetService<IMemoryCache>();
+            IConfiguration configuration= serviceProvider.GetService<IConfiguration>();
+            contextAdmin = serviceProvider.GetService< WebDataContext>();
+            priceService = serviceProvider.GetService<IPriceService>();
+
+
             // Setup concret objects for tests
-            TripCardObj cardObj = JsonUtils.getJsonObjectFromFile<TripCardObj>("./TestObjects/card.json");
             prSelections = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./TestObjects/pRSelections.json");
             transferNodes = JsonUtils.getJsonObjectFromFile<List<TransferNode>>("./TestObjects/transferNodes.json");
-            CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = JsonUtils.getJsonObjectFromFile<CodeWorksVoyWebService.Models.WebData.UserItinerary>("./TestObjects/userItin.json");
-            List<TransferNodeItem> transferNodeItems = JsonUtils.getJsonObjectFromFile<List<TransferNodeItem>>("./TestObjects/transferNodeItems.json");
-            List<PlaceState> placeStates = JsonUtils.getJsonObjectFromFile<List<PlaceState>>("./TestObjects/placeStates.json");
 
-            ServiceFactory serviceFactory = new ServiceFactory();
-            var serviceProvider = serviceFactory.Services.BuildServiceProvider();
-            var cache = serviceProvider.GetService<IMemoryCache>();
-            var config= serviceProvider.GetService<IConfiguration>();
-            var contextAdmin= serviceProvider.GetService< WebDataContext>();
-
-            sessionObjects = new SessionObject(config);
-
+            sessionObjects = new SessionObject(configuration);           
             // Warning you must remove manually the Configration object from Json for SessionObject
             sessionObjects = JsonUtils.getJsonObjectFromFile<SessionObject>("./TestObjects/sessionObjects-StoredItinBefore.json", sessionObjects);
+            sessionObjects.Flight.SupplierID = Convert.ToInt16(configuration.GetSection("AppConfiguration")["DefaultFlightSupplierIDForTemplatePriceCalc"]);
 
-            // Setup Mocks 
-            this.mockUserItinAdapter.SetupAllProperties();
-            this.mockUserItinAdapter.SetReturnsDefault<CodeWorksVoyWebService.Models.WebData.UserItinerary>(userItin);
-            this.mockCardAdapter.SetReturnsDefault<List<PRSelection>>(prSelections);
-            this.mockUserItinAdapter.SetReturnsDefault<List<TransferNode>>(transferNodes);
-            this.mockTransferAdapter.SetupAllProperties();
-            this.mockTransferAdapter.SetReturnsDefault<List<TransferNodeItem>>(transferNodeItems);
-            this.mockMapService.SetReturnsDefault<List<PlaceState>>(placeStates);
-            this.mockSessionObjectsService.SetReturnsDefault<ISessionObject>(sessionObjects);
-
-            // Use A FluentAPI pattern so multiple methods can be chained.
-            Mock<ISessionObject> mockSessionObjects = new MockSessionObjects().SetUpObject();
+            priceService.SessionObject = sessionObjects;
 
             userItinAdapter = new UserItinAdapter(cache,contextAdmin);
+            
 
         }
 
 
         [Fact]
-        public void InsertUserItinData_ItinObj_DataUpdated()
+        public void  InsertUserItinData_ItinObj_DataUpdatedAsync()
         {
             // Arrange
             CreateUserItinAdapter();
-            var unitUnderTest = userItinAdapter;
-           
+            priceService.createPriceFromDate(DateTime.Now, 1);
 
             // Act
-            unitUnderTest.insertUserItin(transferNodes,prSelections,sessionObjects,"$testtemplate$");
-            //ItinObj itinObjX = JsonUtils.getJsonObjectFromFile<ItinObj>("./TestObjects/itinObj.json");
-            //CompareLogic compareLogic = new CompareLogic();
-           // ComparisonResult result = compareLogic.Compare(itinObjX, itinObj);
+            int userItinId=userItinAdapter.insertUserItin(transferNodes,prSelections,priceService.SessionObject,"$testtemplate$1234567890123456789012");
+            CodeWorksVoyWebService.Models.WebData.UserItinerary userItinerary = contextAdmin.UserItinerary.Where(u => u.UserItinId == userItinId).First();
+            CodeWorksVoyWebService.Models.WebData.UserItinerary userItineraryX = JsonUtils.getJsonObjectFromFile<CodeWorksVoyWebService.Models.WebData.UserItinerary>("./userItineraryObj.json");
+            CompareLogic compareLogic = new CompareLogic();
+           ComparisonResult result = compareLogic.Compare(userItineraryX.ItinName, userItinerary.ItinName);
+            ComparisonResult result2 = compareLogic.Compare(userItineraryX.TotalCost, userItinerary.TotalCost);
 
             //These will be different, write out the differences
-            //if (!result.AreEqual)
-           //     output.WriteLine("This is output from {0}", result.DifferencesString);
+            if (!result.AreEqual)
+                output.WriteLine("ItinNames are different", result.DifferencesString);
+            if (!result2.AreEqual)
+                output.WriteLine("Total Costs are different", result2.DifferencesString);
             // Assert
-            //Assert.True(result.AreEqual);
+            Assert.True(result.AreEqual);
+            Assert.True(result2.AreEqual);
         }
 
       

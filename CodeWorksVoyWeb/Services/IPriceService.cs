@@ -6,12 +6,13 @@ public interface IPriceService
     ISessionObject SessionObject { get; set; }
 
     DateTime adjustDate(DateTime adjustDate);
+    void createPriceFromDate(DateTime useDate, int timeId);
     decimal getAptCharge(int supplierID);
     decimal getFlightCost(int outFlightID, int supplierId);
     DateTime getFlightDate();
     HotelPriceObj getHotelPrice(DateTime intDate, List<PRSelection> prSelections);
-    List<ItinTemplateTimeObj> getItinTemplatePrices(int userItinID);
-    List<ItinTemplateTimeObj> getItinTemplateTimeObjs(int timeID);
+    List<ItinTemplateTimeObj> getItinTemplatePrices(int userItinId);
+    List<ItinTemplateTimeObj> getItinTemplateTimeObjs(int timeId);
     int getNearestTimeID();
     decimal getPrice();
     decimal getPriceMultiplier(int centers);
