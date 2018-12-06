@@ -15,6 +15,7 @@ using CodeWorksVoyWebService.Models.WebData;
 using CodeWorksVoyWebService.Models.UserData;
 using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.EntityFrameworkCore;
 
 /// <summary>
 /// Summary description for UserItinAdapter
@@ -135,9 +136,10 @@ public class UserItinAdapter : IUserItinAdapter
         _contextAdmin.UserItinerary.Add(userItinerary);
         _contextAdmin.SaveChanges();
         int userItinId = userItinerary.UserItinId;
-        userItinerary = _contextAdmin.UserItinerary.Where(u => u.UserItinId == userItinId).First();
+
+        _contextAdmin.UserItinerary.Attach(userItinerary);
         userItinerary.ItinId = userItinId;
-       // userItinerary.UUID=user;
+       userItinerary.Uuid=user;
         userItinerary.OutFlightId = sessionObject.Flight.OutFlightID;
         userItinerary.InFlightId = sessionObject.Flight.InFlightID;
         userItinerary.DepAirport = sessionObject.Flight.DepartAirport;
@@ -149,11 +151,6 @@ public class UserItinAdapter : IUserItinAdapter
         userItinerary.TotalCost = sessionObject.TotalCost;
         userItinerary.PriceDateStamp = DateTime.Now;
 
-
-
-
-        ; // Yes it's here
-
         StringBuilder itinNameBuilder = new StringBuilder(); ;
         foreach (PRSelection selection in prSelections)
         {
@@ -162,6 +159,9 @@ public class UserItinAdapter : IUserItinAdapter
         string itinName = itinNameBuilder.ToString().Substring(0, itinNameBuilder.ToString().Length - 1);
         if (itinName.Length > 16) itinName.Substring(0, 16);
         userItinerary.ItinName = itinName;
+
+        
+        _contextAdmin.Entry(userItinerary).State = EntityState.Modified;
         _contextAdmin.SaveChanges();
 
 

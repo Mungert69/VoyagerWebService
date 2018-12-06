@@ -30,7 +30,7 @@ namespace CodeWorksVoyWebService.Controllers
         private IMapService _mapService;
         private IPriceService _priceService;
         //private string userHashId="xxxx";
-        private bool createTestJsonFiles =false;
+        private bool createTestJsonFiles =true;
 
         public ItineraryController(ISessionObjectsService sessionObjectsService, IItineraryService itineraryService, IHotelAdapter hotelAdapter, IPlaceAdapter placeAdapter, ICardAdapter cardAdapter, IUserItinAdapter userItinAdapter, ITransferAdapter transferAdapter, IMapService mapService, IPriceService priceService)
         {

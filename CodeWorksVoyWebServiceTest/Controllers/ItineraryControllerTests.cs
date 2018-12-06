@@ -15,6 +15,7 @@ using CodeWorksVoyWebServiceTest.Utils;
 using Microsoft.Extensions.Configuration;
 using Xunit.Abstractions;
 using CodeWorksVoyWebService.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CodeWorksVoyWebServiceTest.Controllers
 {
@@ -35,7 +36,6 @@ namespace CodeWorksVoyWebServiceTest.Controllers
         private readonly ITestOutputHelper output;
         private SessionObject sessionObjects;
         private Mock<ISessionObjectsService> mockSessionObjectsService;
-        private Mock<IPriceService> mockPrintService;
 
 
 
@@ -54,7 +54,6 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             this.mockTransferAdapter = this.mockRepository.Create<ITransferAdapter>();
             this.mockMapService = this.mockRepository.Create<IMapService>();
             this.mockSessionObjectsService = this.mockRepository.Create<ISessionObjectsService>();
-            this.mockPrintService = this.mockRepository.Create<IPriceService>();
         }
 
         public void Dispose()
@@ -71,11 +70,16 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = JsonUtils.getJsonObjectFromFile<CodeWorksVoyWebService.Models.WebData.UserItinerary>("./TestObjects/userItin.json");
             List<TransferNodeItem> transferNodeItems = JsonUtils.getJsonObjectFromFile<List<TransferNodeItem>>("./TestObjects/transferNodeItems.json");
             List<PlaceState> placeStates = JsonUtils.getJsonObjectFromFile<List<PlaceState>>("./TestObjects/placeStates.json");
-            IConfiguration config = TestContainerConfig.InitConfiguration();
-             sessionObjects= new SessionObject(config);
+            ServiceFactory serviceFactory = new ServiceFactory();
+            var serviceProvider = serviceFactory.Services.BuildServiceProvider();
+           
+            IConfiguration config = serviceProvider.GetService<IConfiguration>();
+            IPriceService priceService = serviceProvider.GetService<IPriceService>();
+
+            sessionObjects = new SessionObject(config);
 
             // Warning you must remove manually the Configration object from Json for SessionObject
-            sessionObjects= JsonUtils.getJsonObjectFromFile<SessionObject>("./TestObjects/sessionObjects-StoredItinBefore.json",sessionObjects);
+            sessionObjects = JsonUtils.getJsonObjectFromFile<SessionObject>("./TestObjects/sessionObjects-StoredItinBefore.json",sessionObjects);
             
             // Setup Mocks 
             this.mockUserItinAdapter.SetupAllProperties();
@@ -99,7 +103,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
                this.mockUserItinAdapter.Object,
                this.mockTransferAdapter.Object,
                this.mockMapService.Object,
-               this.mockPrintService.Object);
+               priceService);
 
            
             itineraryController =new ItineraryController(
@@ -111,7 +115,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
                 this.mockUserItinAdapter.Object,
                 this.mockTransferAdapter.Object,
                 this.mockMapService.Object,
-               this.mockPrintService.Object);
+               priceService);
 
            
         }
