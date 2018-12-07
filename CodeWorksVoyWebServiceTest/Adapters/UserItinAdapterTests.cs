@@ -87,11 +87,27 @@ namespace CodeWorksVoyWebServiceTest.Adapters
 
             // Act
             int userItinId=userItinAdapter.insertUserItin(transferNodes,prSelections,priceService.SessionObject,"$testtemplate$1234567890123456789012");
-            CodeWorksVoyWebService.Models.WebData.UserItinerary userItinerary = contextAdmin.UserItinerary.Where(u => u.UserItinId == userItinId).First();
+
+            CodeWorksVoyWebService.Models.WebData.UserItinerary userItinerary = contextAdmin.UserItinerary.AsNoTracking().Where(u => u.UserItinId == userItinId).First();
             CodeWorksVoyWebService.Models.WebData.UserItinerary userItineraryX = JsonUtils.getJsonObjectFromFile<CodeWorksVoyWebService.Models.WebData.UserItinerary>("./userItineraryObj.json");
             CompareLogic compareLogic = new CompareLogic();
            ComparisonResult result = compareLogic.Compare(userItineraryX.ItinName, userItinerary.ItinName);
             ComparisonResult result2 = compareLogic.Compare(userItineraryX.TotalCost, userItinerary.TotalCost);
+
+
+            contextAdmin.UserItinerary.RemoveRange(userItinerary);
+
+            List<CodeWorksVoyWebService.Models.WebData.ItinPlaces> listItinPlaces = contextAdmin.ItinPlaces.AsNoTracking().Where(i => i.ItinId == userItinId).ToList();
+            //contextAdmin.Entry(listItinPlaces).State = EntityState.Detached;
+            contextAdmin.ItinPlaces.RemoveRange(listItinPlaces);
+
+            List<CodeWorksVoyWebService.Models.WebData.UserTransfers> listUserTransfers = contextAdmin.UserTransfers.AsNoTracking().Where(i => i.ItinId == userItinId).ToList();
+            //contextAdmin.Entry(listUserTransfers).State = EntityState.Detached;
+
+            contextAdmin.UserTransfers.RemoveRange(listUserTransfers);
+            
+            contextAdmin.SaveChanges();
+
 
             //These will be different, write out the differences
             if (!result.AreEqual)

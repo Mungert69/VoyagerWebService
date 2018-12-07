@@ -29,7 +29,7 @@ public class UserItinAdapter : IUserItinAdapter
     private readonly List<CodeWorksVoyWebService.Models.WebData.UserItinerary> adminUserItineraryTable;
     private readonly List<CodeWorksVoyWebService.Models.WebData.ItinPlaces> adminItinPlacesTable;
     private readonly List<CodeWorksVoyWebService.Models.WebData.UserTransfers> adminUserTransfersTable;
-    private bool createTestJsonFiles = true;
+    private bool createTestJsonFiles = false;
     // private readonly UserDataContext _contextUser;
     private bool adminTemplate;
 
@@ -164,6 +164,7 @@ public class UserItinAdapter : IUserItinAdapter
         
         _contextAdmin.Entry(userItinerary).State = EntityState.Modified;
         _contextAdmin.SaveChanges();
+        _contextAdmin.Entry(userItinerary).State = EntityState.Detached;
         if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("userItineraryObj.json", userItinerary);
 
 
@@ -179,7 +180,9 @@ public class UserItinAdapter : IUserItinAdapter
             itinPlaces.Nights = selection.Nights;
             itinPlaces.HotelId = selection.HotelID;
             _contextAdmin.ItinPlaces.Add(itinPlaces);
+            _contextAdmin.Entry(itinPlaces).State = EntityState.Detached;
         }
+      
         _contextAdmin.SaveChanges();
 
         foreach (TransferNode transferNode in transferNodes)
@@ -189,6 +192,7 @@ public class UserItinAdapter : IUserItinAdapter
             userTransfers.TransferId = transferNode.TransferID;
             userTransfers.WithCar = transferNode.WithCar;
             _contextAdmin.UserTransfers.Add(userTransfers);
+            _contextAdmin.Entry(userTransfers).State = EntityState.Detached;
         }
         _contextAdmin.SaveChanges();
 

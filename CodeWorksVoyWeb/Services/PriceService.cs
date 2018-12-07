@@ -14,6 +14,7 @@ using CodeWorksVoyWebService.Models.WebData;
 using Microsoft.Extensions.Configuration;
 using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.EntityFrameworkCore;
 
 /// <summary>
 /// Summary description for PriceCalc
@@ -530,15 +531,15 @@ public class PriceService : IPriceService
     }
     public string updateItinTemplatePrices()
     {
-        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
-        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableDel = _contextWeb.ItinTemplateTimeId.ToList();
+        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableLookup = _contextWeb.ItinTemplateTimeIdlookup.AsNoTracking().ToList();
+        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableDel = _contextWeb.ItinTemplateTimeId.AsNoTracking().ToList();
         _contextWeb.ItinTemplateTimeId.RemoveRange(tableDel);
         _contextWeb.SaveChanges();
 
         CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId timeIdEntity;
-        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableWrite = _contextWeb.ItinTemplateTimeId.ToList();
+        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableWrite = _contextWeb.ItinTemplateTimeId.AsNoTracking().ToList();
 
-        List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> tableTemplate = _contextWeb.AdminItinTemplates.ToList();
+        List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> tableTemplate = _contextWeb.AdminItinTemplates.AsNoTracking().ToList();
 
         SessionObject.Flight.SupplierID = Convert.ToInt16(_configuration.GetSection("AppConfiguration")["DefaultFlightSupplierIDForTemplatePriceCalc"]);
 
