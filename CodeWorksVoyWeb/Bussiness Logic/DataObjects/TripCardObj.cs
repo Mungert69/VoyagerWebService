@@ -20,6 +20,10 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
         private List<PlaceObj> placeObjs;
             private List<DatePriceObj> datePriceObjs;
 
+        public TripCardObj()
+        {
+        }
+
         public int ItinId { get => itinId; set => itinId = value; }
         public decimal Price { get => price; set => price = value; }
         public DateTime TravelDate { get => travelDate; set => travelDate = value; }

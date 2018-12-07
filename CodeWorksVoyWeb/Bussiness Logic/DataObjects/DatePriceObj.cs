@@ -12,6 +12,10 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
         private Decimal exactPrice;
         private String dateStr;
 
+        public DatePriceObj()
+        {
+        }
+
         public DatePriceObj(decimal price, string dateStr)
         {
             this.exactPrice = price;
