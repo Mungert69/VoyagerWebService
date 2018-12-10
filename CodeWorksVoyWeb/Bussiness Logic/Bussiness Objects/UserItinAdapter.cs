@@ -29,7 +29,7 @@ public class UserItinAdapter : IUserItinAdapter
     private readonly List<CodeWorksVoyWebService.Models.WebData.UserItinerary> adminUserItineraryTable;
     private readonly List<CodeWorksVoyWebService.Models.WebData.ItinPlaces> adminItinPlacesTable;
     private readonly List<CodeWorksVoyWebService.Models.WebData.UserTransfers> adminUserTransfersTable;
-    private bool createTestJsonFiles = false;
+    private bool createTestJsonFiles = true;
  
 
 
