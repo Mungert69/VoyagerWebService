@@ -30,6 +30,6 @@ public interface IUserItinAdapter
     UserItinObj getUserAdminItin(int userItinID);
     UserItinObj getUserItinEntity(int userItinID);
     List<UserItinObj> getUserItins(int userID);
-    int insertUserItin(List<TransferNode> transferNodes, List<PRSelection> prSelections, ISessionObject sessionObject, string user);
+    int insertUserItin(ISessionObject sessionObject, string user);
     void updateUserItin(int userItinID, int userID);
 }

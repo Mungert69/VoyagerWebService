@@ -103,7 +103,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
                this.mockUserItinAdapter.Object,
                this.mockTransferAdapter.Object,
                this.mockMapService.Object,
-               priceService);
+               priceService,config);
 
            
             itineraryController =new ItineraryController(
@@ -115,7 +115,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
                 this.mockUserItinAdapter.Object,
                 this.mockTransferAdapter.Object,
                 this.mockMapService.Object,
-               priceService);
+               priceService,config);
 
            
         }

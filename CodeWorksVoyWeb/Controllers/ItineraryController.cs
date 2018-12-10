@@ -8,6 +8,7 @@ using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 using CodeWorksVoyWebService.Bussiness_Logic.Utils;
 
 using CodeWorksVoyWebService.Services;
+using Microsoft.Extensions.Configuration;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,10 +30,11 @@ namespace CodeWorksVoyWebService.Controllers
         private ITransferAdapter _transferAdapter;
         private IMapService _mapService;
         private IPriceService _priceService;
+        private IConfiguration _configuration;
         //private string userHashId="xxxx";
         private bool createTestJsonFiles =true;
 
-        public ItineraryController(ISessionObjectsService sessionObjectsService, IItineraryService itineraryService, IHotelAdapter hotelAdapter, IPlaceAdapter placeAdapter, ICardAdapter cardAdapter, IUserItinAdapter userItinAdapter, ITransferAdapter transferAdapter, IMapService mapService, IPriceService priceService)
+        public ItineraryController(ISessionObjectsService sessionObjectsService, IItineraryService itineraryService, IHotelAdapter hotelAdapter, IPlaceAdapter placeAdapter, ICardAdapter cardAdapter, IUserItinAdapter userItinAdapter, ITransferAdapter transferAdapter, IMapService mapService, IPriceService priceService, IConfiguration configuration)
         {
 
             _sessionObjectsService = sessionObjectsService;
@@ -44,6 +46,7 @@ namespace CodeWorksVoyWebService.Controllers
             _transferAdapter = transferAdapter;
             _mapService = mapService;
             _priceService = priceService;
+            _configuration = configuration;
         }
 
 
@@ -268,6 +271,20 @@ namespace CodeWorksVoyWebService.Controllers
         {
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             sessionObject.PRSelections[id].Nights = sessionObject.PRSelections[id].Nights + 1;
+            _sessionObjectsService.setSessionObject(userId, sessionObject);
+            return Ok(JsonUtils.ConvertJsonStr("Night added"));
+        }
+
+        [HttpGet("Save/{userId}")]
+        public IActionResult SaveItinerary( [FromRoute] string userId)
+        {
+            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
+            _priceService.SessionObject = sessionObject;
+            sessionObject.Flight.SupplierID = Convert.ToInt16(_configuration.GetSection("AppConfiguration")["DefaultFlightSupplierIDForTemplatePriceCalc"]);
+
+            _priceService.createPriceFromDate(DateTime.Now, 1);
+            int userItinId = _userItinAdapter.insertUserItin( sessionObject, userId);
+            sessionObject.UserItinID = userItinId;
             _sessionObjectsService.setSessionObject(userId, sessionObject);
             return Ok(JsonUtils.ConvertJsonStr("Night added"));
         }

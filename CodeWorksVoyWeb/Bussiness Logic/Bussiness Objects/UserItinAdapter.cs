@@ -30,8 +30,7 @@ public class UserItinAdapter : IUserItinAdapter
     private readonly List<CodeWorksVoyWebService.Models.WebData.ItinPlaces> adminItinPlacesTable;
     private readonly List<CodeWorksVoyWebService.Models.WebData.UserTransfers> adminUserTransfersTable;
     private bool createTestJsonFiles = false;
-    // private readonly UserDataContext _contextUser;
-    private bool adminTemplate;
+ 
 
 
     public UserItinAdapter(IMemoryCache cache, WebDataContext contextAdmin)
@@ -130,8 +129,10 @@ public class UserItinAdapter : IUserItinAdapter
     }
 
 
-    public int insertUserItin(List<TransferNode> transferNodes, List<PRSelection> prSelections, ISessionObject sessionObject, string user)
+    public int insertUserItin(ISessionObject sessionObject, string user)
     {
+        List<PRSelection> prSelections = sessionObject.PRSelections;
+        List<TransferNode> transferNodes = sessionObject.TransferNodes;
         CodeWorksVoyWebService.Models.WebData.UserItinerary userItinerary = new CodeWorksVoyWebService.Models.WebData.UserItinerary();
         //int itinID = Convert.ToInt32(getMaxItinId()) + 1;
         _contextAdmin.UserItinerary.Add(userItinerary);

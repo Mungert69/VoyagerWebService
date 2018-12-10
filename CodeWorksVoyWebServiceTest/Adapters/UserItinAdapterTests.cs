@@ -69,7 +69,8 @@ namespace CodeWorksVoyWebServiceTest.Adapters
             // Warning you must remove manually the Configration object from Json for SessionObject
             sessionObjects = JsonUtils.getJsonObjectFromFile<SessionObject>("./TestObjects/sessionObjects-StoredItinBefore.json", sessionObjects);
             sessionObjects.Flight.SupplierID = Convert.ToInt16(configuration.GetSection("AppConfiguration")["DefaultFlightSupplierIDForTemplatePriceCalc"]);
-
+            sessionObjects.TransferNodes = transferNodes;
+            sessionObjects.PRSelections = prSelections;
             priceService.SessionObject = sessionObjects;
 
             userItinAdapter = new UserItinAdapter(cache,contextAdmin);
@@ -86,7 +87,7 @@ namespace CodeWorksVoyWebServiceTest.Adapters
             priceService.createPriceFromDate(DateTime.Now, 1);
 
             // Act
-            int userItinId=userItinAdapter.insertUserItin(transferNodes,prSelections,priceService.SessionObject,"$testtemplate$1234567890123456789012");
+            int userItinId=userItinAdapter.insertUserItin(priceService.SessionObject,"$testtemplate$1234567890123456789012");
 
             CodeWorksVoyWebService.Models.WebData.UserItinerary userItinerary = contextAdmin.UserItinerary.AsNoTracking().Where(u => u.UserItinId == userItinId).First();
             CodeWorksVoyWebService.Models.WebData.UserItinerary userItineraryX = JsonUtils.getJsonObjectFromFile<CodeWorksVoyWebService.Models.WebData.UserItinerary>("./userItineraryObj.json");

@@ -98,12 +98,12 @@ public class FlightAdapter : IFlightAdapter
         return airportObjs;
     }
 
-    public  List<FlightObj> getOutFlightsByDateRange(int supplierID, DateTime date, DateTime startDate)
+    public  List<FlightObj> getOutFlightsByDateRange(int supplierID,  DateTime startDate, DateTime endDate)
     {
         List<FlightObj> flightObjs = new List<FlightObj>();
 
-        List<CodeWorksVoyWebService.Models.CubaData.FlightTable> table = flightTable.Where(f => f.UseIt == "Y" && f.SupplierId == supplierID && (f.FlightDepartureDate >= startDate && f.FlightDepartureDate <= date)).ToList();
-        flightObjs.Add(new FlightObj());
+        List<CodeWorksVoyWebService.Models.CubaData.FlightTable> table = flightTable.Where(f => f.UseIt == "Y" && f.SupplierId == supplierID && (f.FlightDepartureDate >= startDate.Date && f.FlightDepartureDate <= endDate.Date)).ToList();
+        //flightObjs.Add(new FlightObj());
         foreach (CodeWorksVoyWebService.Models.CubaData.FlightTable row in table)
         {
             FlightObj flightObj = new FlightObj();
@@ -116,12 +116,12 @@ public class FlightAdapter : IFlightAdapter
         return flightObjs;
     }
 
-    public  List<FlightObj> getOutFlightsByDateRangeForward(int supplierID, DateTime date, DateTime endDate)
+    public  List<FlightObj> getOutFlightsByDateRangeForward(int supplierID, DateTime startDate, DateTime endDate)
     {
         List<FlightObj> flightObjs = new List<FlightObj>();
 
-        List<CodeWorksVoyWebService.Models.CubaData.FlightTable> table = flightTable.Where(f => f.UseIt == "Y" && f.SupplierId == supplierID && (f.FlightDepartureDate >= date && f.FlightDepartureDate <= endDate)).OrderBy(f => f.FlightDepartureDate).ToList();
-        flightObjs.Add(new FlightObj());
+        List<CodeWorksVoyWebService.Models.CubaData.FlightTable> table = flightTable.Where(f => f.UseIt == "Y" && f.SupplierId == supplierID && (f.FlightDepartureDate >= startDate.Date && f.FlightDepartureDate <= endDate.Date)).OrderBy(f => f.FlightDepartureDate).ToList();
+        //flightObjs.Add(new FlightObj());
         foreach (CodeWorksVoyWebService.Models.CubaData.FlightTable row in table)
         {
             FlightObj flightObj = new FlightObj();
