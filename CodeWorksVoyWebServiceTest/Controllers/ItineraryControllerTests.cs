@@ -54,12 +54,12 @@ namespace CodeWorksVoyWebServiceTest.Controllers
         private void CreateItineraryControllers()
         {
             // Setup concret objects for tests
-            TripCardObj cardObj = JsonUtils.getJsonObjectFromFile<TripCardObj>("./TestObjects/card.json");
-            List<PRSelection> prSelections = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./TestObjects/pRSelections.json");
-            List<TransferNode> transferNodes = JsonUtils.getJsonObjectFromFile<List<TransferNode>>("./TestObjects/transferNodes.json");
-            CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = JsonUtils.getJsonObjectFromFile<CodeWorksVoyWebService.Models.WebData.UserItinerary>("./TestObjects/userItin.json");
-            List<TransferNodeItem> transferNodeItems = JsonUtils.getJsonObjectFromFile<List<TransferNodeItem>>("./TestObjects/transferNodeItems.json");
-            List<PlaceState> placeStates = JsonUtils.getJsonObjectFromFile<List<PlaceState>>("./TestObjects/placeStates.json");
+            TripCardObj cardObj = JsonUtils.getJsonObjectFromFile<TripCardObj>("./card.json");
+            List<PRSelection> prSelections = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./pRSelections.json");
+            List<TransferNode> transferNodes = JsonUtils.getJsonObjectFromFile<List<TransferNode>>("./transferNodes.json");
+            CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = JsonUtils.getJsonObjectFromFile<CodeWorksVoyWebService.Models.WebData.UserItinerary>("./userItin.json");
+            List<TransferNodeItem> transferNodeItems = JsonUtils.getJsonObjectFromFile<List<TransferNodeItem>>("./transferNodeItems.json");
+            List<PlaceState> placeStates = JsonUtils.getJsonObjectFromFile<List<PlaceState>>("./placeStates.json");
 
             ServiceFactory serviceFactory = new ServiceFactory();
             var serviceProvider = serviceFactory.Services.BuildServiceProvider();
@@ -93,7 +93,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             ItinObj itinObj = unitUnderTest.GetItinObj(
                 id,
                 templateTypeId, "xxxx");
-            ItinObj itinObjX = JsonUtils.getJsonObjectFromFile<ItinObj>("./TestObjects/itinObj.json");
+            ItinObj itinObjX = JsonUtils.getJsonObjectFromFile<ItinObj>("./itinObj.json");
             CompareLogic compareLogic = new CompareLogic();
             ComparisonResult result = compareLogic.Compare(itinObjX, itinObj);
 
@@ -121,7 +121,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
 
             // Act
             StoredItinObj itinObj = unitUnderTest.GetStoredItinObj("xxxx");
-            StoredItinObj itinObjX = JsonUtils.getJsonObjectFromFile<StoredItinObj>("./TestObjects/storedItinObj.json");
+            StoredItinObj itinObjX = JsonUtils.getJsonObjectFromFile<StoredItinObj>("./storedItinObj.json");
             CompareLogic compareLogic = new CompareLogic();
             ComparisonResult result = compareLogic.Compare(itinObjX, itinObj);
 
@@ -155,7 +155,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             unitUnderTest.RemoveNight(1, "xxxx");
             ItinObj itinObj = unitUnderTest.GetStoredItinObj("xxxx");
             List<PRSelection> pRSelections = itinObj.PRSelections;
-            List<PRSelection> pRSelectionsX = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./TestObjects/pRSelections-RemoveNight.json");
+            List<PRSelection> pRSelectionsX = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./pRSelections-RemoveNight.json");
             CompareLogic compareLogic = new CompareLogic();
             ComparisonResult result = compareLogic.Compare(pRSelectionsX, pRSelections);
 

@@ -898,5 +898,6 @@ public class SessionObject : ISessionObject
         }
     }
 
+    [JsonIgnore]
     public IConfiguration Configuration { get => _Configuration; set => _Configuration = value; }
 }
