@@ -32,7 +32,7 @@ namespace CodeWorksVoyWebService.Controllers
         private IPriceService _priceService;
         private IConfiguration _configuration;
         //private string userHashId="xxxx";
-        private bool createTestJsonFiles =true;
+        private bool createTestJsonFiles =false;
 
         public ItineraryController(ISessionObjectsService sessionObjectsService, IItineraryService itineraryService, IHotelAdapter hotelAdapter, IPlaceAdapter placeAdapter, ICardAdapter cardAdapter, IUserItinAdapter userItinAdapter, ITransferAdapter transferAdapter, IMapService mapService, IPriceService priceService, IConfiguration configuration)
         {
@@ -269,24 +269,37 @@ namespace CodeWorksVoyWebService.Controllers
         [HttpGet("AddNight/{id}/{userId}")]
         public IActionResult AddNight([FromRoute] int id, [FromRoute] string userId)
         {
+            try { 
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             sessionObject.PRSelections[id].Nights = sessionObject.PRSelections[id].Nights + 1;
             _sessionObjectsService.setSessionObject(userId, sessionObject);
             return Ok(JsonUtils.ConvertJsonStr("Night added"));
+            }
+            catch (Exception e)
+            {
+                return Ok(JsonUtils.ConvertJsonStr("Failed to add Night error was : " + e.Message));
+            }
         }
 
         [HttpGet("Save/{userId}")]
         public IActionResult SaveItinerary( [FromRoute] string userId)
         {
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
-            _priceService.SessionObject = sessionObject;
-            sessionObject.Flight.SupplierID = Convert.ToInt16(_configuration.GetSection("AppConfiguration")["DefaultFlightSupplierIDForTemplatePriceCalc"]);
+            try
+            {
+                ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
+                _priceService.SessionObject = sessionObject;
+                sessionObject.Flight.SupplierID = Convert.ToInt16(_configuration.GetSection("AppConfiguration")["DefaultFlightSupplierIDForTemplatePriceCalc"]);
 
-            _priceService.createPriceFromDate(DateTime.Now, 1);
-            int userItinId = _userItinAdapter.insertUserItin( sessionObject, userId);
-            sessionObject.UserItinID = userItinId;
-            _sessionObjectsService.setSessionObject(userId, sessionObject);
-            return Ok(JsonUtils.ConvertJsonStr("Night added"));
+                _priceService.createPriceFromDate(DateTime.Now, 1);
+                int userItinId = _userItinAdapter.insertUserItin(sessionObject, userId);
+                sessionObject.UserItinID = userItinId;
+                _sessionObjectsService.setSessionObject(userId, sessionObject);
+                return Ok(JsonUtils.ConvertJsonStr("Itinerary saved with Id : " + userItinId));
+            }
+            catch (Exception e)
+            {
+                return Ok(JsonUtils.ConvertJsonStr("Failed to save Itinerary error was : " + e.Message));
+            }
         }
 
 
@@ -294,18 +307,25 @@ namespace CodeWorksVoyWebService.Controllers
         [HttpGet("RemoveNight/{id}/{userId}")]
         public IActionResult RemoveNight([FromRoute] int id, [FromRoute] string userId)
         {
-            ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
+            try
+            {
+                ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
 
-            sessionObject.PRSelections[id].Nights = sessionObject.PRSelections[id].Nights - 1;
-            if (sessionObject.PRSelections[id].Nights <= 1) { sessionObject.PRSelections[id].Nights = 1; }
-            if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("pRSelections-RemoveNight.json", sessionObject.PRSelections);
-            _sessionObjectsService.setSessionObject(userId, sessionObject);
-            return Ok(JsonUtils.ConvertJsonStr("Night removed"));
+                sessionObject.PRSelections[id].Nights = sessionObject.PRSelections[id].Nights - 1;
+                if (sessionObject.PRSelections[id].Nights <= 1) { sessionObject.PRSelections[id].Nights = 1; }
+                if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("pRSelections-RemoveNight.json", sessionObject.PRSelections);
+                _sessionObjectsService.setSessionObject(userId, sessionObject);
+                return Ok(JsonUtils.ConvertJsonStr("Night removed"));
+            }
+            catch (Exception e) {
+                return Ok(JsonUtils.ConvertJsonStr("Failed to remove Night error was : "+e.Message));
+            }
         }
 
         [HttpGet("DelHotel/{userId}")]
         public IActionResult DelHotel([FromRoute] string userId)
         {
+            try { 
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
 
             // Remove last Place hotel and transfer node.
@@ -329,20 +349,18 @@ namespace CodeWorksVoyWebService.Controllers
             _sessionObjectsService.setSessionObject(userId, sessionObject);
 
             return Ok(JsonUtils.ConvertJsonStr("Last hop deleted"));
-            // Rebuild map.
-            /*selectHops();
-            getMapButtons();
-            AddHotelButton.Visible = false;
-            getSelections();
-            getHotels();
-            updateTabPanel();
-            getPlaceInfo();*/
+            }
+            catch (Exception e)
+            {
+                return Ok(JsonUtils.ConvertJsonStr("Failed to remove Hotel error was : " + e.Message));
+            }
         }
 
 
         [HttpGet("AddHotel/{id}/{id2}/{userId}")]
         public IActionResult AddHotel([FromRoute] int id, [FromRoute] int id2, [FromRoute] string userId)
         {
+            try { 
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             _itineraryService.SessionObject = sessionObject;
             sessionObject.SelectedPlaceID = id;
@@ -398,20 +416,16 @@ namespace CodeWorksVoyWebService.Controllers
                     _itineraryService.addHotel();
                 }
             }
-            // Add a hotel to selected resort.
-
-
-            //FinishPanel.Visible = true;
-            //getSelections();
-            //selectHops();
-            //getMapButtons();
-            //AddHotelButton.Visible = false;
+           
             sessionObject.IsTemplateChanged = true;
-            //TemplateChangedLabel.Visible = IsTemplateChanged;
-            //Response.Redirect("TripBuilder.aspx?place=" + SelectedPlace + "&hotel=" + SelectedHotel);
-
+          
             _sessionObjectsService.setSessionObject(userId, sessionObject);
-            return Ok(JsonUtils.ConvertJsonStr("Itin added"));
+            return Ok(JsonUtils.ConvertJsonStr("Added Hotel " + sessionObject.SelectedHotel+ " in Place "+sessionObject.SelectedPlace));
+            }
+            catch (Exception e)
+            {
+                return Ok(JsonUtils.ConvertJsonStr("Failed to add Hotel error was : " + e.Message));
+            }
 
         }
 
