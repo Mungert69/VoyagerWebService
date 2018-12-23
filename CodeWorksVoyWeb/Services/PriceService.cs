@@ -29,6 +29,8 @@ public class PriceService : IPriceService
     private readonly List<CodeWorksVoyWebService.Models.CubaData.Aptrates> aptRatesTable;
     private readonly List<CodeWorksVoyWebService.Models.CubaData.TransferLogic> transferLogicTable;
     private readonly List<CodeWorksVoyWebService.Models.CubaData.DefaultTransfers> defaultTransfersTable;
+    private readonly List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> templateTimeIdTable;
+    private readonly List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> templateTimeIdLookupTable;
     private IPlaceAdapter _placeAdapter;
     private IHotelAdapter _hotelAdapter;
     private IFlightAdapter _flightAdapter;
@@ -52,6 +54,8 @@ public class PriceService : IPriceService
         aptRatesTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.Aptrates>(ref cache, context, aptRatesTable, "AptRatesTable");
         transferLogicTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.TransferLogic>(ref cache, context, transferLogicTable, "TransferLogicTable");
         defaultTransfersTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.CubaData.DefaultTransfers>(ref cache, context, defaultTransfersTable, "DefaultTransfersTable");
+        templateTimeIdTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId>(ref cache, contextWeb, templateTimeIdTable, "TemplateTimeIdTable");
+        templateTimeIdLookupTable = FactoryUtils.CheckCache<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup>(ref cache, contextWeb, templateTimeIdLookupTable, "TemplateTimeIdLookupTable");
 
         _configuration = configuration;
         //_contextRes = contextRes;
@@ -350,13 +354,13 @@ public class PriceService : IPriceService
     public int getNearestTimeID()
     {
 
-        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableTimeIdLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
+        //List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableTimeIdLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
         DateTime now = DateTime.Now;
         DateTime tempTime;
         int intM = now.Month;
         int timeID = 1;
         int lowestDays = 365;
-        foreach (CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup row in tableTimeIdLookup)
+        foreach (CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup row in templateTimeIdLookupTable)
         {
             int intD = Convert.ToDateTime(row.Date).Month;
             if (intD == intM)
@@ -392,10 +396,10 @@ public class PriceService : IPriceService
         List<DateTime> timeObjs = new List<DateTime>();
 
         int nowTimeID = getNearestTimeID();
-        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableTimeIdLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
+        //List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableTimeIdLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
 
 
-        foreach (CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup row in tableTimeIdLookup)
+        foreach (CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup row in templateTimeIdLookupTable)
         {
             int nowYear = DateTime.Now.Year;
             DateTime nowYearDate = new DateTime(nowYear, Convert.ToDateTime(row.Date).Month, Convert.ToDateTime(row.Date).Day);
@@ -415,8 +419,8 @@ public class PriceService : IPriceService
     {
         List<ItinTemplateTimeObj> timeObjs = new List<ItinTemplateTimeObj>();
 
-        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableTimeId = _contextWeb.ItinTemplateTimeId.Where(t => t.UserItinId == userItinId).ToList();
-        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
+        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableTimeId = templateTimeIdTable.Where(t => t.UserItinId == userItinId).ToList();
+        //List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableLookup = _contextWeb.ItinTemplateTimeIdlookup.ToList();
 
         int timeID = getNearestTimeID();
         foreach (CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId row in tableTimeId)
@@ -431,7 +435,7 @@ public class PriceService : IPriceService
                 timeObj.Price = Convert.ToDecimal(row.Price);
             }
             timeObj.TimeID = Convert.ToInt32(row.TimeId);
-            timeObj.TimeIdName = tableLookup.Where(t => t.TimeId == timeObj.TimeID).Select(s => s.TimeRangeName).First();
+            timeObj.TimeIdName = templateTimeIdLookupTable.Where(t => t.TimeId == timeObj.TimeID).Select(s => s.TimeRangeName).First();
             timeObjs.Add(timeObj);
         }
         return timeObjs;
@@ -531,7 +535,7 @@ public class PriceService : IPriceService
     }
     public string updateItinTemplatePrices()
     {
-        List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableLookup = _contextWeb.ItinTemplateTimeIdlookup.AsNoTracking().ToList();
+        //List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup> tableLookup = _contextWeb.ItinTemplateTimeIdlookup.AsNoTracking().ToList();
         List<CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeId> tableDel = _contextWeb.ItinTemplateTimeId.AsNoTracking().ToList();
         _contextWeb.ItinTemplateTimeId.RemoveRange(tableDel);
         _contextWeb.SaveChanges();
@@ -548,7 +552,7 @@ public class PriceService : IPriceService
         foreach (CodeWorksVoyWebService.Models.WebData.AdminItinTemplates rowTemplate in tableTemplate)
         {
 
-            foreach (CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup rowLookup in tableLookup)
+            foreach (CodeWorksVoyWebService.Models.WebData.ItinTemplateTimeIdlookup rowLookup in templateTimeIdLookupTable)
             {
                 try
                 {

@@ -13,10 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 
-namespace CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects
+public class CardAdapter : ICardAdapter
 {
-    public class CardAdapter : ICardAdapter
-    {
 
         //private readonly CubaDataContext _context;
         //private readonly WebDataContext _contextWebData;
@@ -148,4 +146,4 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects
 
 
     }
-}
+

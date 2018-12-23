@@ -11,13 +11,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
+
 using CodeWorksVoyWebService.Models.CubaData;
 using CodeWorksVoyWebService.Models.UserData;
 using CodeWorksVoyWebService.Models.VoyagerReserve;
 using CodeWorksVoyWebService.Models.WebData;
 using CodeWorksVoyWebService.Services;
 using CodeWorksVoyWebService.Services;
+using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
 
 namespace CodeWorksVoyWeb
 {
@@ -70,9 +71,13 @@ namespace CodeWorksVoyWeb
             services.AddTransient<IPriceService, PriceService>();
             services.AddTransient<IUserItinAdapter, UserItinAdapter>();
             services.AddTransient<IMapService, MapService>();
+            services.AddScoped<ICacheServices, CacheServices>();
            // services.AddSingleton<ISessionObject, SessionObject>();
             services.AddSingleton<ISessionObjectsService, SessionObjectsService>();
             services.AddSingleton<IConfiguration>(Configuration);
+
+            services.AddHostedService<ConsumeScopedServiceHostedService>();
+            services.AddScoped<IScopedProcessingService, ScopedProcessingService>();
 
 
         }
@@ -91,12 +96,16 @@ namespace CodeWorksVoyWeb
             app.UseResponseCompression();
             app.UseCors("AllowAnyOrigin");
             app.UseHttpsRedirection();
+
+           
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}/{id2?}/{id3?}");
             });
+
         }
     }
 }

@@ -40,7 +40,7 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
         public void setCardFromItinerary(int userItinId, int templateTypeId, IUserItinAdapter userItinAdapter, bool createTestJsonFiles)
         {
 
-           
+        
             CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = userItinAdapter.getAdminItin(userItinId);
             if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("userItin.json", userItin);
 

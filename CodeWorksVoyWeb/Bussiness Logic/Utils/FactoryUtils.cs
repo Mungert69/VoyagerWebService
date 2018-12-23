@@ -15,8 +15,7 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects
 
         public static List<T> CheckCache<T>(ref IMemoryCache cache, DbContext context, List<T> chkObj, string objName) where T : class {
  
-            try
-            {
+           
                 
                 cache.TryGetValue(objName, out chkObj);
                 if (chkObj == null)
@@ -29,15 +28,26 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects
                 }
              return chkObj;
                 
-            }
-            catch(Exception e)  { string message=e.Message;}
-            return null;
+   
         }
+        public static T CheckCacheNoWrite<T>(ref IMemoryCache cache, T chkObj, string objName) where T : class
+        {
+
+           
+
+                cache.TryGetValue(objName, out chkObj);
+                if (chkObj != null)
+                {
+                    return chkObj;
+                }
+                return null;
+
+        }
+
         public static T CheckCache<T>(ref IMemoryCache cache, T chkObj, string objName) where T : class
         {
 
-            try
-            {
+           
 
                 cache.TryGetValue(objName, out chkObj);
                 if (chkObj == null)
@@ -49,20 +59,15 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects
                 }
                 return chkObj;
 
-            }
-            catch (Exception e) { string message = e.Message; }
-            return null;
-        }
+                 }
 
         public static void WriteCache<T>(ref IMemoryCache cache, T chkObj, string objName) where T : class
         {
 
-            try
-            {
+            
                 cache.Set(objName, chkObj);
 
-            }
-            catch (Exception e) { string message = e.Message; }            
+                    
         }
     }
 }

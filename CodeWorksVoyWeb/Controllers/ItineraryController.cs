@@ -31,12 +31,13 @@ namespace CodeWorksVoyWebService.Controllers
         private IMapService _mapService;
         private IPriceService _priceService;
         private IConfiguration _configuration;
+        private ICacheServices _cacheServices;
         //private string userHashId="xxxx";
         private bool createTestJsonFiles =false;
 
         public bool CreateTestJsonFiles { get => createTestJsonFiles; set => createTestJsonFiles = value; }
 
-        public ItineraryController(ISessionObjectsService sessionObjectsService, IItineraryService itineraryService, IHotelAdapter hotelAdapter, IPlaceAdapter placeAdapter, ICardAdapter cardAdapter, IUserItinAdapter userItinAdapter, ITransferAdapter transferAdapter, IMapService mapService, IPriceService priceService, IConfiguration configuration)
+        public ItineraryController(ICacheServices cacheServices, ISessionObjectsService sessionObjectsService, IItineraryService itineraryService, IHotelAdapter hotelAdapter, IPlaceAdapter placeAdapter, ICardAdapter cardAdapter, IUserItinAdapter userItinAdapter, ITransferAdapter transferAdapter, IMapService mapService, IPriceService priceService, IConfiguration configuration)
         {
 
             _sessionObjectsService = sessionObjectsService;
@@ -49,6 +50,7 @@ namespace CodeWorksVoyWebService.Controllers
             _mapService = mapService;
             _priceService = priceService;
             _configuration = configuration;
+            _cacheServices = cacheServices;
         }
 
 
@@ -192,21 +194,9 @@ namespace CodeWorksVoyWebService.Controllers
         public IEnumerable<TripCardObj> GetAllItineraryCards([FromRoute] string userId)
         {
 
-
-            List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> adminTemplates = _userItinAdapter.getAllAdminTemplateItins();
-
-            List<TripCardObj> cards = new List<TripCardObj>();
-            TripCardObj card;
-            foreach (CodeWorksVoyWebService.Models.WebData.AdminItinTemplates adminTemplate in adminTemplates)
-            {
-                card = new TripCardObj();
-                card.setCardFromItinerary(Convert.ToInt32(adminTemplate.AdminItinId), (int)adminTemplate.TemplateTypeId, _userItinAdapter, CreateTestJsonFiles);
-                card.getDatePriceObjs(_priceService);
-                card.setPRSeletions(_userItinAdapter, _cardAdapter);
-                cards.Add(card);
-            }
-            if (userId != null) { }
-
+            List<TripCardObj> cards;
+            cards=_cacheServices.waitCardsReady();
+            JsonUtils.writeJsonObjectToFile("allCards.json", cards);
             return cards;
 
         }
