@@ -33,6 +33,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
         private ItineraryController itineraryController;
         private readonly ITestOutputHelper output;
         private SessionObject sessionObjects;
+        private ICacheServices _cacheServices;
       
 
 
@@ -73,8 +74,9 @@ namespace CodeWorksVoyWebServiceTest.Controllers
          _mapService = serviceProvider.GetService<IMapService>();
          _priceService = serviceProvider.GetService<IPriceService>();
          _configuration = serviceProvider.GetService<IConfiguration>();
+            _cacheServices= serviceProvider.GetService<ICacheServices>();
 
-         itineraryController = new ItineraryController(_sessionObjectsService, _itineraryService, _hotelAdapter, _placeAdapter, _cardAdapter, _userItinAdapter, _transferAdapter, _mapService, _priceService, _configuration);
+            itineraryController = new ItineraryController(_cacheServices,_sessionObjectsService, _itineraryService, _hotelAdapter, _placeAdapter, _cardAdapter, _userItinAdapter, _transferAdapter, _mapService, _priceService, _configuration);
 
 
         }
