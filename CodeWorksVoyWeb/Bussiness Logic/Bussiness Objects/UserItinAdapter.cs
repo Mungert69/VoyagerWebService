@@ -118,6 +118,16 @@ public class UserItinAdapter : IUserItinAdapter
         return adminTemplates;
     }
 
+    public List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> getAllAdminTemplateItins()
+    {
+        List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> adminTemplates;
+
+        adminTemplates = adminItinTemplatesTable.ToList();
+
+
+        return adminTemplates;
+    }
+
     public List<CodeWorksVoyWebService.Models.WebData.UserItinerary> getAllAdminItins()
     {
         List<CodeWorksVoyWebService.Models.WebData.UserItinerary> userItins;

@@ -12,7 +12,6 @@ using CodeWorksVoyWebService.Models.WebData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
-using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
 
 namespace CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects
 {

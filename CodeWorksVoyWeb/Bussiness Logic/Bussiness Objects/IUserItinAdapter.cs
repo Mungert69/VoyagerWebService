@@ -7,6 +7,7 @@ public interface IUserItinAdapter
     UserItinerary getAdminItin(int userItinID);
     List<AdminItinTemplates> getAdminTemplateItins(int templateTypeId);
     List<UserItinerary> getAllAdminItins();
+    List<AdminItinTemplates> getAllAdminTemplateItins();
     List<ItinTemplateObj> getAllItinTemplates();
     List<PRSelection> getItinHotels(int itinID);
     int getItinID(int userItinID);

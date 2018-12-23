@@ -1,4 +1,6 @@
-﻿using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
+﻿using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
+using CodeWorksVoyWebService.Bussiness_Logic.DataObjects;
+using CodeWorksVoyWebService.Bussiness_Logic.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,7 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
 {
     public class TripCardObj : CardObj
     {
-
+        private List<PRSelection> pRSelections;
         private decimal price = 0;
         private string pricesStr = "";
         private DateTime travelDate;
@@ -34,6 +36,33 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
         public List<PlaceObj> PlaceObjs { get => placeObjs; set => placeObjs = value; }
         public List<DatePriceObj> DatePriceObjs { get => datePriceObjs; set => datePriceObjs = value; }
 
+
+        public void setCardFromItinerary(int userItinId, int templateTypeId, IUserItinAdapter userItinAdapter, bool createTestJsonFiles)
+        {
+
+           
+            CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = userItinAdapter.getAdminItin(userItinId);
+            if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("userItin.json", userItin);
+
+            base.Id = userItin.UserItinId;
+            itinId = (int)userItin.ItinId;
+            base.Title = userItin.ItinName;
+            base.DescriptionShort = userItin.Seotext;
+            base.Longitude = "";
+            base.Latitude = "";
+            base.CountryId = 0;
+            base.Country = "";
+            base.TypeId = templateTypeId;
+
+
+            List<string> strList = new List<string>();
+            strList.Add("");
+            base.PicFileName = strList.ElementAt(0);
+
+            base.PicFileNames = strList;
+
+        }
+
         public void getPriceString(IPriceService priceService) {
             List<ItinTemplateTimeObj> itinTemplatePrices = priceService.getItinTemplatePrices(base.Id);
             List<ItinTemplateTimeObj> sortedList = itinTemplatePrices.OrderBy(o => o.TimeID).ToList();
@@ -44,6 +73,27 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
             pricesStr = str.ToString();
         }
 
+        public List<PRSelection> setPRSeletions(IUserItinAdapter userItinAdapter, ICardAdapter cardAdapter)
+        {
+
+            pRSelections = userItinAdapter.getItinPlaces(itinId);
+            pRSelections = cardAdapter.updateSelectionWithCards(pRSelections);
+            getNights(pRSelections);
+            stages = pRSelections.Count;
+            getPlaceObjs(pRSelections);
+            getTripPics(pRSelections);
+            return pRSelections;
+
+        }
+        public void setPRSeletions(List<PRSelection> pRSelections)
+        {
+
+            getNights(pRSelections);
+            stages = pRSelections.Count;
+            getPlaceObjs(pRSelections);
+            getTripPics(pRSelections);
+
+        }
         public void getDatePriceObjs(IPriceService priceService)
         {
             List<ItinTemplateTimeObj> itinTemplatePrices = priceService.getItinTemplatePrices(base.Id);

@@ -85,16 +85,10 @@ namespace CodeWorksVoyWebService.Controllers
             {
 
                 //TODO .getDatePriceObjs will not be called for a userItin.
-                card = getCardFromItinerary(Convert.ToInt32(id), templateTypeId);
+                card.setCardFromItinerary(Convert.ToInt32(id), templateTypeId, _userItinAdapter, CreateTestJsonFiles);
                 card.getDatePriceObjs(_priceService);
-
-                pRSelections = _userItinAdapter.getItinPlaces(card.ItinId);
-                pRSelections = _cardAdapter.updateSelectionWithCards(pRSelections);
-                card.getNights(pRSelections);
-                card.Stages = pRSelections.Count;
-                card.getPlaceObjs(pRSelections);
-                card.getTripPics(pRSelections);
-
+                pRSelections= card.setPRSeletions(_userItinAdapter, _cardAdapter);
+               
 
                 if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("card.json", card);
                 if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("pRSelections.json", pRSelections);
@@ -140,9 +134,12 @@ namespace CodeWorksVoyWebService.Controllers
         {
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("sessionObjects-StoredItinBefore.json", sessionObject);
+
+            //Setup card Object from Stored session data.
             TripCardObj card = new TripCardObj();
             List<PRSelection> pRSelections = sessionObject.PRSelections;
             pRSelections = _cardAdapter.updateSelectionWithCards(pRSelections);
+            card.setPRSeletions(pRSelections);
 
             List<TransferNode> transferNodes = sessionObject.TransferNodes;
             List<TransferNodeItem>  transferNodeItems = _transferAdapter.getTransferNodeItems(transferNodes);
@@ -166,32 +163,6 @@ namespace CodeWorksVoyWebService.Controllers
         }
 
 
-        private TripCardObj getCardFromItinerary(int userItinId, int templateTypeId)
-        {
-
-            TripCardObj card = new TripCardObj();
-
-            CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = _userItinAdapter.getAdminItin(userItinId);
-            if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("userItin.json", userItin);
-
-            card.Id = userItin.UserItinId;
-            card.ItinId = (int)userItin.ItinId;
-            card.Title = userItin.ItinName;
-            card.DescriptionShort = userItin.Seotext;
-            card.Longitude = "";
-            card.Latitude = "";
-            card.CountryId = 0;
-            card.Country = "";
-            card.TypeId = templateTypeId;
-           
-
-            List<string> strList = new List<string>();
-            strList.Add("");
-            card.PicFileName = strList.ElementAt(0);
-
-            card.PicFileNames = strList;
-            return card;
-        }
 
         // GET: api/Itinerary/Cards/43
         [HttpGet("Cards/{templateTypeId}")]
@@ -201,26 +172,40 @@ namespace CodeWorksVoyWebService.Controllers
 
             List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> adminTemplates = _userItinAdapter.getAdminTemplateItins(templateTypeId);
 
-            //List<CodeWorkVoyWebService.Models.WebData.UserItinerary> userItins = _userItinAdapter.getAdminTemplateItins();
             List<TripCardObj> cards = new List<TripCardObj>();
-            int counter = 0;
-            TripCardObj card;
-            List<PRSelection> pRSelections = new List<PRSelection>();
+             TripCardObj card;
             foreach (CodeWorksVoyWebService.Models.WebData.AdminItinTemplates adminTemplate in adminTemplates)
             {
                 card = new TripCardObj();
-                card = getCardFromItinerary(Convert.ToInt32(adminTemplate.AdminItinId), templateTypeId);
+                card.setCardFromItinerary(Convert.ToInt32(adminTemplate.AdminItinId), templateTypeId, _userItinAdapter, CreateTestJsonFiles);
                 card.getDatePriceObjs(_priceService);
-                pRSelections = _userItinAdapter.getItinPlaces(card.ItinId);
-                pRSelections = _cardAdapter.updateSelectionWithCards(pRSelections);
-                card.getNights(pRSelections);
-                card.Stages = pRSelections.Count;
-                card.getPlaceObjs(pRSelections);
-                card.getTripPics(pRSelections);
-                cards.Add(card);
-                counter++;
-               
+                card.setPRSeletions(_userItinAdapter, _cardAdapter);
+                cards.Add(card);            
             }
+
+            return cards;
+
+        }
+
+
+        [HttpGet("AllCards/{userId}")]
+        public IEnumerable<TripCardObj> GetAllItineraryCards([FromRoute] string userId)
+        {
+
+
+            List<CodeWorksVoyWebService.Models.WebData.AdminItinTemplates> adminTemplates = _userItinAdapter.getAllAdminTemplateItins();
+
+            List<TripCardObj> cards = new List<TripCardObj>();
+            TripCardObj card;
+            foreach (CodeWorksVoyWebService.Models.WebData.AdminItinTemplates adminTemplate in adminTemplates)
+            {
+                card = new TripCardObj();
+                card.setCardFromItinerary(Convert.ToInt32(adminTemplate.AdminItinId), (int)adminTemplate.TemplateTypeId, _userItinAdapter, CreateTestJsonFiles);
+                card.getDatePriceObjs(_priceService);
+                card.setPRSeletions(_userItinAdapter, _cardAdapter);
+                cards.Add(card);
+            }
+            if (userId != null) { }
 
             return cards;
 
