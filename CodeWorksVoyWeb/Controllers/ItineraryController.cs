@@ -34,6 +34,8 @@ namespace CodeWorksVoyWebService.Controllers
         //private string userHashId="xxxx";
         private bool createTestJsonFiles =false;
 
+        public bool CreateTestJsonFiles { get => createTestJsonFiles; set => createTestJsonFiles = value; }
+
         public ItineraryController(ISessionObjectsService sessionObjectsService, IItineraryService itineraryService, IHotelAdapter hotelAdapter, IPlaceAdapter placeAdapter, ICardAdapter cardAdapter, IUserItinAdapter userItinAdapter, ITransferAdapter transferAdapter, IMapService mapService, IPriceService priceService, IConfiguration configuration)
         {
 
@@ -94,8 +96,8 @@ namespace CodeWorksVoyWebService.Controllers
                 card.getTripPics(pRSelections);
 
 
-                if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("card.json", card);
-                if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("pRSelections.json", pRSelections);
+                if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("card.json", card);
+                if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("pRSelections.json", pRSelections);
 
 
                 itinObj.Card = card;
@@ -105,10 +107,10 @@ namespace CodeWorksVoyWebService.Controllers
                 if (!isView)
                 {
                     transferNodes = _userItinAdapter.getTransfersNodes(card.ItinId);
-                    if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("transferNodes.json", transferNodes);
+                    if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("transferNodes.json", transferNodes);
 
                     List<TransferNodeItem> transferNodeItems = _transferAdapter.getTransferNodeItems(transferNodes);
-                    if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("transferNodeItems.json", transferNodeItems);
+                    if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("transferNodeItems.json", transferNodeItems);
                     itinObj.TransferNodeItems = transferNodeItems;
 
                     ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
@@ -126,7 +128,7 @@ namespace CodeWorksVoyWebService.Controllers
                 }
             }
 
-            if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("itinObj.json", itinObj);
+            if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("itinObj.json", itinObj);
             return itinObj;
         }
 
@@ -137,7 +139,7 @@ namespace CodeWorksVoyWebService.Controllers
         public StoredItinObj GetStoredItinObj([FromRoute] string userId)
         {
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
-            if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("sessionObjects-StoredItinBefore.json", sessionObject);
+            if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("sessionObjects-StoredItinBefore.json", sessionObject);
             TripCardObj card = new TripCardObj();
             List<PRSelection> pRSelections = sessionObject.PRSelections;
             pRSelections = _cardAdapter.updateSelectionWithCards(pRSelections);
@@ -148,7 +150,7 @@ namespace CodeWorksVoyWebService.Controllers
             // Update placeStates in sessionObject.
 
             List<PlaceState> placeStates = _mapService.selectHops(sessionObject);
-            if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("placeStates.json", placeStates);
+            if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("placeStates.json", placeStates);
 
             StoredItinObj itinObj = new StoredItinObj();
             //TODO write UserData code
@@ -158,7 +160,7 @@ namespace CodeWorksVoyWebService.Controllers
             itinObj.PRSelections = pRSelections;
             itinObj.TransferNodeItems = transferNodeItems;
             itinObj.PlaceStates = placeStates;
-            if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("storedItinObj.json", itinObj);
+            if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("storedItinObj.json", itinObj);
 
             return itinObj;
         }
@@ -170,7 +172,7 @@ namespace CodeWorksVoyWebService.Controllers
             TripCardObj card = new TripCardObj();
 
             CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = _userItinAdapter.getAdminItin(userItinId);
-            if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("userItin.json", userItin);
+            if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("userItin.json", userItin);
 
             card.Id = userItin.UserItinId;
             card.ItinId = (int)userItin.ItinId;
@@ -313,7 +315,7 @@ namespace CodeWorksVoyWebService.Controllers
 
                 sessionObject.PRSelections[id].Nights = sessionObject.PRSelections[id].Nights - 1;
                 if (sessionObject.PRSelections[id].Nights <= 1) { sessionObject.PRSelections[id].Nights = 1; }
-                if (createTestJsonFiles) JsonUtils.writeJsonObjectToFile("pRSelections-RemoveNight.json", sessionObject.PRSelections);
+                if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("pRSelections-RemoveNight.json", sessionObject.PRSelections);
                 _sessionObjectsService.setSessionObject(userId, sessionObject);
                 return Ok(JsonUtils.ConvertJsonStr("Night removed"));
             }
@@ -347,8 +349,9 @@ namespace CodeWorksVoyWebService.Controllers
                 sessionObject.SelectedIndex = -1;
             }
             _sessionObjectsService.setSessionObject(userId, sessionObject);
-
-            return Ok(JsonUtils.ConvertJsonStr("Last hop deleted"));
+                Random rnd = new Random();
+                int test = rnd.Next();
+            return Ok(JsonUtils.ConvertJsonStr("Last hop deleted "+test));
             }
             catch (Exception e)
             {

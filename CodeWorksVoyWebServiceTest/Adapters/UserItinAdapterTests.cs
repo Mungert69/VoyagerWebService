@@ -62,12 +62,12 @@ namespace CodeWorksVoyWebServiceTest.Adapters
 
 
             // Setup concret objects for tests
-            prSelections = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./TestObjects/pRSelections.json");
-            transferNodes = JsonUtils.getJsonObjectFromFile<List<TransferNode>>("./TestObjects/transferNodes.json");
+            prSelections = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./pRSelections.json");
+            transferNodes = JsonUtils.getJsonObjectFromFile<List<TransferNode>>("./transferNodes.json");
 
             sessionObjects = new SessionObject(configuration);           
             // Warning you must remove manually the Configration object from Json for SessionObject
-            sessionObjects = JsonUtils.getJsonObjectFromFile<SessionObject>("./TestObjects/sessionObjects-StoredItinBefore.json", sessionObjects);
+            sessionObjects = JsonUtils.getJsonObjectFromFile<SessionObject>("./sessionObjects-StoredItinBefore.json", sessionObjects);
             sessionObjects.Flight.SupplierID = Convert.ToInt16(configuration.GetSection("AppConfiguration")["DefaultFlightSupplierIDForTemplatePriceCalc"]);
             sessionObjects.TransferNodes = transferNodes;
             sessionObjects.PRSelections = prSelections;

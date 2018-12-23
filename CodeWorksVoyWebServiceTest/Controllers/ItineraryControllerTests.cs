@@ -54,12 +54,12 @@ namespace CodeWorksVoyWebServiceTest.Controllers
         private void CreateItineraryControllers()
         {
             // Setup concret objects for tests
-            TripCardObj cardObj = JsonUtils.getJsonObjectFromFile<TripCardObj>("./card.json");
-            List<PRSelection> prSelections = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./pRSelections.json");
-            List<TransferNode> transferNodes = JsonUtils.getJsonObjectFromFile<List<TransferNode>>("./transferNodes.json");
-            CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = JsonUtils.getJsonObjectFromFile<CodeWorksVoyWebService.Models.WebData.UserItinerary>("./userItin.json");
-            List<TransferNodeItem> transferNodeItems = JsonUtils.getJsonObjectFromFile<List<TransferNodeItem>>("./transferNodeItems.json");
-            List<PlaceState> placeStates = JsonUtils.getJsonObjectFromFile<List<PlaceState>>("./placeStates.json");
+            //TripCardObj cardObj = JsonUtils.getJsonObjectFromFile<TripCardObj>("./card.json");
+            //List<PRSelection> prSelections = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./pRSelections.json");
+            //List<TransferNode> transferNodes = JsonUtils.getJsonObjectFromFile<List<TransferNode>>("./transferNodes.json");
+            //CodeWorksVoyWebService.Models.WebData.UserItinerary userItin = JsonUtils.getJsonObjectFromFile<CodeWorksVoyWebService.Models.WebData.UserItinerary>("./userItin.json");
+            //List<TransferNodeItem> transferNodeItems = JsonUtils.getJsonObjectFromFile<List<TransferNodeItem>>("./transferNodeItems.json");
+            //List<PlaceState> placeStates = JsonUtils.getJsonObjectFromFile<List<PlaceState>>("./placeStates.json");
 
             ServiceFactory serviceFactory = new ServiceFactory();
             var serviceProvider = serviceFactory.Services.BuildServiceProvider();
@@ -153,6 +153,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             // Act
 
             unitUnderTest.RemoveNight(1, "xxxx");
+            unitUnderTest.CreateTestJsonFiles = false;
             ItinObj itinObj = unitUnderTest.GetStoredItinObj("xxxx");
             List<PRSelection> pRSelections = itinObj.PRSelections;
             List<PRSelection> pRSelectionsX = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./pRSelections-RemoveNight.json");
