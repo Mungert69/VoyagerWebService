@@ -13,6 +13,7 @@ namespace CodeWorksVoyWebService.Bussiness_Logic.DataObjects
     public class TripCardObj : CardObj
     {
         private List<PRSelection> pRSelections;
+        private string userId;
         private decimal price = 0;
         private string pricesStr = "";
         private DateTime travelDate;

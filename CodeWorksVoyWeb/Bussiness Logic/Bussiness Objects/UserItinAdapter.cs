@@ -139,7 +139,7 @@ public class UserItinAdapter : IUserItinAdapter
     }
 
 
-    public int insertUserItin(ISessionObject sessionObject, string user)
+    public int insertUserItin(ISessionObject sessionObject, Guid user)
     {
         List<PRSelection> prSelections = sessionObject.PRSelections;
         List<TransferNode> transferNodes = sessionObject.TransferNodes;
@@ -151,7 +151,7 @@ public class UserItinAdapter : IUserItinAdapter
 
         _contextAdmin.UserItinerary.Attach(userItinerary);
         userItinerary.ItinId = userItinId;
-       userItinerary.Uuid=user;
+       userItinerary.Uuid=user.ToString();
         userItinerary.OutFlightId = sessionObject.Flight.OutFlightID;
         userItinerary.InFlightId = sessionObject.Flight.InFlightID;
         userItinerary.DepAirport = sessionObject.Flight.DepartAirport;

@@ -94,7 +94,7 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             // Act
             ItinObj itinObj = unitUnderTest.GetItinObj(
                 id,
-                templateTypeId, "xxxx");
+                templateTypeId, Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"));
             ItinObj itinObjX = JsonUtils.getJsonObjectFromFile<ItinObj>("./itinObj.json");
             CompareLogic compareLogic = new CompareLogic();
             ComparisonResult result = compareLogic.Compare(itinObjX, itinObj);
@@ -119,10 +119,10 @@ namespace CodeWorksVoyWebServiceTest.Controllers
             int templateTypeId = 1;
              unitUnderTest.GetItinObj(
                 id,
-                templateTypeId, "xxxx");
+                templateTypeId, Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"));
 
             // Act
-            StoredItinObj itinObj = unitUnderTest.GetStoredItinObj("xxxx");
+            StoredItinObj itinObj = unitUnderTest.GetStoredItinObj(Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"));
             StoredItinObj itinObjX = JsonUtils.getJsonObjectFromFile<StoredItinObj>("./storedItinObj.json");
             CompareLogic compareLogic = new CompareLogic();
             ComparisonResult result = compareLogic.Compare(itinObjX, itinObj);
@@ -150,13 +150,13 @@ namespace CodeWorksVoyWebServiceTest.Controllers
 
             unitUnderTest.GetItinObj(
                 id,
-                templateTypeId, "xxxx");
+                templateTypeId, Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"));
            
             // Act
 
-            unitUnderTest.RemoveNight(1, "xxxx");
+            unitUnderTest.RemoveNight(1, Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"));
             unitUnderTest.CreateTestJsonFiles = false;
-            ItinObj itinObj = unitUnderTest.GetStoredItinObj("xxxx");
+            ItinObj itinObj = unitUnderTest.GetStoredItinObj(Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"));
             List<PRSelection> pRSelections = itinObj.PRSelections;
             List<PRSelection> pRSelectionsX = JsonUtils.getJsonObjectFromFile<List<PRSelection>>("./pRSelections-RemoveNight.json");
             CompareLogic compareLogic = new CompareLogic();

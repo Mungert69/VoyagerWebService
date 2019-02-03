@@ -84,14 +84,15 @@ namespace CodeWorksVoyWebServiceTest.Adapters
         {
             // Arrange
             CreateUserItinAdapter();
-            priceService.createPriceFromDate(DateTime.Now, 1);
+            CodeWorksVoyWebService.Models.WebData.UserItinerary userItineraryX = JsonUtils.getJsonObjectFromFile<CodeWorksVoyWebService.Models.WebData.UserItinerary>("./userItineraryObj.json");
+
+            priceService.createPriceFromDate((DateTime)userItineraryX.PriceDateStamp, 1);
 
             // Act
-            int userItinId=userItinAdapter.insertUserItin(priceService.SessionObject,"$testtemplate$1234567890123456789012");
+            int userItinId=userItinAdapter.insertUserItin(priceService.SessionObject,Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"));
 
             CodeWorksVoyWebService.Models.WebData.UserItinerary userItinerary = contextAdmin.UserItinerary.AsNoTracking().Where(u => u.UserItinId == userItinId).First();
-            CodeWorksVoyWebService.Models.WebData.UserItinerary userItineraryX = JsonUtils.getJsonObjectFromFile<CodeWorksVoyWebService.Models.WebData.UserItinerary>("./userItineraryObj.json");
-            CompareLogic compareLogic = new CompareLogic();
+             CompareLogic compareLogic = new CompareLogic();
            ComparisonResult result = compareLogic.Compare(userItineraryX.ItinName, userItinerary.ItinName);
             ComparisonResult result2 = compareLogic.Compare(userItineraryX.TotalCost, userItinerary.TotalCost);
 

@@ -56,7 +56,7 @@ namespace CodeWorksVoyWebService.Controllers
 
         // GET: api/Itinerary/ItinObj/30058/43
         [HttpGet("ItinObj/{id}/{templateTypeId}/{userId}")]
-        public ItinObj GetItinObj([FromRoute] string id, [FromRoute] int templateTypeId, [FromRoute] string userId)
+        public ItinObj GetItinObj([FromRoute] string id, [FromRoute] int templateTypeId, [FromRoute] Guid userId)
         {
 
             return ItinObj(id, templateTypeId, false, userId);
@@ -66,18 +66,16 @@ namespace CodeWorksVoyWebService.Controllers
         [HttpGet("ViewItinObj/{id}/{templateTypeId}")]
         public ItinObj GetViewItinObj([FromRoute] string id, [FromRoute] int templateTypeId)
         {
-            return ItinObj(id, templateTypeId, true,null);
+            return ItinObj(id, templateTypeId, true, Guid.Parse(null));
 
         }
 
 
-        private ItinObj ItinObj(string id, int templateTypeId, bool isView, string userId)
+        private ItinObj ItinObj(string id, int templateTypeId, bool isView, Guid userId)
         {
             //TODO write UserData code
             ItinObj itinObj = new ItinObj();
 
-            // Prevent buffer over run.
-            if ((userId !=null && userId.Length > 36) || id.Length>10 ) return itinObj;
             TripCardObj card = new TripCardObj();
 
             List <PRSelection> pRSelections = new List<PRSelection>();
@@ -132,7 +130,7 @@ namespace CodeWorksVoyWebService.Controllers
 
         // GET: api/Itinerary/StoredItinObj
         [HttpGet("StoredItinObj/{userId}")]
-        public StoredItinObj GetStoredItinObj([FromRoute] string userId)
+        public StoredItinObj GetStoredItinObj([FromRoute] Guid userId)
         {
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             if (CreateTestJsonFiles) JsonUtils.writeJsonObjectToFile("sessionObjects-StoredItinBefore.json", sessionObject);
@@ -191,12 +189,12 @@ namespace CodeWorksVoyWebService.Controllers
 
 
         [HttpGet("AllCards/{userId}")]
-        public IEnumerable<TripCardObj> GetAllItineraryCards([FromRoute] string userId)
+        public IEnumerable<TripCardObj> GetAllItineraryCards([FromRoute] Guid userId)
         {
 
             List<TripCardObj> cards;
             cards=_cacheServices.waitCardsReady();
-            JsonUtils.writeJsonObjectToFile("allCards.json", cards);
+            if (CreateTestJsonFiles)  JsonUtils.writeJsonObjectToFile("allCards.json", cards);
             return cards;
 
         }
@@ -216,14 +214,14 @@ namespace CodeWorksVoyWebService.Controllers
 
 
         [HttpGet("TotalNights/{userId}")]
-        public IActionResult GetTotalNights([FromRoute] string userId)
+        public IActionResult GetTotalNights([FromRoute] Guid userId)
         {
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             return Ok(sessionObject.SelectedNights);
 
         }
 
-        public void deleteLastTransferNode(string userId)
+        public void deleteLastTransferNode(Guid userId)
         {
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             List<TransferNode> tempNodes = sessionObject.TransferNodes;
@@ -234,7 +232,7 @@ namespace CodeWorksVoyWebService.Controllers
         }
 
 
-        public void deleteLastHR(string userId)
+        public void deleteLastHR(Guid userId)
         {
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             List<PRSelection> tempSelections = sessionObject.PRSelections;
@@ -244,7 +242,7 @@ namespace CodeWorksVoyWebService.Controllers
 
         }
         [HttpGet("AddNight/{id}/{userId}")]
-        public IActionResult AddNight([FromRoute] int id, [FromRoute] string userId)
+        public IActionResult AddNight([FromRoute] int id, [FromRoute] Guid userId)
         {
             try { 
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
@@ -259,7 +257,7 @@ namespace CodeWorksVoyWebService.Controllers
         }
 
         [HttpGet("Save/{userId}")]
-        public IActionResult SaveItinerary( [FromRoute] string userId)
+        public IActionResult SaveItinerary( [FromRoute] Guid userId)
         {
             try
             {
@@ -282,7 +280,7 @@ namespace CodeWorksVoyWebService.Controllers
 
 
         [HttpGet("RemoveNight/{id}/{userId}")]
-        public IActionResult RemoveNight([FromRoute] int id, [FromRoute] string userId)
+        public IActionResult RemoveNight([FromRoute] int id, [FromRoute] Guid userId)
         {
             try
             {
@@ -300,7 +298,7 @@ namespace CodeWorksVoyWebService.Controllers
         }
 
         [HttpGet("DelHotel/{userId}")]
-        public IActionResult DelHotel([FromRoute] string userId)
+        public IActionResult DelHotel([FromRoute] Guid userId)
         {
             try { 
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
@@ -336,7 +334,7 @@ namespace CodeWorksVoyWebService.Controllers
 
 
         [HttpGet("AddHotel/{id}/{id2}/{userId}")]
-        public IActionResult AddHotel([FromRoute] int id, [FromRoute] int id2, [FromRoute] string userId)
+        public IActionResult AddHotel([FromRoute] int id, [FromRoute] int id2, [FromRoute] Guid userId)
         {
             try { 
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);

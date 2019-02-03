@@ -24,7 +24,8 @@ namespace CodeWorksVoyWeb.Controllers
         [HttpGet("AllPrices")]
         public ActionResult<string> GetAllPrices()
         {
-            _priceService.SessionObject= _sessionObjectsService.getSessionObject("Admin");
+           
+            _priceService.SessionObject= _sessionObjectsService.getSessionObject(Guid.Parse("Admin"));
             return _priceService.updateItinTemplatePrices();
         }
 

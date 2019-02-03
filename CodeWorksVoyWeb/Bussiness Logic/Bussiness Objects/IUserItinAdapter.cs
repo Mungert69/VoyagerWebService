@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CodeWorksVoyWebService.Models.WebData;
 
 public interface IUserItinAdapter
@@ -31,6 +32,6 @@ public interface IUserItinAdapter
     UserItinObj getUserAdminItin(int userItinID);
     UserItinObj getUserItinEntity(int userItinID);
     List<UserItinObj> getUserItins(int userID);
-    int insertUserItin(ISessionObject sessionObject, string user);
+    int insertUserItin(ISessionObject sessionObject, Guid user);
     void updateUserItin(int userItinID, int userID);
 }

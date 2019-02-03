@@ -23,7 +23,7 @@ namespace CodeWorksVoyWebService.Services
             this.configuration = configuration;
         }
 
-        public ISessionObject getSessionObject(string userHashId) {
+        public ISessionObject getSessionObject(Guid userHashId) {
             SessionObject sessionObject = null;
             accessCounter++;
             sessionObject= FactoryUtils.CheckCache<SessionObject>(ref cache, sessionObject, "SessionObject" + userHashId);
@@ -32,7 +32,7 @@ namespace CodeWorksVoyWebService.Services
 
         }
 
-        public void setSessionObject(string userHashId, ISessionObject sessionObject) {
+        public void setSessionObject(Guid userHashId, ISessionObject sessionObject) {
             FactoryUtils.WriteCache<ISessionObject>(ref cache, sessionObject, "SessionObject" + userHashId);
         }
     }

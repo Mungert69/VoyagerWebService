@@ -46,7 +46,7 @@ namespace CodeWorksVoyWebService.Controllers
 
 
         [HttpGet("GetAirports/{id}/{userId}")]
-        public IActionResult GetAirports([FromRoute] int id, [FromRoute] string userId)
+        public IActionResult GetAirports([FromRoute] int id, [FromRoute] Guid userId)
         {
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             sessionObject.Flight.SupplierID = id;
@@ -55,7 +55,7 @@ namespace CodeWorksVoyWebService.Controllers
         }
 
         [HttpGet("GetAirlines/{userId}")]
-        public IActionResult GetAirlines( [FromRoute] string userId)
+        public IActionResult GetAirlines( [FromRoute] Guid userId)
         {
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             return Ok(_flightAdapter.getAirlines(sessionObject.CountryFlag));
@@ -63,7 +63,7 @@ namespace CodeWorksVoyWebService.Controllers
         }
 
         [HttpGet("GetOutFlight/{id}/{userId}")]
-        public IActionResult GetOutFlights([FromRoute] string id, [FromRoute] string userId)
+        public IActionResult GetOutFlights([FromRoute] string id, [FromRoute] Guid userId)
         {
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             sessionObject.Flight.DepartAirport = id;
@@ -78,7 +78,7 @@ namespace CodeWorksVoyWebService.Controllers
         }
 
         [HttpGet("GetInFlight/{id}/{id2}/{userId}")]
-        public IActionResult getInFlights([FromRoute] int id, [FromRoute] string id2, [FromRoute] string userId)
+        public IActionResult getInFlights([FromRoute] int id, [FromRoute] string id2, [FromRoute] Guid userId)
         {
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
             sessionObject.Flight.OutFlightID = id;
@@ -95,7 +95,7 @@ namespace CodeWorksVoyWebService.Controllers
         }
 
         [HttpGet("GetCost/{id}/{id2}/{userId}")]
-        public IActionResult GetCost([FromRoute] int id, [FromRoute] string id2, [FromRoute] string userId)
+        public IActionResult GetCost([FromRoute] int id, [FromRoute] string id2, [FromRoute] Guid userId)
         {
             StringBuilder message = new StringBuilder();
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
@@ -116,7 +116,7 @@ namespace CodeWorksVoyWebService.Controllers
         }
 
         [HttpGet("GetCost/{userId}")]
-        public IActionResult GetCost( [FromRoute] string userId)
+        public IActionResult GetCost( [FromRoute] Guid userId)
         {
             StringBuilder message = new StringBuilder();
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
@@ -134,7 +134,7 @@ namespace CodeWorksVoyWebService.Controllers
             return Ok(JsonUtils.ConvertJsonStr(message.ToString() + " Cost is : " + cost));
         }
 
-        public string CheckLastHop(string userId)
+        public string CheckLastHop(Guid userId)
         {
             string message = "";
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
@@ -239,7 +239,7 @@ namespace CodeWorksVoyWebService.Controllers
         }
 
 
-        private decimal getPrice(string userId)
+        private decimal getPrice(Guid userId)
         {
             decimal price = 0;
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
@@ -254,7 +254,7 @@ namespace CodeWorksVoyWebService.Controllers
 
             //Response.Redirect("Detail.aspx");
         }
-        private bool testNightsEqual(string userId)
+        private bool testNightsEqual(Guid userId)
         {
             int totalNights = 0;
             ISessionObject sessionObject = _sessionObjectsService.getSessionObject(userId);
