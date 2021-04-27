@@ -1,24 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-
 using CodeWorksVoyWebService.Models.CubaData;
 using CodeWorksVoyWebService.Models.UserData;
 using CodeWorksVoyWebService.Models.VoyagerReserve;
 using CodeWorksVoyWebService.Models.WebData;
 using CodeWorksVoyWebService.Services;
-using CodeWorksVoyWebService.Services;
-using CodeWorksVoyWebService.Bussiness_Logic.Bussiness_Objects;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace CodeWorksVoyWeb
 {
@@ -40,7 +31,7 @@ namespace CodeWorksVoyWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddSessionStateTempDataProvider();
+            services.AddMvc().AddSessionStateTempDataProvider();
             services.AddMemoryCache();
             services.AddResponseCompression();
             services.AddCors(options =>
@@ -50,13 +41,13 @@ namespace CodeWorksVoyWeb
             });
 
 
-            var conCubaData = @"Server=DEVELOP\CODEWORKS;Database=CubaData;Trusted_Connection=True;ConnectRetryCount=0";
+            var conCubaData = @"Server=DESKTOP-0HLK5H4;Database=CubaData;Trusted_Connection=True;ConnectRetryCount=0";
             services.AddDbContext<CubaDataContext>(options => options.UseSqlServer(conCubaData));
-            var conWebData = @"Server=DEVELOP\CODEWORKS;Database=WebData;Trusted_Connection=True;ConnectRetryCount=0";
+            var conWebData = @"Server=DESKTOP-0HLK5H4;Database=WebData;Trusted_Connection=True;ConnectRetryCount=0";
             services.AddDbContext<WebDataContext>(options => options.UseSqlServer(conWebData));
-            var conVoyagerReserve = @"Server=DEVELOP\CODEWORKS;Database=VoyagerReserve;Trusted_Connection=True;ConnectRetryCount=0";
+            var conVoyagerReserve = @"Server=DESKTOP-0HLK5H4;Database=VoyagerReserve;Trusted_Connection=True;ConnectRetryCount=0";
             services.AddDbContext<VoyagerReserveContext>(options => options.UseSqlServer(conVoyagerReserve));
-            var conUserData = @"Server=DEVELOP\CODEWORKS;Database=UserData;Trusted_Connection=True;ConnectRetryCount=0";
+            var conUserData = @"Server=DESKTOP-0HLK5H4;Database=UserData;Trusted_Connection=True;ConnectRetryCount=0";
             services.AddDbContext<UserDataContext>(options => options.UseSqlServer(conUserData));
 
 
@@ -94,17 +85,18 @@ namespace CodeWorksVoyWeb
                 app.UseHsts();
             }
             app.UseResponseCompression();
+          
+            app.UseAuthentication();
+            app.UseRouting();
             app.UseCors("AllowAnyOrigin");
-            app.UseHttpsRedirection();
+
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
            
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}/{id2?}/{id3?}");
-            });
 
         }
     }

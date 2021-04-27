@@ -670,11 +670,11 @@ namespace CodeWorksVoyWebService.Models.CubaData
             modelBuilder.Entity<ContractRates>(entity =>
             {
                 entity.HasKey(e => e.ContractRateId)
-                    .ForSqlServerIsClustered(false);
+                    .IsClustered(false);
 
                 entity.HasIndex(e => e.ContractRateId)
                     .HasName("_dta_index_ContractRates_c_7_996198599__K1")
-                    .ForSqlServerIsClustered();
+                    .IsClustered();
 
                 entity.Property(e => e.ContractRateId).HasColumnName("ContractRateID");
 
@@ -1532,11 +1532,9 @@ namespace CodeWorksVoyWebService.Models.CubaData
             modelBuilder.Entity<XferCosts>(entity =>
             {
                 entity.HasKey(e => e.Id)
-                    .ForSqlServerIsClustered(false);
+                    .IsClustered(false);
 
-                entity.HasIndex(e => e.Id)
-                    .HasName("_dta_index_XferCosts_c_7_887674210__K1")
-                    .ForSqlServerIsClustered();
+               
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
